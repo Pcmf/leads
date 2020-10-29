@@ -1,0 +1,26 @@
+<div class="form-inline ">
+    <div class="form-group">
+        <label>
+            Este Mês
+            <input ng-click="clearDatas()" class="form-control" type="radio" ng-model="tml.opc" value="mes"/>
+        </label>
+    </div>
+    <div class="form-group">
+        <label>
+            Hoje
+            <input ng-click="clearDatas()" class="form-control" type="radio" ng-model="tml.opc" value="dia"/>
+        </label>
+    </div>
+    <div class="form-group">
+        <label>
+            De
+            <input class="form-control" type="date" ng-model="tml.data1" ng-change="cleanOpc()" />
+        </label>
+        <label>
+            Até 
+                <input class="form-control" type="date" ng-model="tml.data2"  ng-change="cleanOpc()"/>
+        </label>
+    </div>
+    <button class="btn btn-success" ng-click="applyFilter(tml)">Aplicar</button>
+    <button class="btn btn-warning" ng-click="clearFilter()" title="Limpar"><i class="fa fa-eraser"></i></button>
+</div>

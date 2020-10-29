@@ -1,0 +1,38 @@
+# Turn rewrite engine on
+RewriteEngine on
+
+#POST do LOGIN 
+#RewriteRule ^auth/([0-9a-zA-z$./]+) restful/restful.php?url=auth&token=$1 [L,QSA]
+
+RewriteRule ^leads/([0-9/]+)/([0-9/]+) index.php?url=leads&user=$1&id=$2 [L,QSA]
+RewriteRule ^leads/([0-9/]+) index.php?url=leads&user=$1 [L,QSA]
+RewriteRule ^upleads/([0-9/]+) index.php?url=upleads&lead=$1 [L,QSA]
+RewriteRule ^create index.php?url=create [L,QSA]
+RewriteRule ^login index.php?url=login [L,QSA]
+RewriteRule ^doc/([0-9/]+)/([0-9/]+) index.php?url=doc&lead=$1&linha=$2 [L,QSA]
+RewriteRule ^docs/([0-9/]+)/([0-9/]+) index.php?url=docs&lead=$1&tipodoc=$2 [L,QSA]
+RewriteRule ^docs/([0-9/]+) index.php?url=docs&lead=$1 [L,QSA]
+RewriteRule ^docs index.php?url=docs [L,QSA]
+RewriteRule ^updocs/([a-z/]+) index.php?url=updocs&func=$1 [L,QSA]
+RewriteRule ^savedocs/([0-9/]+) index.php?url=savedocs&lead=$1 [L,QSA]
+RewriteRule ^getdata/([0-9a-zA-Z_/]+) index.php?url=getdata&tabela=$1 [L,QSA]
+RewriteRule ^processos/([0-9/]+)/([0-9/]+) index.php?url=processos&user=$1&lead=$2 [L,QSA]
+RewriteRule ^processos/([0-9/]+) index.php?url=processos&user=$1 [L,QSA]
+RewriteRule ^processos index.php?url=processos [L,QSA]
+RewriteRule ^dashboard/([0-9/]+) index.php?url=dashboard&user=$1 [L,QSA]
+RewriteRule ^dash/([0-9/]+) index.php?url=dash&user=$1 [L,QSA]
+RewriteRule ^mural/([0-9/]+) index.php?url=mural&user=$1 [L,QSA]
+RewriteRule ^mural index.php?url=mural [L,QSA]
+RewriteRule ^users index.php?url=users [L,QSA]
+RewriteRule ^search/([0-9a-zA-Z_/]+)/([0-9a-zA-Z_/]+)  index.php?url=search&type=$1&data=$2 [L,QSA]
+RewriteRule ^call index.php?url=call [L,QSA]
+RewriteRule ^notas index.php?url=notas [L,QSA]
+RewriteRule ^autoag index.php?url=autoag [L,QSA]
+RewriteRule ^agendar index.php?url=agendar [L,QSA]
+RewriteRule ^askdocs/([0-9/]+)/([0-9/]+) index.php?url=askdocs&user=$1&lead=$2 [L,QSA]
+RewriteRule ^cofidis/([0-9/]+) index.php?url=cofidis&user=$1 [L,QSA]
+RewriteRule ^list/([0-9/]+)/([0-9/]+) index.php?url=list&user=$1&tipo=$2 [L,QSA]
+RewriteRule ^anular/([0-9/]+)/([0-9/]+) index.php?url=anular&user=$1&lead=$2 [L,QSA]
+
+
+

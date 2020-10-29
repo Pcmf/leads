@@ -1,0 +1,48 @@
+<div class="container">
+    <h1 class="text-center text-info">AUDITORIA</h1>
+    <p>
+        <span class="pull-right form-inline" style="margin-right: 20px">
+           <i class="fa fa-search text-info"></i>
+           <input type="text" ng-model="searchFilter" class="form-control" placeholder="Filtrar por..." >         
+       </span>    
+    </p>
+    <select class="form-control" name="analista" ng-model="tml.analista" ng-change="saveSelected(tml.analista)"
+            style="width: 140px; display: inline; margin-right: 10px">
+            <option value="99">Todos</option>
+            <option ng-repeat="a in analistas" ng-if="a.tipo=='Analista' && a.ativo" ng-value="a.id">{{a.nome}}</option>
+        </select>
+    <time-line style="display: inline"></time-line>
+
+    <br/>
+    <table ng-table="paramsTable" class="table table-condensed table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Lead</th>
+                <th>Nome</th>
+                <th>Data Entrada</th>
+                <th>Valor</th>
+                <th>Motivo Recusa</th>
+                <th>Data de Recusa</th>
+                <th>Dias</th>
+                <th>Analista</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="d in $data | filter: searchFilter" ng-click="verDetalhe(d.lead)" style="cursor: pointer">
+                <th><a href="#!/detLead/{{d.lead}}">{{d.lead}}</a></th>   
+                <td>{{d.nome}}</td>
+                <td>{{d.dataentrada}}</td>
+                <td>{{d.montante}}</td>
+                <td>
+                    <ol>
+                        <li ng-repeat="m in d.motivos"> <span class="text-sm">( {{m.data}} )</span> - {{m.motivo}};<br/>{{m.outro}}</li>
+                    </ol>
+                </td>
+                <td>{{d.datastatus}}</td>
+                <td>{{d.dias}}</td>
+                <td>{{d.analista}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+

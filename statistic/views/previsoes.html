@@ -1,0 +1,146 @@
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <h3 class="text-info form-inline">Estatisticas de Financiamentos por Dia de Semana </h3>
+            <hr/>
+            <div class="col-xs-3">
+            <select class="form-control" ng-model="fornSel" ng-change="selectedForn()">
+                <option ng-value="99">Todos </option>
+                    <option ng-repeat="f in fornecedores" ng-value="f.id">{{ f.nome}}</option>
+            </select>
+            </div>
+            <div class="col-xs-9">
+            <time-line></time-line>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        
+        <div class="panel panel-primary col-lg-8" id="est">
+            <div class="panel-heading">
+                <h3>Estatisticas</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-condensed table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Qty</th>
+                            <th>%</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Recebidos</td>
+                            <td>{{recebidos}}</td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>Aprovados</td>
+                            <td>{{aprovados || 0}}</td>
+                            <td>{{aprovados / recebidos *100 | number :2 }} %</td>
+                            <td>{{valorAprovado || 0}}€</td>
+                        </tr>
+                        <tr>
+                            <td>Financiados</td>
+                            <td>{{financiados || 0}}</td>
+                            <td>{{financiados / recebidos *100 | number :2 }} %</td>
+                            <td>{{valorFin || 0}} €</td>
+                        </tr> 
+                        <tr>
+                            <td>Desistencias</td>
+                            <td>{{desistencias || 0}}</td>
+                            <td>{{desistencias / aprovados *100 | number :2 }} %</td>
+                            <td>{{valorDesistencias || 0}} €</td>
+                        </tr>                             
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel panel-default col-lg-4" id="dom">
+            <div class="panel-heading">
+                    <h3>DOMINGO</h3>
+            </div>
+            <div class="panel-body">
+                <h1 class="col-xs-6">{{semanal[6].qty  || 0}}</h1>
+                <h1 class="col-xs-6">{{semanal[6].qty/recebidos *100  || 0 | number :2 }} %</h1>
+                <h1 class="col-xs-12 text-info">{{semanal[6].valor || 0}} €</h1>
+            </div>
+        </div>
+    </div>
+    <!-- Segunda Linha -->
+    <div class="col-lg-12">
+        <div class="panel panel-default col-lg-4">
+            <div class="panel-heading">
+                <h3>SEGUNDA</h3>
+            </div>
+            <div class="panel-body">
+                <h1 class="col-xs-5">{{semanal[0].qty || 0}}</h1>
+                <h1 class="col-xs-7">{{semanal[0].qty/recebidos *100  || 0 | number :2 }} %</h1>
+                <h1 class="col-xs-12 text-info">{{semanal[0].valor || 0}} €</h1>
+            </div>
+        </div>
+
+        <div class="panel panel-default col-lg-4">
+            <div class="panel-heading">
+                <h3>TERÇA</h3>
+            </div>
+            <div class="panel-body">
+                <h1 class="col-xs-5">{{semanal[1].qty || 0}}</h1>
+                <h1 class="col-xs-7">{{semanal[1].qty/recebidos *100  || 0 | number :2 }} %</h1>
+                <h1 class="col-xs-12 text-info">{{semanal[1].valor || 0 }} €</h1>
+            </div>
+        </div>
+
+        <div class="panel panel-default col-lg-4">
+            <div class="panel-heading">
+                <h3>QUARTA</h3>
+            </div>
+            <div class="panel-body">
+                <h1 class="col-xs-5">{{semanal[2].qty || 0}}</h1>
+                <h1 class="col-xs-7">{{semanal[2].qty/recebidos *100  || 0 | number :2 }} %</h1>
+                <h1 class="col-xs-12 text-info">{{semanal[2].valor || 0}} €</h1>
+            </div>
+        </div>
+
+        <div class="panel panel-default col-lg-4">
+            <div class="panel-heading">
+                <h3 >QUINTA</h3>
+            </div>
+            <div class="panel-body">
+                <h1 class="col-xs-5">{{semanal[3].qty || 0}}</h1>
+                <h1 class="col-xs-7">{{semanal[3].qty/recebidos *100  || 0 | number :2 }} %</h1>
+                <h1 class="col-xs-12 text-info">{{semanal[3].valor || 0}} €</h1>
+            </div>
+        </div>
+        <div class="panel panel-default col-lg-4">
+            <div class="panel-heading">
+                <h3>SEXTA</h3>
+            </div>
+            <div class="panel-body">
+                <h1 class="col-xs-5">{{semanal[4].qty || 0}}</h1>
+                <h1 class="col-xs-7">{{semanal[4].qty/recebidos *100  || 0 | number :2 }} %</h1>
+                <h1 class="col-xs-12 text-info">{{semanal[4].valor || 0 }} €</h1>
+            </div>
+        </div>
+
+        <div class="panel panel-default col-lg-4">
+            <div class="panel-heading">
+                <h3>SABADO</h3>
+            </div>
+            <div class="panel-body">
+                <h1 class="col-xs-5">{{semanal[5].qty || 0}}</h1>
+                <h1 class="col-xs-7">{{semanal[5].qty/recebidos *100  || 0 | number :2 }} %</h1>
+                <h1 class="col-xs-12 text-info">{{semanal[5].valor || 0}} €</h1>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<script>
+   $('#dom').height($('#est').height());
+</script>

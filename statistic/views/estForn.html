@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+        <h3 class="text-center text-info form-inline">Fornecedores  </h3>
+        <h4 class="text-center text-info form-inline">
+            <time-line></time-line>
+        </h4>
+        </div>
+    </div>
+    
+    <div  class="row">
+    <!-- Painel esquerdo com informação das leads -->
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h4 class="text-center">LEADS RECEBIDAS</h4>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Fornecedor</th>
+                                <th>Recebidas</th>
+                                <th>Não Atribuidos</th>
+                                <th>Anuladas</th>
+                                <th>Recusadas</th>
+                                <th>Para Analise*</th>
+                                <th>Pendentes*</th>
+                                <th><a active-link href="#!/listApv/all/{{tml}}">Aprovados</a></th>
+                                <th class="text-center"><a active-link href="#!/listFin/all/{{tml}}">Financiados</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="f in byFornecedor">
+                                <td class="text-primary" ng-click="detListByForn(f)"><span  active-link>{{f.ForNome}}</span></td>
+                                <td class="text-center">{{f.NV}}</td>
+                                <td class="text-center">{{f.NATRB}}</td>
+                                <td class="text-center">{{f.ANUL}}</td>
+                                <td class="text-center">{{f.RECANL}}</td>
+                                <td class="text-center">{{f.PARANL}}</td>
+                                <td class="text-center">{{f.PNDANL}}</td>
+                                <td class="text-center"><a active-link href="#!/listApv/{{f.id}}/{{tml}}">{{f.APRV}}</a></td>
+                                <td class="text-center"><a active-link href="#!/listFin/{{f.id}}/{{tml}}"><strong>{{f.FNC.qty}}</strong> <span active-link class="text-primary pull-right">{{f.FNC.valor}} €</span></a></td>
+                            </tr>
+                            <tr><td colspan="9"><small class="pull-right">* independente da seleção do periodo.</small></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- Painel direito com informação dos Analistas 
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h4 class="text-center">Fornecedor: {{fornecedor}}</h4>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Origem</th>
+                                <th>Tipo</th>
+                                <th>Quantidade</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="fl in fornList">
+                                <td class="text-primary" ng-click="detFLNome(fl)"><span active-link>{{fl.nomelead}}</span></td>
+                                <td class="text-info" ng-click="detFLNomeTipo(fl)"><span active-link>{{fl.tipo}}</span></td>
+                                <td class="text-center">{{fl.qty}}</td>
+                                <td class="text-right">{{fl.valor}} Eur</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>            
+        </div>-->
+        
+        <!-- Painel direito com detalhes por status 
+        <div class="col-md-6">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h4 class="text-center">Origem : {{origem}} <span ng-if="tipo"> Tipo: {{tipo}}</span></h4>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Situação</th>
+                                <th>Quantidade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="fol in fornOrigList">
+                                <td class="text-primary" ng-click="detFLNomeStatus(fol)"><span active-link>{{fol.nome}}</span></td>
+                                <td class="text-center">{{fol.qty}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>            
+        </div>        
+    </div>-->
+</div>

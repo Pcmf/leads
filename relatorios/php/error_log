@@ -1,0 +1,93 @@
+[28-Nov-2019 15:04:53 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:06:31 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:06:31 UTC] PHP Notice:  Undefined property: stdClass::$sts in /home/gestlife/public_html/leads/relatorios/php/imprimir.php on line 19
+[28-Nov-2019 15:06:44 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:06:44 UTC] PHP Notice:  Undefined property: stdClass::$sts in /home/gestlife/public_html/leads/relatorios/php/imprimir.php on line 19
+[28-Nov-2019 15:06:56 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:07:17 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:09:40 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:11:01 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:11:18 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:12:07 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:13:31 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:14:27 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:26:26 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:37:26 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:44:15 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:44:15 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function substring() in /home/gestlife/public_html/leads/relatorios/php/imprimir.php:41
+Stack trace:
+#0 {main}
+  thrown in /home/gestlife/public_html/leads/relatorios/php/imprimir.php on line 41
+[28-Nov-2019 15:44:24 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:44:24 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function substring() in /home/gestlife/public_html/leads/relatorios/php/imprimir.php:41
+Stack trace:
+#0 {main}
+  thrown in /home/gestlife/public_html/leads/relatorios/php/imprimir.php on line 41
+[28-Nov-2019 15:44:39 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:44:39 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function substring() in /home/gestlife/public_html/leads/relatorios/php/imprimir.php:41
+Stack trace:
+#0 {main}
+  thrown in /home/gestlife/public_html/leads/relatorios/php/imprimir.php on line 41
+[28-Nov-2019 15:45:13 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:45:13 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function substring() in /home/gestlife/public_html/leads/relatorios/php/imprimir.php:41
+Stack trace:
+#0 {main}
+  thrown in /home/gestlife/public_html/leads/relatorios/php/imprimir.php on line 41
+[28-Nov-2019 15:47:39 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:47:39 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function substring() in /home/gestlife/public_html/leads/relatorios/php/imprimir.php:41
+Stack trace:
+#0 {main}
+  thrown in /home/gestlife/public_html/leads/relatorios/php/imprimir.php on line 41
+[28-Nov-2019 15:49:43 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:51:09 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[28-Nov-2019 15:51:27 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[02-Dec-2019 19:11:22 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[02-Dec-2019 19:11:22 UTC] PHP Notice:  Undefined property: stdClass::$sts in /home/gestlife/public_html/leads/relatorios/php/imprimir.php on line 19
+[02-Dec-2019 19:27:28 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[02-Dec-2019 19:27:28 UTC] PHP Notice:  Undefined property: stdClass::$sts in /home/gestlife/public_html/leads/relatorios/php/imprimir.php on line 19
+[02-Dec-2019 19:29:38 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[02-Dec-2019 19:29:38 UTC] PHP Notice:  Undefined property: stdClass::$sts in /home/gestlife/public_html/leads/relatorios/php/imprimir.php on line 19
+[20-Dec-2019 15:30:17 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[20-Dec-2019 15:30:35 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[20-Dec-2019 15:30:55 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[09-Jan-2020 17:23:17 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[04-Feb-2020 16:12:18 Europe/Lisbon] PHP Notice:  Undefined variable: row1 in /home/gestlife/public_html/leads/relatorios/php/criarRelatorioHon.php on line 136
+[06-Feb-2020 16:13:04 Europe/Lisbon] PHP Notice:  Undefined variable: row1 in /home/gestlife/public_html/leads/relatorios/php/criarRelatorioHon.php on line 136
+[06-Feb-2020 17:02:12 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[06-Feb-2020 17:02:12 UTC] PHP Notice:  Undefined property: stdClass::$sts in /home/gestlife/public_html/leads/relatorios/php/imprimir.php on line 19
+[06-Feb-2020 17:51:15 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[21-Feb-2020 21:10:15 Europe/Lisbon] PHP Notice:  Undefined variable: row1 in /home/gestlife/public_html/leads/relatorios/php/criarRelatorioHon.php on line 136
+[21-Feb-2020 21:11:09 Europe/Lisbon] PHP Notice:  Undefined variable: row1 in /home/gestlife/public_html/leads/relatorios/php/criarRelatorioHon.php on line 136
+[02-Mar-2020 20:03:51 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[02-Mar-2020 20:03:51 UTC] PHP Notice:  Undefined property: stdClass::$sts in /home/gestlife/public_html/leads/relatorios/php/imprimir.php on line 19
+[02-Mar-2020 20:04:55 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[02-Mar-2020 20:04:55 UTC] PHP Notice:  Undefined property: stdClass::$sts in /home/gestlife/public_html/leads/relatorios/php/imprimir.php on line 19
+[02-Mar-2020 20:05:24 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[02-Mar-2020 20:05:24 UTC] PHP Notice:  Undefined property: stdClass::$sts in /home/gestlife/public_html/leads/relatorios/php/imprimir.php on line 19
+[02-Mar-2020 20:05:48 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[02-Mar-2020 20:05:48 UTC] PHP Notice:  Undefined property: stdClass::$sts in /home/gestlife/public_html/leads/relatorios/php/imprimir.php on line 19
+[12-Mar-2020 18:02:16 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[12-Mar-2020 18:02:16 UTC] PHP Notice:  Undefined property: stdClass::$sts in /home/gestlife/public_html/leads/relatorios/php/imprimir.php on line 19
+[04-Apr-2020 15:47:12 Europe/Lisbon] PHP Notice:  Undefined variable: row1 in /home/gestlife/public_html/leads/relatorios/php/criarRelatorioHon.php on line 136
+[04-Apr-2020 15:47:44 Europe/Lisbon] PHP Notice:  Undefined variable: row1 in /home/gestlife/public_html/leads/relatorios/php/criarRelatorioHon.php on line 136
+[04-Apr-2020 15:47:58 Europe/Lisbon] PHP Notice:  Undefined variable: row1 in /home/gestlife/public_html/leads/relatorios/php/criarRelatorioHon.php on line 136
+[07-Apr-2020 23:04:31 Europe/Lisbon] PHP Notice:  Undefined variable: row1 in /home/gestlife/public_html/leads/relatorios/php/criarRelatorioHon.php on line 136
+[07-Apr-2020 23:04:52 Europe/Lisbon] PHP Notice:  Undefined variable: row1 in /home/gestlife/public_html/leads/relatorios/php/criarRelatorioHon.php on line 136
+[29-Apr-2020 11:12:01 Europe/Lisbon] PHP Notice:  Undefined variable: row1 in /home/gestlife/public_html/leads/relatorios/php/criarRelatorioHon.php on line 136
+[29-Apr-2020 11:12:16 Europe/Lisbon] PHP Notice:  Undefined variable: row1 in /home/gestlife/public_html/leads/relatorios/php/criarRelatorioHon.php on line 136
+[29-Apr-2020 11:14:44 Europe/Lisbon] PHP Notice:  Undefined variable: row1 in /home/gestlife/public_html/leads/relatorios/php/criarRelatorioHon.php on line 136
+[09-May-2020 18:06:57 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[26-May-2020 16:10:19 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[04-Jun-2020 16:38:50 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[21-Aug-2020 15:16:17 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[09-Sep-2020 07:11:23 Europe/Lisbon] PHP Notice:  Undefined variable: row1 in /home/gestlife/public_html/leads/relatorios/php/criarRelatorioHon.php on line 136
+[09-Sep-2020 07:11:41 Europe/Lisbon] PHP Notice:  Undefined variable: row1 in /home/gestlife/public_html/leads/relatorios/php/criarRelatorioHon.php on line 136
+[09-Sep-2020 09:18:04 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[16-Sep-2020 09:16:00 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[16-Sep-2020 09:16:51 UTC] PHP Deprecated:  Methods with the same name as their class will not be constructors in a future version of PHP; FPDF has a deprecated constructor in /home/gestlife/public_html/leads/relatorios/php/fpdf.php on line 12
+[18-Oct-2020 23:31:45 Europe/Lisbon] PHP Warning:  mysqli_connect(): (HY000/2002): No such file or directory in /home/gestlife/public_html/leads/php/openCon.php on line 7
+[18-Oct-2020 23:31:45 Europe/Lisbon] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_error() in /home/gestlife/public_html/leads/php/openCon.php:10
+Stack trace:
+#0 /home/gestlife/public_html/leads/relatorios/php/relatorioLeads.php(8): require_once()
+#1 {main}
+  thrown in /home/gestlife/public_html/leads/php/openCon.php on line 10

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<!--
+    Vista inicial do Gestor. Aqui serão apresentadas as principais informações
+    sobre as LEADS e as principais ações.
+-->
+
+<div class="container-fluid">
+    
+
+    
+<!DOCTYPE html>
+<!--
+    Vista inicial do Gestor. Aqui serão apresentadas as principais informações
+    sobre as LEADS e as principais ações.
+-->
+
+<div class="container-fluid">
+    
+    <div class="row">
+        <div class="col-lg-7 col-lg-offset-1">
+        <div class="col-xs-3">
+            <div class="panel ph" style="background-color: green; color: white">
+              <div class="panel-heading">
+                <h3 class="panel-title">Novas</h3>
+              </div>
+                <div class="panel-body">
+                        <div class="col-xs-4">
+                              <h1 class="" style="font-size: 4em">{{paraAnalise}}</h1>
+                        </div>
+                        <div class="col-xs-8 text-center"  ng-if="(paraAnalise)>0 && presenca==1 && docOk==0">
+                            <a href="#!/form1" class="btn btn-lg btn-default deco-none" ng-if="!ativa" style="color: green">
+                                PUXAR<i class="fa fa-chevron-right fa-4x"> </i> 
+                            </a>
+                        </div>
+                        <div class="col-xs-12 text-center" ng-if="(paraAnalise)==0 || presenca==0">
+                            <h2 class="text-default">Não há LEADS</h2>
+                        </div>
+                        <div class="col-xs-12 text-center" ng-if="docOk>0">
+                            <h2 class="text-default">Documentação Nova</h2>
+                        </div>
+                </div>
+            </div>
+        </div>
+            <!-- Lista dos Em analise/pendentes -->
+        <div class="col-xs-9">
+            <div class="panel panel-default ph">
+              <div class="panel-heading">
+                <h3 class="panel-title">Em Analise / Pendentes</h3>
+              </div>
+              <div class="panel-body">
+                  <div class="col-xs-2 text-center">
+                        <h1 class="" style="font-size: 4em">{{emAnalise}}</h1>
+                  </div>
+                  <div class="col-xs-10">
+                      <table class="table table-hover table-condensed">
+                          <thead class="">
+                              <tr>
+                                  <th>LEAD</th>
+                                  <th>Nome</th>
+                                  <th>Montante</th>
+                                  <th>Data</th>
+                                  <th>Status</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr ng-repeat="ea in listaEmAnalise" ng-click="seeDetailAnalise(ea.lead)" class="hoverHand">
+                                  <td><a href="#!/form1/{{ea.lead}}">{{ea.lead}}</a></td>
+                                  <td>{{ea.nome}}</td>
+                                  <td>{{ea.valorpretendido}} €</td>
+                                  <td>{{ea.dtstatus}}</td>
+                                  <td>{{ea.stsnome}}</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                      <a ng-if="emAnalise>=1" href="#!/listPend" class="btn btn-default btn-block">Ver todos</a> 
+                  </div>
+              </div>
+            </div>
+        </div>
+        <!-- Aprovados a aguardar contratos/financiamento -->    
+        <div class="col-xs-12">
+            <div class="panel panel-success ph">
+              <div class="panel-heading">
+                <h3 class="panel-title">Pendentes de Financiamento</h3>
+              </div>
+              <div class="panel-body">
+                  
+                      <div class="col-xs-2 text-center">
+                         <h1 class="text-success" style="font-size: 4em">{{aprovados}}</h1>
+                      </div>
+                      <div class="col-xs-10">
+                      <table class="table table-condensed table-hover">
+                          <thead class="text-success">
+                              <tr>
+                                  <th>LEAD</th>
+                                  <th>Processo</th>
+                                  <th>Parceiro</th>
+                                  <th>Montante</th>
+                                  <th>Data Aprovado</th>
+                                  <th>Situação do Contrato</th>
+                                  <th>Data da situação</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr ng-repeat="la in listaAprovados">
+                                  <td>{{la.lead}}</td>
+                                  <td>{{la.processo}}</td>
+                                  <td>{{la.nome}}</td>
+                                  <td>{{la.montante}}</td>
+                                  <td>{{la.dtaprovado}}</td>
+                                  <td>
+                                      <span class="text-danger" ng-show="la.dtcontratocliente==null">Por Enviar</span>
+                                      <span class="text-primary" ng-show="(la.formaenvio!=null && la.dtcontratoparceiro==null && la.dt2via==null)">Enviado para o cliente</span>
+                                      <span class="text-info" ng-show="la.dt2via && la.dtcontratoparceiro==null">Enviada 2ª Via</span>
+                                      <span class="text-success" ng-show="la.dtcontratoparceiro">Enviado para o parceiro</span>
+                                  </td>
+                                  <td>
+                                      <span class="text-danger" ng-show="la.dtcontratocliente==null">n.a</span>
+                                      <span class="text-primary" ng-show="(la.formaenvio!=null && la.dtcontratoparceiro==null)">{{la.dtcliente}}</span>
+                                      <span class="text-success" ng-show="la.dtcontratoparceiro!=null">{{la.dtparceiro}}</span>
+                                  </td>
+                              </tr>
+                          </tbody>
+                      </table>                      
+                          <a href="#!/listApr" ng-if="aprovados>=1" class="btn btn-sm btn-success btn-block">Ver todos</a> 
+                  </div>
+              </div>
+            </div>
+        </div>
+
+
+        <div class="col-sm-12">
+            <div class="panel panel-primary ph">
+              <div class="panel-heading">
+                <h3 class="panel-title">Pesquisa LEADS/Processos</h3>
+              </div>
+              <div class="panel-body">
+                  <form ng-submit="searchLead(s)">
+                      <div class="col-xs-6">
+                        <div class="form-inline">
+                            <label>LEAD:</label>
+                            <input class="form-control input-sm no-spinner" type="number" ng-model="s.lead"/>
+                        </div>
+                        <div class="form-inline">
+                            <label>Processo: </label>
+                            <input class="form-control input-sm" type="text" ng-model="s.process"/>
+                        </div>
+                        <div class="form-inline">
+                            <label>Parceiro:</label>
+                            <select class="form-control" ng-model="s.parceiro" ng-options="parceiro.nome for parceiro in parceiros track by parceiro.id"></select>
+                        </div>                           
+                        <div class="form-inline">
+                            <label>NIF:</label>
+                            <input class="form-control input-sm no-spinner" type="number" ng-model="s.nif"/>
+                        </div>
+                      </div>
+                      <div class="col-xs-6">
+                        <div class="form-inline">
+                            <label>Nome:</label>
+                            <input class="form-control input-sm" type="text" ng-model="s.nome"/>
+                        </div>
+                        <div class="form-inline">
+                            <label>Email:</label>
+                            <input class="form-control input-sm" type="email" ng-model="s.email"/>
+                        </div>
+                        <div class="form-inline">
+                            <label>Telefone:</label>
+                            <input class="form-control input-sm no-spinner" type="number" ng-model="s.telefone"/>
+                        </div>
+                        <div class="form-inline">
+                            <label>LEAD Original</label>
+                            <input class="form-control input-sm no-spinner" type="number" ng-model="s.leadorig"/>
+                        </div>                          
+                          <br/>
+                        <div class="text-center">
+                            <button class="btn btn-success" type="submit"><i class="fa fa-search"></i> Pesquisar</button>
+                            <button class="btn btn-warning" type="button" ng-click="clearSearch()"><i class="fa fa-eraser"></i> Limpar</button>
+                        </div>
+                      </div>
+                  </form>  
+              </div>
+            </div>
+        </div>
+        </div>
+        <!-- Painel da direita -->
+        <div class="col-lg-3" style="margin-left: -25px">
+            
+            <div class="col-sm-12">
+                <div class="panel panel-warning ph">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">Final</h3>
+                  </div>
+                  <div class="panel-body">
+                      <p>
+                      <a class="btn btn-block btn-success" href="#!/listFin" style="font-size: 1.4em;">Financiados: {{financiados}}</a>
+                      </p>
+                      <p>
+                          <a class="btn btn-block btn-warning" href="#!/listFinACP"  style="font-size: 1.4em;">Financiados -ACP {{financiadosACP}} <span ng-show="alertaACP>0" class="fa fa-bell fa-danger"></span> </a>
+                      </p>
+                      <p>
+                          <a class="btn btn-block btn-info" href="#!/listFinRCP"  style="font-size: 1.4em;">Comprovativos Recebidos {{financiadosRCP}} </a>
+                      </p>
+                      <p>
+                        <a class="btn btn-block btn-danger" href="#!/listRec"  style="font-size: 1.4em;">Recusados: {{recusados}}</a>
+                      </p>                 
+                      <p>
+                        <a class="btn btn-block btn-primary" href="#!/listSusp"  style="font-size: 1.4em;">Suspensos: {{suspensos}}</a>
+                      </p>  
+                  </div>
+                </div>
+            </div>             
+            
+                <!-- Mural -->
+                <div class="col-sm-12">
+                    <div class="col-sm-12" style="padding-left: 0;padding-right: 0">
+                        <div class="panel panel-{{alerta}}" id="ph2">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Mural</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="panel" style="height: 330px; background-color: #fff; overflow-y: scroll" scroll-glue-bottom>
+                                        <!-- Bloco de conversa -->
+                                <div ng-repeat="conv in conversas" ng-click="selectDestino(conv)">
+                                    <div ng-class="conv.sentido" ng-if="clicked != conv.id">
+                                        <span class="pull-right">
+                                            <small>{{conv.dataenvio}} 
+                                                <strong ng-if="conv.sentido === 'msg-in'"> <- {{conv.userorigem}}</strong>
+                                                <strong ng-if="conv.sentido === 'msg-out'"> -> {{conv.userdestino}}</strong>
+                                            </small>
+                                        </span> </br> 
+                                        <p ng-hide="clicked!=conv.id">{{conv.assunto}}</p>
+                                    </div>
+                                    <div ng-class="conv.sentido" style="border: grey thick solid" ng-if="clicked==conv.id">
+                                        <span class="pull-right">
+                                            <small>{{conv.dataenvio}} 
+                                                <strong ng-if="conv.sentido === 'msg-in'"> <- {{conv.userorigem}}</strong>
+                                                <strong ng-if="conv.sentido === 'msg-out'"> -> {{conv.userdestino}}</strong>
+                                            </small>
+                                        </span> </br> 
+                                        <p ng-show="clicked==conv.id">{{conv.assunto}}</p>                                    
+                                    </div>
+                                </div>
+                                    </div>
+                                    <input class="form-control" type="text" ng-model="assunto"/>
+                                    <div class="col-xs-12">
+                                        <div class="col-xs-8">
+                                                <!-- Split button -->
+                                                <div class="btn-group dropup">
+                                                  <button type="button" class="btn btn-success" ng-click="enviarResposta()">Enviar para</button>
+                                                  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span class="caret"></span>
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                  </button>
+                                                  <ul class="dropdown-menu"  >
+                                                      <li ng-repeat="u in utilizadores | orderBy:'nome' " ng-if="u.id!=sessionStorage.userId && u.ativo==1" ng-click="enviarPara(u)"><a ng-if="u.mural==1" href="" >{{u.nome}} - {{u.tipo}}</a></li>
+                                                  </ul>
+                                                </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>             
+        </div>
+        
+    </div>
+    <br/><br/>
+</div>
+
+
+
+
+<script>
+$.fn.equalizeHeights = function() {
+  var maxHeight = this.map(function( i, e ) {
+    return $( e ).height();
+  }).get();
+  return this.height( Math.max.apply( this, maxHeight ) );
+};
+ 
+
+  $("div .ph").equalizeHeights();
+  $("#ph2").height(($(".ph").height())*2+4);
+</script>

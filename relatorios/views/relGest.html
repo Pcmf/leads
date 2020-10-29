@@ -1,0 +1,138 @@
+<div class="container-fluid">
+    <div class="row">
+        <!--  -->
+        <div class="col-xs-10 col-xs-offset-1 ">
+            <h4 class="text-center text-primary">Relatórios dos Gestores</h4>
+            <br/>
+            <!-- seleção dos dos gestores -->
+            <div class="col-xs-12 col-xs-offset-1 text-center">
+                <div class="form-group col-xs-2">
+                    <label>Gestors</label>
+                    <select class="form-control" ng-model="f.gestor" placeholder="Gestores" ng-change="toogleGestor()">
+                        <option value=""></option>
+                        <option ng-repeat="g in gestores" ng-value="g.id" ng-if="g.tipo=='Gestor'">{{g.nome}}</option>
+                    </select>
+                </div>
+                <div class="col-xs-2">
+                    <div class="form-group">
+                        <label>Todos Gestores
+                            <input class="form-control" type="checkbox" ng-model="f.allGestores" ng-change="toogleGestorAll()"/> 
+                        </label>
+                    </div>
+                </div>
+            
+                <!-- Seleção do periodo-->
+
+                <div class="form-group col-xs-1">
+                    <label>
+                        Este Mês
+                        <input ng-click="clearDatas()" class="form-control" type="radio" ng-model="tml.opc" value="mes"/>
+                    </label>
+                </div>
+                <div class="form-group col-xs-1">
+                    <label>
+                        Hoje
+                        <input ng-click="clearDatas()" class="form-control" type="radio" ng-model="tml.opc" value="dia"/>
+                    </label>
+                </div>
+
+                <div class="form-group col-xs-4">
+                    <label>
+                        De &nbsp;
+                        <input class="form-control" type="date" ng-model="tml.data1" />
+                    </label>
+                    <label>
+                        Até 
+                            <input class="form-control" type="date" ng-model="tml.data2" />
+                    </label>
+                </div> 
+
+                <!-- Botões -->
+                <div class="col-xs-1">
+                    <label>&nbsp;</label>
+                    <button ng-disabled="!f.allGestores && !f.gestor " class="form-control btn btn-success" ng-click="aplicar()"> Aplicar</button>
+                </div>
+                <div class="col-xs-1">
+                    <label>&nbsp;</label>
+                    <button class="form-control btn btn-warning" ng-click="limparFiltro()"> Limpar</button>
+                </div>
+
+            
+            </div>
+
+        </div>
+        
+        <!--  principal -->
+       <div class="col-xs-12">
+            
+           <!-- Painel das Anuladas -->
+            <div class="col-xs-6 relGest">
+                <div class="panel">
+                    <div class="panel-body">
+                        <table ng-table="paramsTable" class="table table-condensed table-striped table-hover table-responsive">
+                            <thead>
+                                <tr><th colspan="6" class="text-center text-primary">Anuladas</th></tr>
+                                <tr>
+                                    <th>LEAD</th>
+                                    <th>Situação</th>
+                                    <th>Justificação</th>
+                                    <th>Chamada</th>
+                                    <th>Data Chamada</th>
+                                    <th>Data Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="d in $data">
+                                    <td><a href="#!/detLead/{{d.id}}">{{d.id}}</a></td>
+                                    <td ng-if="d.status==3">Nº não Atribuido</td>
+                                    <td ng-if="d.status==4">Anulado pelo gestor</td>
+                                    <td>{{d.motivo}}</td>
+                                    <td>{{d.duracao}}</td>
+                                    <td>{{d.dataChamada}}</td>
+                                    <td>{{d.dataStatus}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Painel das Agendadas - não atendidas -->
+            <div class="col-xs-6 relGest">
+                <div class="panel">
+                    <div class="panel-body">
+                        <table ng-table="paramsTable2" class="table table-condensed table-striped table-hover table-responsive">
+                            <thead>
+                                <tr><th colspan="6" class="text-center text-primary">Não Atendidas - com tempos de chamada inferior a 40s</th></tr>
+                                <tr>
+                                    <th>LEAD</th>
+                                    <th>Duração</th>
+                                    <th>Data Chamada</th>
+                                    <th>Telefone</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="d in $data">
+                                    <td><a href="#!/detLead/{{d.id}}">{{d.id}}</a></td>
+                                    <td>{{d.duracao}}</td>
+                                    <td>{{d.data}}</td>
+                                    <td>{{d.telefone}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Painel das Agendadas Manualmente
+            <div class="col-xs-6 bg-success">
+                <p>Anuladas</p>
+            </div> -->
+           
+            <!-- Painel das que aguardam documentação
+            <div class="col-xs-6 bg-warning">
+                <p>Não Atendidas</p>
+            </div>-->
+       </div>
+    </div>
+</div>

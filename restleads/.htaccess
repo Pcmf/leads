@@ -1,0 +1,6 @@
+
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^api\.gestlifes\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.api\.gestlifes\.com$
+RewriteRule ^/?$ "http\:\/\/sisleads\.gestlifes\.com\/leads" [R=301,L]
+

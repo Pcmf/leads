@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!--
+    Listar e editar a situação dos contratos. 
+    Registar datas de envio e permitir anexar documentação do contrato
+-->
+
+<div class="container">
+            <div class="panel panel-success ph">
+              <div class="panel-heading">
+                <h3 class="panel-title" ng-if="sts==5">Listagem dos Atribuidos</h3>
+                <h3 class="panel-title" ng-if="sts==7">Listagem dos Ativados</h3>
+                <h3 class="panel-title" ng-if="sts==6">Listagem dos Recusados</h3>
+              </div>
+              <div class="panel-body">
+
+                      <table  ng-table="paramsTable"  class="table table-condensed table-hover">
+                          <thead class="text-success">
+                              <tr>
+                                  <th>LEAD</th>
+                                  <th>Nome</th>
+                                  <th>Telefone</th>
+                                  <th>Situação</th>
+                                  <th>Data Situação</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr ng-repeat="lc in $data">
+                                  <td>
+                                      <a href="#!detLead/{{lc.lead}}">
+                                          {{lc.lead}}</a></td>
+                                  <td>{{lc.nome}}</td>
+                                  <td>{{lc.telefone}}</td>
+                                  <td>{{lc.statusnome}}</td>
+                                  <td ng-if="sts==5 || sts==6">{{lc.datarespostafinal}}</td>
+                                  <td ng-if="sts==7">{{lc.datarespostafinal}}</td>
+
+                              </tr>
+                          </tbody>
+                      </table>                      
+                </div>
+                <div class="penel-body text-center">
+                    <a class="btn btn-warning" href="#!/cc"><i class="fa fa-undo"> </i> Voltar</a>
+                </div>
+          </div>
+</div>
+
+

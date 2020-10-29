@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--
+    Listar as LEADS finaciadas
+-->
+<div class="container">
+    <h3 class="text-center">Listagem de Financiamentos {{timeLine}}
+        <span class="pull-right form-inline" style="margin-right: 100px">
+           <i class="fa fa-search text-info"></i>
+           <input type="text" ng-model="searchFilter" class="form-control" placeholder="Filtrar por..." >         
+       </span>
+    </h3>
+    <table ng-table="paramsTable" class="table table-bordered table-condensed table-hover">
+        <thead class="bg-primary">
+            <tr>
+                <th>LEAD
+                    <a href="" ng-click="sort('id')" class="sortDir text-danger" ng-class="{ active: isSorted('id') }">&#x25B2;</a>
+                    <a href="" ng-click="sort('-id')" class="sortDir text-danger" ng-class="{ active: isSorted('-id' ) }">&#x25BC;</a>                 
+                </th>
+                <th>Cliente</th>
+                <th>Fornecedor
+                    <a href="" ng-click="sort('nomefornecedor')" class="sortDir text-danger" ng-class="{ active: isSorted('nomefornecedor') }">&#x25B2;</a>
+                    <a href="" ng-click="sort('-nomefornecedor')" class="sortDir text-danger" ng-class="{ active: isSorted('-nomefornecedor' ) }">&#x25BC;</a>                 
+                </th>
+                <th>Tipo 
+                    <a href="" ng-click="sort('tipocredito')" class="sortDir text-danger" ng-class="{ active: isSorted('tipocredito') }">&#x25B2;</a>
+                    <a href="" ng-click="sort('-tipocredito')" class="sortDir text-danger" ng-class="{ active: isSorted('-tipocredito' ) }">&#x25BC;</a>                 
+                </th>
+                <th class="text-center">Valor financiado
+                    <a href="" ng-click="sort('montante')" class="sortDir text-danger" ng-class="{ active: isSorted('montante') }">&#x25B2;</a>
+                    <a href="" ng-click="sort('-montante')" class="sortDir text-danger" ng-class="{ active: isSorted('-montante' ) }">&#x25BC;</a>                 
+                </th>
+                <th>Instituição
+                    <a href="" ng-click="sort('nomeparceiro')" class="sortDir text-danger" ng-class="{ active: isSorted('nomeparceiro') }">&#x25B2;</a>
+                    <a href="" ng-click="sort('-nomeparceiro')" class="sortDir text-danger" ng-class="{ active: isSorted('-nomeparceiro' ) }">&#x25BC;</a>                 
+                </th>
+                <th>Data financiamento
+                    <a href="" ng-click="sort('datafinanciado')" class="sortDir text-danger" ng-class="{ active: isSorted('datafinanciado') }">&#x25B2;</a>
+                    <a href="" ng-click="sort('-datafinanciado')" class="sortDir text-danger" ng-class="{ active: isSorted('-datafinanciado' ) }">&#x25BC;</a>                 
+                </th>
+                <th>Gestor
+                    <a href="" ng-click="sort('gestor')" class="sortDir text-danger" ng-class="{ active: isSorted('gestor') }">&#x25B2;</a>
+                    <a href="" ng-click="sort('-gestor')" class="sortDir text-danger" ng-class="{ active: isSorted('-gestor' ) }">&#x25BC;</a>                 
+                </th>
+                <th>Analista
+                    <a href="" ng-click="sort('analista')" class="sortDir text-danger" ng-class="{ active: isSorted('analista') }">&#x25B2;</a>
+                    <a href="" ng-click="sort('-analista')" class="sortDir text-danger" ng-class="{ active: isSorted('-analista' ) }">&#x25BC;</a>                 
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="d in $data | orderBy:predicate:reverse | filter: searchFilter">
+                <td><a href="#!/detLead/{{d.id}}">{{d.id}}</a></td>
+                <td class="text-capitalize">{{d.nome}}</td>
+                <td>{{d.nomefornecedor}} - {{d.nomelead}}</td>
+                <td>{{d.tipocredito}}</td>
+                <td class="text-right alert alert-danger" ng-if="d.status==12">{{d.montante | currency:'€'}}</td>
+                <td class="text-right alert" ng-if="d.status==7">{{d.montante | currency:'€'}}</td>
+                <td>{{d.nomeparceiro}}</td>
+                <td>{{d.datafinanciado}}</td>
+                <td>{{d.gestor}}</td>
+                <td>{{d.analista}}</td>                
+            </tr>
+            <tr>
+                <td colspan="3">&nbsp;</td>
+                <td colspan="2" class="text-right">Total: {{total | number}} Eur</td>
+                <td colspan="4">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <div class="text-center">
+        <button class="btn btn-warning" onclick="window.history.back(-1)" >Voltar</button>
+    </div>
+    
+</div>

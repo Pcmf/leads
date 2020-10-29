@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--
+    Listar as LEADS financiadas
+-->
+<div class="container">
+    <h3 class="text-center">Listagem {{timeLine}}
+        <span class="pull-right form-inline" style="margin-right: 100px">
+           <i class="fa fa-search text-info"></i>
+           <input type="text" ng-model="searchFilter" class="form-control" placeholder="Filtrar por..." >         
+       </span>
+    </h3>
+    <table ng-table="paramsTable" class="table table-bordered table-condensed table-hover">
+        <thead class="bg-primary">
+            <tr>
+                <th>LEAD
+                    <a href="" ng-click="sort('id')" class="sortDir text-danger" ng-class="{ active: isSorted('id') }">&#x25B2;</a>
+                    <a href="" ng-click="sort('-id')" class="sortDir text-danger" ng-class="{ active: isSorted('-id' ) }">&#x25BC;</a>                 
+                </th>
+                <th>Cliente</th>
+                <th>Telefone</th>
+                <th>Email</th>
+                <th class="text-center">Montante</th>
+                <th class="text-center">Situação
+      <!--              <a href="" ng-click="sort('status')" class="sortDir text-danger" ng-class="{ active: isSorted('status') }">&#x25B2;</a>
+                    <a href="" ng-click="sort('-status')" class="sortDir text-danger" ng-class="{ active: isSorted('-status' ) }">&#x25BC;</a>        -->         
+                </th>
+                <th>Data situação
+                    <a href="" ng-click="sort('datastatus')" class="sortDir text-danger" ng-class="{ active: isSorted('datastatus') }">&#x25B2;</a>
+                    <a href="" ng-click="sort('-datastatus')" class="sortDir text-danger" ng-class="{ active: isSorted('-datastatus' ) }">&#x25BC;</a>                 
+                </th>
+                <th>Gestor</th>
+                <th>Analista</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="d in $data | orderBy:predicate:reverse | filter: searchFilter">
+                <td><a href="#!/detLead/{{d.id}}">{{d.id}}</a></td>
+                <td>{{d.nome}}</td>
+                <td>{{d.telefone}}</td>
+                <td>{{d.email}}</td>
+       <!--         <td class="text-right" ng-show="d.sts!=13 && d.sts!=17 && d.sts!=16 && d.sts!=23 && d.sts!=24">{{d.valorpretendido}} Eur</td>
+                       <td class="text-right" ng-show="d.sts==13 || d.sts==17 || d.sts==16 || d.sts==23 || d.sts==24">{{d.montante}} Eur </td> -->
+                        <td class="text-right">{{d.montante}} Eur </td>
+                <td class="text-center">{{d.status}}</td>
+                <td>{{d.datastatus}}</td>
+                <td>{{d.gestor}}</td>
+                <td>{{d.analista}}</td>                
+            </tr>
+            <tr>
+                <td colspan="4" class="text-right">Total: </td>
+                <td>{{total =d.montante+total | number}} Eur</td>
+                <td colspan="4">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <div class="text-center">
+        <button class="btn btn-warning" onclick="window.history.back(-1)" >Voltar</button>
+    </div>
+    
+</div>

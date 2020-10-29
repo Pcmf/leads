@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+        <h3 class="text-center text-info form-inline">Recuperação  </h3>
+        <h4 class="text-center text-info form-inline">
+            <time-line></time-line>
+        </h4>
+        </div>
+    </div>
+    
+    <div  class="row">
+    <!-- Painel esquerdo com informação das leads -->
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h4 class="text-center">LEADS RECEBIDAS</h4>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Entraram para recuperação</th>
+                                <th>Por Recuperar</th>
+                                <th>Não Atendidas 2ª</th>
+                                <th>Anulado pelo Gestor</th>
+                                <th>Recuperados</th>
+                                <th>Anulados F.Doc</th>
+                                <th>Na Analise</th>
+                                <th>Rej / Recusados</th>
+                                <th>Financiados</th>
+                                <th>Valor Financiado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th class="text-primary" >{{d.inrecup}}</th>
+                                <th class="text-primary" >{{d.pararecup}}</th>
+                                <td class="text-center">{{d.naoatendidos}}</td>
+                                <td class="text-center">{{d.naointeressados}}</td>
+                                <td class="text-center">{{d.recuperados}}</td>
+                                <td class="text-center">{{d.afd}}</td>
+                                <td class="text-center">{{d.analise}}</td>
+                                <td class="text-center">{{d.rejrec}}</td>
+                                <td class="text-center">{{d.financiados}}</td>
+                                <td class="text-center">{{d.valorfin}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

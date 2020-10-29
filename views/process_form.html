@@ -1,0 +1,448 @@
+<!--
+    Janela com formulario do processo de um lado e visualizador de documentação do outro.
+    
+-->
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 class="text-center">Formulário do Processo</h3>
+        </div> 
+    </div>
+    <div class="row">
+        <!-- Painel do formulário -->
+        <div class="col-xs-5" style="border-right: 2px solid blue; height: 1000px; overflow-y: scroll">
+            <div class="panel">
+                        <div class="panel-heading panel-primary">
+                            <h4><strong class="text-primary">{{p.lead}}</strong> - Processo</h4>
+                        </div>
+                        <!-- Dados Pessoais -->
+                        <div class="panel-body">
+                            <ul class="nav nav-pills">
+                                <li role="presentation" ng-class="firstT"><a href="" ng-click="titular = 'primeiro'; secondT = ''; firstT = 'active'">1º Titular</a></li>
+                                <li role="presentation" ng-class="secondT"><a href="" ng-click="titular = 'segundo'; secondT = 'active'; firstT = ''">2º Titular</a></li>
+                                <li role="presentation" ng-if="p.segundoproponente==1"><i class="fa fa-check fa-2x text-success"></i></li> 
+                            </ul>
+                            <!-- PAINEL do 1º TITULAR -->
+                            <div class="primeiro-titular" ng-show="titular == 'primeiro'">
+                                <br/>
+                                <div class="col-xs-12">
+                                    <label class="text-primary text-uppercase">Dados Pessoais</label>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-6">
+                                        <label>Nome</label>
+                                        <input id="nome" class="form-control" type="text" ng-model="p.nome">
+                                    </div>
+                                    <div class="form-group col-xs-3">
+                                        <label>Data de nascimento</label>
+                                        <input id="datanascimento" class="form-control" type="text" 
+                                               ng-model="p.datanascimento" placeholder="dd-mm-aaaa"
+                                               mask="39-19-2999">
+                                    </div> 
+                                    <div class="form-group col-xs-3">
+                                        <label>NIF</label>
+                                        <input id="nif" class="form-control" type="text" ng-model="p.nif">
+                                    </div> 
+                                    <!-- segunda linha -->
+                                    <div class="form group col-xs-4">
+                                        <label >Documento Identificação</label>
+                                        <select  class="form-control" ng-model="p.tipodoc">
+                                            <option  ng-repeat="d in tiposdoc track by d.id" ng-selected='p.tipodoc == d.id' ng-value="d.id">{{d.nome}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-xs-3">
+                                        <label>Numero Documento</label>
+                                        <input id="numdoc" class="form-control" type="text" ng-model="p.numdocumento">
+                                    </div>                                     
+                                    <div class="form-group col-xs-2">
+                                        <label>Validade</label>
+                                        <input id="validade" class="form-control" type="text" 
+                                               ng-model="p.validade"  style="font-size: 1.1em" 
+                                               placeholder="dd-mm-aaaa" mask="39-19-2999">
+                                    </div> 
+                                    <div class="form-group col-xs-3">
+                                        <label>Nacionalidade</label>
+                                        <select class="form-control" ng-model="p.nacionalidade">
+                                            <option value="portuguesa" ng-selected="p.nacionalidade == ''">portuguesa</option>
+                                            <option ng-repeat="n in nacionalidades"  ng-value="n.nacionalidade" ng-selected="n.nacionalidade == p.nacionalidade">{{n.nacionalidade}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-xs-4">
+                                        <label>Estado Civil</label>
+                                        <select class="form-control" ng-model="p.estadocivil" >
+                                            <option ng-repeat="ec in estadoscivis track by ec.id" ng-selected="p.estadocivil == ec.id" ng-value="ec.id">{{ec.nome}}</option>
+                                        </select>
+                                    </div> 
+                                    <div class="form-group col-xs-2">
+                                        <label>Filhos</label>
+                                        <input id="filhos" class="form-control" type="text" ng-model="p.filhos">
+                                    </div>
+
+                                </div> 
+
+                                <!-- Morada e contactos -->
+                                <div class="col-xs-12">
+                                    <label class="text-primary text-uppercase">Morada e contactos</label>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-3">
+                                        <label>Tipo de Habitação</label>
+                                        <select class="form-control" ng-model="p.tipohabitacao" >
+                                            <option ng-repeat="th in tiposhabitacao track by th.id" ng-selected='p.tipohabitacao == th.id' ng-value="th.id">{{th.nome}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-xs-3">
+                                        <label>Desde</label>
+                                        <input id="desde" class="form-control" type="text" ng-model="p.anoiniciohabitacao"
+                                               placeholder="ano">
+                                    </div> 
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-6">
+                                        <label>Morada</label>
+                                        <input id="morada" class="form-control" type="text" ng-model="p.morada">
+                                    </div>
+                                    <div class="form-group col-xs-3">
+                                        <label>Localidade</label>
+                                        <input id="loc" class="form-control" type="text" ng-model="p.localidade">
+                                    </div>  
+                                    <div class="form-group col-xs-3">
+                                        <label>Codigo Postal</label>
+                                        <input id="cp" class="form-control" type="text" ng-model="p.cp"
+                                               placeholder="xxxx-zzz" mask="9999-999">
+                                    </div>                                 
+                                </div>  
+
+                                <!-- Contactos e emails -->
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-3">
+                                        <label>Telefone</label>
+                                        <input id="tel" class="form-control" type="text" ng-model="p.telefone">
+                                    </div>
+                                    <div class="form-group col-xs-6">
+                                        <label>Email</label>
+                                        <input id="email" class="form-control" type="text" ng-model="p.email">
+                                    </div> 
+                                </div>
+                                <!-- Dados Profissionais -->
+                                <div class="col-xs-12">
+                                    <label class="text-primary text-uppercase">Dados Profissionais</label>
+                                </div>
+                                <div class="col-xs-12">
+
+                                    <div class="form-group col-xs-3">
+                                        <label>Sector</label>
+                                        <select class="form-control" ng-model="p.sector">
+                                            <option value="Privado" ng-selected="p.sector == 'Privado'">Privado</option>
+                                            <option value="Publico" ng-selected="p.sector == 'Publico'">Publico</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-xs-3">
+                                        <label>Tipo Contrato</label>
+                                        <select class="form-control" ng-model="p.tipocontrato">
+                                            <option ng-repeat="tc in tiposcontrato track by tc.id" ng-selected='p.tipocontrato == tc.id' ng-value="tc.id">{{tc.nome}}</option>
+                                        </select>
+                                    </div> 
+                                    <div class="form-group col-xs-2">
+                                        <label>Desde Ano</label>
+                                        <input id="dsd" class="form-control" type="text" ng-model="p.desde" placeholder="ano">
+                                    </div>
+                                    <div class="form-group col-xs-2">
+                                        <label>Mês</label>
+                                        <select class="form-control" ng-model="p.desdemes">
+                                            <option value="1" ng-selected="p.desdemes == 1">Jan</option>
+                                            <option value="2" ng-selected="p.desdemes == 2">Fev</option>
+                                            <option value="3" ng-selected="p.desdemes == 3">Mar</option>
+                                            <option value="4" ng-selected="p.desdemes == 4">Abr</option>
+                                            <option value="5" ng-selected="p.desdemes == 5">Mai</option>
+                                            <option value="6" ng-selected="p.desdemes == 6">Jun</option>
+                                            <option value="7" ng-selected="p.desdemes == 7">Jul</option>
+                                            <option value="8" ng-selected="p.desdemes == 8">Ago</option>
+                                            <option value="9" ng-selected="p.desdemes == 9">Set</option>
+                                            <option value="10" ng-selected="p.desdemes == 10">Out</option>
+                                            <option value="11" ng-selected="p.desdemes == 11">Nov</option>
+                                            <option value="12" ng-selected="p.desdemes == 12">Dez</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-xs-6">
+                                        <label>Nome da Empresa</label>
+                                        <input id="emp" class="form-control" type="text" ng-model="p.nomeempresa">
+                                    </div>
+                                    <div class="form-group col-xs-3">
+                                        <label>NIF Empresa</label>
+                                        <input id="nifemp" class="form-control" type="text" ng-model="p.nifempresa">
+                                    </div>
+                                    <div class="form-group col-xs-3">
+                                        <label>Telefone</label>
+                                        <input id="tlf" class="form-control" type="text" ng-model="p.telefoneempresa">
+                                    </div>
+                                </div>
+
+                                <!-- Dados Bancarios -->
+                                <div class="col-xs-12">
+                                    <label class="text-primary text-uppercase">Dados Bancarios</label>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-6">
+                                        <label>IBAN</label>
+                                        <input id="iban" class="form-control" type="text" ng-model="p.iban">
+                                    </div>
+                                    <div class="form-group col-xs-3">
+                                        <label>Desde</label>
+                                        <input id="dsdiban" class="form-control" type="text" 
+                                               ng-model="p.ibandesde" placeholder="ano">
+                                    </div>  
+                                    <div class="form-group col-xs-3">
+                                        <label >Dia Pagamento</label>
+                                        <select id="dsdia" class="form-control" ng-model="p.diaprestacao">
+                                            <option value="1" ng-selected="p.diapretacao==1">1</option>
+                                            <option value="5" ng-selected="p.diapretacao==5">5</option>
+                                            <option value="10" ng-selected="p.diapretacao==10">10</option>
+                                            <option value="25" ng-selected="p.diapretacao==25">25</option>
+                                        </select>
+                                    </div>                                         
+                                </div> 
+
+                            </div>
+                            
+                            
+                            <!-- Painel do segundo titular -->
+                            <div class="segundo-titular" ng-show="titular == 'segundo'">
+                                <br/>
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-2">
+                                        <label>2º Titular</label>
+                                        <select class="form-control"
+                                               ng-model="p.segundoproponente" 
+                                               ng-change="clear2TitularDados(p)">
+                                            <option value="0" ng-selected="p.segundoproponente==0">Não</option>
+                                            <option value="1" ng-selected="p.segundoproponente==1">Sim</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-xs-4"  ng-if="p.segundoproponente == true || p.segundoproponente == 1">
+                                        <label>Relação Familiar</label>
+                                        <select class="form-control" ng-model="p.relacaofamiliar" >
+                                            <option ng-repeat="rf in relacoesfamiliares track by rf.id" ng-selected="p.relacaofamiliar == rf.id" ng-value="rf.id">{{rf.descricao}}</option>
+                                        </select>
+                                    </div>  
+                                </div>
+                                <!--Dados pessoais do segundo titular-->
+                                <div ng-if="p.segundoproponente == true || p.segundoproponente == 1">
+                                    <div  class="col-xs-12">
+                                        <div class="form-group col-xs-6">
+                                            <label>Nome do 2º titular</label>
+                                            <input id="nome2" class="form-control" type="text" ng-model="p.nome2">
+                                        </div>
+                                        <div class="form-group col-xs-3">
+                                            <label>Data de nascimento 2ºT</label>
+                                            <input id="dtnasc2" class="form-control" type="text" ng-model="p.datanascimento2"
+                                                   placeholder="dd-mm-aaaa" mask="39-19-2999">
+                                        </div>
+                                        <div class="form-group col-xs-3">
+                                            <label>NIF 2º titular</label>
+                                            <input id="nif2" class="form-control" type="text" ng-model="p.nif2">
+                                        </div>
+                                    </div>
+                                    <!-- segunda linha -->
+                                    <div  class="col-xs-12">
+                                        <div class="form group col-xs-4">
+                                            <label>Documento Identificação 2ºT</label>
+                                            <select class="form-control" ng-model="p.tipodoc2">
+                                                <option ng-repeat="d in tiposdoc track by d.id" ng-selected='p.tipodoc2 == d.id' ng-value="d.id">{{d.nome}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-xs-3">
+                                            <label>Numero Documento 2ºT</label>
+                                            <input id="numdoc2" class="form-control" type="text" ng-model="p.numdocumento2">
+                                        </div>                                     
+                                        <div class="form-group col-xs-2">
+                                            <label>Validade 2ºT</label>
+                                            <input id="validade2" class="form-control" type="text" 
+                                                   ng-model="p.validade2"  style="font-size: 1.1em"
+                                                   placeholder="dd-mm-aaaa" mask="39-19-2999">
+                                        </div> 
+                                        <div class="form-group col-xs-3">
+                                            <label>Nacionalidade 2ºT</label>
+                                            <select class="form-control" ng-model="p.nacionalidade2">
+                                                <option value="portuguesa" ng-selected="p.nacionalidade2 == ''">portuguesa</option>
+                                                <option ng-repeat="n in nacionalidades"  ng-value="n.nacionalidade" ng-selected="n.nacionalidade == p.nacionalidade2">{{n.nacionalidade}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Morada e contactos -->
+                                    <div class="col-xs-12">
+                                        <label class="text-primary text-uppercase">Morada e contactos</label>
+                                    </div>
+
+                                    <!-- morada 2º Titular -->
+                                    <div class="col-xs-12">
+                                        <div class="form-group col-xs-3">
+                                            <label>Mesma do 1º</label>
+                                            <input class="form-control" type="checkbox" ng-model="p.mesmahabitacao" ng-change="clearDadoshibitacao2()"
+                                                   ng-checked="p.mesmahabitacao == true || p.mesmahabitacao == 1">
+                                        </div>                                                
+
+                                        <div ng-if="(!p.mesmahabitacao || p.mesmahabitacao == 0)">
+                                        
+                                            <div class="form-group col-xs-3">
+                                                <label>Tipo de Habitação 2º</label>
+                                                <select class="form-control" ng-model="p.tipohabitacao2" >
+                                                    <option ng-repeat="th in tiposhabitacao track by th.id" ng-selected='p.tipohabitacao2 == th.id' ng-value="th.id">{{th.nome}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-xs-3">
+                                                <label>Desde</label>
+                                                <input id="desde2" class="form-control" type="text" 
+                                                       ng-model="p.anoiniciohabitacao2" placeholder="ano">
+                                            </div> 
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12" ng-if="(!p.mesmahabitacao || p.mesmahabitacao == 0)">
+                                        <div class="form-group col-xs-6">
+                                            <label>Morada do 2º titular</label>
+                                            <input id="morada2" class="form-control" type="text" ng-model="p.morada2">
+                                        </div>
+                                        <div class="form-group col-xs-3">
+                                            <label>Localidade</label>
+                                            <input id="loc2" class="form-control" type="text" ng-model="p.localidade2">
+                                        </div>  
+                                        <div class="form-group col-xs-3">
+                                            <label>Codigo Postal</label>
+                                            <input id="cp2" class="form-control" type="text" ng-model="p.cp2"
+                                                   placeholder="xxxx-zzz" mask="9999-999">
+                                        </div>                                 
+                                    </div>  
+                                    <!-- Contactos e emails -->
+                                    <div class="col-xs-12">
+                                            <div class="form-group col-xs-3">
+                                                <label>Telefone 2ºT</label>
+                                                <input id="tel2" class="form-control" type="text" ng-model="p.telefone2">
+                                            </div>
+                                            <div class="form-group col-xs-6">
+                                                <label>Email 2º Titular</label>
+                                                <input id="email2" class="form-control" type="text" ng-model="p.email2">
+                                            </div> 
+                                    </div>
+                                    <!-- Dados Profissionais -->
+                                    <div class="col-xs-12">
+                                        <div class="form-group col-xs-3">
+                                            <label>Sector 2ºT</label>
+                                            <select class="form-control" ng-model="p.sector2">
+                                                <option value="Privado" ng-selected="p.sector2 == 'Privado'">Privado</option>
+                                                <option value="Publico" ng-selected="p.sector2 == 'Publico'">Publico</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-xs-3">
+                                            <label>Tipo Contrato 2ºT</label>
+                                            <select class="form-control" ng-model="p.tipocontrato2">
+                                                <option ng-repeat="tc in tiposcontrato track by tc.id" ng-selected='p.tipocontrato2 == tc.id' ng-value="tc.id">{{tc.nome}}</option>
+                                            </select>
+                                        </div> 
+                                        <div class="form-group col-xs-2">
+                                            <label>Desde 2ºT</label>
+                                            <input id="dsd2" class="form-control" type="text" ng-model="p.desde2" placeholder="ano">
+                                        </div>
+                                        <div class="form-group col-xs-2">
+                                            <label>Mês</label>
+                                            <select class="form-control" ng-model="p.desdemes2">
+                                                <option value="1" ng-selected="p.desdemes2 == 1">Jan</option>
+                                                <option value="2" ng-selected="p.desdemes2 == 2">Fev</option>
+                                                <option value="3" ng-selected="p.desdemes2 == 3">Mar</option>
+                                                <option value="4" ng-selected="p.desdemes2 == 4">Abr</option>
+                                                <option value="5" ng-selected="p.desdemes2 == 5">Mai</option>
+                                                <option value="6" ng-selected="p.desdemes2 == 6">Jun</option>
+                                                <option value="7" ng-selected="p.desdemes2 == 7">Jul</option>
+                                                <option value="8" ng-selected="p.desdemes2 == 8">Ago</option>
+                                                <option value="9" ng-selected="p.desdemes2 == 9">Set</option>
+                                                <option value="10" ng-selected="p.desdemes2 == 10">Out</option>
+                                                <option value="11" ng-selected="p.desdemes2 == 11">Nov</option>
+                                                <option value="12" ng-selected="p.desdemes2 == 12">Dez</option>
+                                            </select>
+                                        </div> 
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <div class="form-group col-xs-6">
+                                            <label>Nome da Empresa 2ºT</label>
+                                            <input id="emp2" class="form-control" type="text" ng-model="p.nomeempresa2">
+                                        </div>
+                                        <div class="form-group col-xs-3">
+                                            <label>NIF Empresa 2ºT</label>
+                                            <input id="nifemp2" class="form-control" type="text" ng-model="p.nifempresa2">
+                                        </div>
+                                        <div class="form-group col-xs-3">
+                                            <label>Telefone 2ºT</label>
+                                            <input id="tlf2" class="form-control" type="text" ng-model="p.telefoneempresa2">
+                                        </div>                                   
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Botão para guardar -->
+                            <div class="col-xs-12">
+                                <button class="btn btn-success btn-block" ng-click="sendToAnalise(p)">GUARDAR E ENVIAR PARA ANALISE</button>
+                                <button class="btn btn-primary btn-block" ng-click="saveProcesso(p)">GUARDAR SEM ENVIAR</button>
+                            </div>
+                        </div>
+                    </div>
+        </div>
+                    
+        <!-- Painel da Documentação -->
+        <div class="col-xs-7">
+            <div class="panel"  ng-if="!showDoc">
+                <div class="panel-heading">
+                    <h4><strong class="text-primary">{{dl.id}}</strong> - Documentação Pedida / Recebida </h4>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-condensed table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Documento Pedido</th>
+                                <th>Ficheiro</th>
+                                <th>Recebido</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="d in docs">
+                                <td>{{d.nomedoc}}</td>
+                                <td>{{d.nomefx}}</td>
+                                <td ng-if="d.recebido == 1" class="text-success">SIM</td>
+                                <td ng-if="d.recebido == 0" class="text-danger">NÃO</td> 
+                                <td class="text-right">
+                                    <button ng-if="d.recebido == 1 && d.nomefx" class="btn btn-success btn-sm" ng-click="verDoc(d)" title="Ver documentos"><i class="fa fa-eye"></i></button>
+                                    <button ng-if="d.recebido == 1 && d.nomefx" ng-click="descarregarDoc(d)" class="btn btn-primary btn-sm" title="Descarregar para pasta temporaria"><i class="fa fa-download"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="panel-footer text-center">
+                        <button class="btn btn-primary" ng-click="descarregarDocs(dl.id)"><i class="fa fa-download"> </i> Descarregar Todos</button>
+                    </div> 
+
+                </div>
+            </div>
+
+
+
+
+            <!-- Visualiza a Documentação -->
+            <div ng-if="showDoc">
+                <div class="panel-header bg-info">
+                    <h3 class="modal-title">{{nomedoc}}
+                        <span class="closeModal" ng-click="closeShowDoc()">X</span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <iframe ng-if="imagePath" ng-src="{{imagePath}}" width="1100px" height="800px"></iframe> 
+                </div>
+
+                <div class="panel-footer">
+                    <div class="text-center">
+                        <button class="btn btn-warning" ng-click="closeShowDoc()">Fechar</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

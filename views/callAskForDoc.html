@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="container">
+    <div class="">
+        <h3 class="text-center text-info">Fazer Chamada a Pedir Documentação</h3>
+    </div>
+    <div class="row">
+        <div class="col-xs-10 col-xs-offset-2">
+                    <div class="form-group-sm col-sm-2">
+                        <label>Cliente</label>
+                        <input type="text" class="form-control" ng-model="dl.lead" readonly=""/>
+                    </div>
+                    <div class="form-group-sm col-sm-2">
+                        <label>Data Entrada</label>
+                        <input type="text" class="form-control" ng-model="dl.dataentrada" readonly=""/>
+                    </div>                
+                    <div class="form-group-sm col-sm-2">
+                        <label>Situação</label>
+                        <input ng-click="ativar(dl)" type="text" class="form-control" ng-model="dl.status" readonly=""/>
+                        
+                    </div>
+                    <div class="form-group-sm col-sm-2">
+                        <label>Data Situação</label>
+                        <input type="text" class="form-control" ng-model="dl.datastatus" readonly=""/>
+                    </div>
+        </div>
+        <div class="col-xs-10 col-xs-offset-2">
+                <div class="form-group-sm col-xs-3">
+                    <label>Nome </label>
+                    <input class="form-control" type="text" ng-model="dl.nome" title="{{dl.nome}}" readonly=""/>
+                </div>
+                <div class="form-group-sm col-xs-1">
+                    <label>Idade </label>
+                    <input  class="form-control" type="text" ng-model="dl.idade" readonly=""/>
+                </div>
+                <div class="form-group-sm col-xs-2">
+                    <label>Telefone </label>
+                    <input  class="form-control" type="text" ng-model="dl.telefone" readonly=""/>
+                </div>
+                <div class="form-group-sm col-xs-3">
+                    <label>Email </label>
+                        <div class="input-group">
+                        <input type="text" class="form-control" ng-model="dl.email">
+                        <span class="input-group-btn">
+                          <button class="btn btn-info btn-sm"  ng-click="alterar(dl.email)" ><i class="fa fa-save"></i></button>
+                        </span>
+                      </div>
+                </div>
+        </div>
+         <div class="col-xs-10 col-xs-offset-2">
+                <div class="form-group-sm col-xs-2">
+                    <label for="montante">Valor Pretendido</label>
+                    <input id="montante" name="montante" string-to-number  class="form-control no-spinner" min="0" type="number" ng-model="dl.valorpretendido" readonly=""/>
+                </div>
+                <div class="form-group-sm col-xs-2">
+                    <label for="tipoLead">Tipo Crédito</label>                
+                    <select id="tipoLead" class="form-control" ng-model="dl.tipocredito" readonly="">
+                        <option value="CP" ng-selected="dl.tipocredito=='CP'">C. Pessoal</option>
+                        <option value="CC" ng-selected="dl.tipocredito=='CC'">C. Consolidado</option>
+                        <option value="CT" ng-selected="dl.tipocredito=='CT'">Cartão  Crédito</option>
+                        <option value="AU" ng-selected="dl.tipocredito=='AU'">Auto</option>
+                    </select>
+                </div>                
+                <div class="form-group-sm col-xs-1">
+                    <label for="numprestacoes">Prazo </label>
+                    <input id="numprestacoes" class="form-control no-spinner" string-to-number  min="0" type="number" ng-model="dl.prazopretendido" readonly=""/>
+                </div>
+                <div class="form-group-sm col-xs-1">
+                    <label for="valorprestacao">Prestação </label>
+                    <input id="valorprestacao" class="form-control no-spinner" string-to-number  min="0" type="number" ng-model="dl.prestacaopretendida"  readonly=""/>
+                </div>
+                <div class="form-group-sm col-xs-3">
+                    <label for="finalidade">Finalidade</label>
+                    <input id="finalidade" name="finalidade" class="form-control" type="text" ng-model="dl.finalidade"  readonly=""/>
+                </div>
+        </div>
+         <div class="col-xs-12">
+             <p>&nbsp;</p>
+                <div class="form-group-sm col-xs-6 col-xs-offset-2">
+                <table class="table table-condensed table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Documento Pedido</th>
+                            <th>Recebido</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="d in docs">
+                            <td>{{d.nomedoc}}</td>
+                            <td ng-if="d.recebido==1" class="text-success">SIM</td>
+                            <td ng-if="d.recebido==0" class="text-danger">NÃO</td> 
+                            <td>
+                                <button ng-if="d.recebido==1" class="btn btn-success btn-sm" title="Visualizar este documento" ng-click="verDoc(d)"><i class="fa fa-eye"></i></button>
+                                <button ng-if="d.recebido==0" class="btn btn-danger btn-sm" title="Remover este documento do pedido" ng-click="removerDoc(d)"><i class="fa fa-times"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+             <div class="col-xs-3">
+                 <p>&nbsp;</p>
+                 <button class="btn btn-info" ng-click="editDocuments()" ><i class="fa fa-pencil-alt"></i> Editar Documentos</button>
+                 <p></p>
+                 <button class="btn btn-primary" ng-click="sendEmail()"><i class="fa fa-envelope"></i> Enviar novo Pedido</button>
+                <p></p>
+                <button class="btn btn-danger" ng-click="cancelProcess()"><i class="fa fa-thumbs-down"></i> Cancelar Processo</button>
+             </div>
+         </div>
+    </div>
+    <div class="col-xs-10 col-xs-offset-2">
+        <p>&nbsp;</p>
+        <button ng-if="mkCall" class="btn btn-success btn-lg" ng-click="makeCall()"><i class="fa fa-phone"> Fazer chamada</i></button>
+        <button ng-if="!mkCall" class="btn btn-danger btn-lg" ng-click="makeCall()"><i class="fa fa-phone-volume"> Terminar chamada </i></button>
+        <button ng-disabled="mkCall" class="btn btn-danger btn-lg"  ng-click="naoAtende()"><i class="glyphicon glyphicon-phone-alt"> </i> Não atende</button>
+        <button  class="btn btn-warning btn-lg" ng-click="voltar()"><i class="fa fa-undo"> Voltar </i></button>
+        <div class="form-group col-sm-6 pull-right">
+            <label>Agendar
+            <input class="form-control" type="date" ng-model="dataAgenda">
+            </label>
+            <button ng-disabled="!dataAgenda" class="btn btn-info btn-lg" ng-click="agendaData()"><i class="fa fa-calendar"> </i> Agendar</button>
+        </div>
+        
+    </div>
+</div>
+
+
+<!-- Modal para Pedir Doc. Seleciona o tipo de pedido de documentação.
+    TODO- Preenche a morada ou confirma o email -  Regista a data espectavél da receção dos documentos   -->
+<script type="text/ng-template" id="modalPedirDocs.html" ng-controller="modalInstancePedirDocs">
+<div class="modal-header bg-info">
+<h3 class="modal-title"><strong class="text-primary">{{lead}}</strong> - Documentação Necessária
+        <span class="closeModal" ng-click="closeModal()">X</span>
+    </h3>
+</div>
+
+    <div class="modal-body">
+        <div class="container">
+            <div class="row">
+
+        <!-- Listagem dos documentos a pedir, com check box para selecionar -->
+                <div class=" col-xs-12">
+                    <ul class="list-unstyled col-xs-12 col-md-6" ng-repeat="doc in docs track by doc.id">
+                        <li>
+                            <label>
+                                 <input class="checkbox-group" type="checkbox" checklist-model="d.docs" checklist-value="doc"/> 
+                                 {{doc.nomedoc}}
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="form-group col-xs-12 col-md-6">
+                    <br/>
+                    <label>Outro Documento</label>
+                    <input class="form-control" type='text' ng-model="outroDoc"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="text-center">
+            <button class="btn btn-success" ng-click="enviarPedidoDocEmFalta(lead,d)">Pedir documentação em falta e a selecionada</button>
+            <button class="btn btn-success" ng-click="enviarPedidoDoc(d)">Pedir Apenas a Selecionado</button>
+            <a class="btn btn-warning" ng-click="closeModal()">Cancelar</a>
+        </div>         
+    </div>
+</script>

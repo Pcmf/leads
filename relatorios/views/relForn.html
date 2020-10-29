@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<!--
+        filtros e seleções para relatorios sobre fornecedores
+-->
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 text-center bg-primary">
+            <h4 class="text-center text-primary">Relatório de Fornecedores</h4>
+            <div class="form-group col-xs-2 col-xs-offset-1">
+                <label>Fornecedores
+                    <select class="form-control" ng-model="sl.fornSel" ng-change="selectedForn()">
+                        <option ng-repeat="f in fornecedores" ng-value="f">{{ f.nome}}</option>
+                    </select>
+                </label>
+            </div>
+            <div class="form-group col-xs-2">
+                <label>
+                    De
+                    <input class="form-control" type="date" ng-model="sl.data1" />
+                </label>
+            </div>
+            <div class="form-group col-xs-2">
+                <label>
+                    Até <small> (Opcional)</small>
+                    <input class="form-control" type="date" ng-model="sl.data2" />
+                </label>
+            </div>
+
+            <div class="col-xs-4">
+                <label>&nbsp;
+                        <button class="btn btn-warning btn-block" ng-click="limparDados()">Limpar</button>
+                </label> 
+                <label>&nbsp;
+                    <button class="btn btn-success btn-block" ng-click="criarRelatorio(sl)">Aplicar</button>
+                </label>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tabela Resumo -->
+    <div class="col-xs-8 col-xs-offset-2">
+        <table class="table table-responsive table-bordered" ng-if="respostas">
+            <thead class="bg-info">
+                <tr>
+                    <th colspan="3" class="text-center text-primary"><h4>Fornecedor: {{fornecedor}}</h4></th>
+                    </tr>
+                    <tr>
+                        <th>Situação</th>
+                        <th>Quantidade</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Recebidas</td>
+                        <td class="text-right">{{respostas.recebidas}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Por contactar</td>
+                        <td class="text-right">{{respostas.porcontactar}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Não atribuidas</td>
+                        <td class="text-right">{{respostas.naoatribuidas}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Anuladas pelo gestor</td>
+                        <td class="text-right"><a href="#!/rDet/4/{{fornId}}/{{datas}}/" >{{respostas.anulgestor}}</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Anuladas por excesso de tempo</td>
+                        <td class="text-right">{{respostas.anultempo}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Agendadas automaticamente</td>
+                        <td class="text-right">{{respostas.agendaauto}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Agendadas pelo gestor</td>
+                        <td class="text-right">{{respostas.agendagestor}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Aguardam documentação</td>
+                        <td class="text-right"><a href="#!/rDet/8/{{fornId}}/{{datas}}/" >{{respostas.aguardadoc}}</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Para Analise</td>
+                        <td class="text-right"><a href="#!/rDet/10/{{fornId}}/{{datas}}/" >{{respostas.paraanalise}}</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Pendentes na analise</td>
+                        <td class="text-right"><a href="#!/rDet/13/{{fornId}}/{{datas}}/" >{{respostas.pendente}}</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Recusada pelo analista</td>
+                        <td class="text-right"><a href="#!/rDet/14/{{fornId}}/{{datas}}" >{{respostas.recusada}}</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Não aprovadas</td>
+                        <td class="text-right"><a href="#!/rDet/15/{{fornId}}/{{datas}}" >{{respostas.naoaprovado}}</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Desistencias</td>
+                        <td class="text-right"><a href="#!/rDet/18/{{fornId}}/{{datas}}" >{{respostas.desistiu}}</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Recusada após financiamento</td>
+                        <td class="text-right"><a href="#!/rDet/19/{{fornId}}/{{datas}}" >{{respostas.recaposfin}}</a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Aprovados</td>
+                        <td class="text-right"><a href="#!/rDet/16/{{fornId}}/{{datas}}" >{{respostas.aprovado.QTY}}</a></td>
+                        <td class="text-right">{{respostas.aprovado.TOTAL | currency:'€'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Financiados</td>
+                        <td class="text-right">{{respostas.financiado.QTY}}</td>
+                        <td class="text-right">{{respostas.financiado.TOTAL | currency:'€'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+
+</div>
+
+
+<!-- Modal para ver detalhe   
+<script type="text/ng-template" id="modalDet.html" ng-controller="modalInstanceDet"> 
+   
+    <div class="modal-body">
+    
+    </div>
+</script>-->

@@ -1,0 +1,28 @@
+<!-- Criação de uma LEAD on location -->
+
+<div class="container">
+    <div class="row">
+        <form ng-submit="criaLead(c)">
+            <div class=" col-xs-12 text-center">
+                <h3 class="text-info">Criação de LEAD no local</h3>
+                <div class="form-group-sm col-xs-6">
+                    <label>Nome da LEAD / Origem<small class="text-danger"> *</small></label>
+                    <input class="form-control" type="text" ng-model="c.nomelead" required=""/>
+                </div>            
+            </div>
+            <!-- Formulario para registo do contacto -->
+
+            <div class="col-xs-12">
+
+                <div class="form-group-sm col-xs-2">
+                    <label>Fornecedor<small class="text-danger"> *</small></label>
+                    <select class="form-control" ng-model="c.fornecedor" ng-options="fornecedor.nome for fornecedor in fornecedores track by fornecedor.id" required=""></select>
+                </div>
+            </div>
+            
+                            <!--Botões -->
+                <div class="col-xs-12 text-center">
+                    <button class="btn btn-success" type="submit">Seguinte</button>
+                    <button class="btn btn-warning" type="button" onclick="window.history.back(-1)">Cancelar</button>
+                </div>
+        </form>

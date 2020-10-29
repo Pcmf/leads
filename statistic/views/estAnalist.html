@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="container">
+    <h3 class="text-center text-info form-inline">Estatisticas - Analistas</h3>
+    <h4 class="text-center text-info form-inline">
+        <time-line></time-line>
+    </h4>
+    
+    <div class="row">
+    <!-- Painel esquerdo com informação das leads -->
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h4 class="text-center">ANALISTAS</h4>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Puxadas</th>
+                                <th>Pendentes</th>
+                                <th>Aguardam DOC</th>
+                                <th>Recusados</th>
+                                <th>Aprovados</th>
+                                <th>Financiados</th>
+                                <th>Rejeitados</th>
+                                <th>Desistencias</th>
+                                <th>Anulados FCP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="a in byAnalist">
+                                <td class="text-primary"><a href="#!/listA/{{a.id}}/all/{{timeLine}}">{{a.analista}}</a></td>
+                                <td class="text-center"><strong>{{a.puxadas}}</strong></td>
+                                <td class="text-center"><a href="#!/listA/{{a.id}}/pen/{{timeLine}}">{{a.pendentes}}</a></td>
+                                <td class="text-center"><a href="#!/listA/{{a.id}}/adoc/{{timeLine}}">{{a.adoc}}</a></td>
+                                <td class="text-center"><a href="#!/listA/{{a.id}}/nul/{{timeLine}}">{{a.anulados}}</a></td>
+                                <td class="text-center"><a href="#!/listA/{{a.id}}/apv/{{timeLine}}">{{a.aprovados}}</a></td>
+                                <td class="text-center"><a href="#!/listA/{{a.id}}/fin/{{timeLine}}">{{a.financiados}}</a></td>
+                                <td class="text-center"><a href="#!/listA/{{a.id}}/rjt/{{timeLine}}">{{a.rejeitados}}</a></td>
+                                <td class="text-center"><a href="#!/listA/{{a.id}}/des/{{timeLine}}">{{a.desistencias}}</a></td>
+                                <td class="text-center"><a href="#!/listA/{{a.id}}/afcp/{{timeLine}}">{{a.anuladosFCP}}</a></td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">Total que entraram para analise: &nbsp;&nbsp;  <span class="text-primary " style="font-size: 1.3em"> {{paraanalise}}</span></th>
+                                <td colspan="7">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">Total que estão á espera: &nbsp;&nbsp;  <span class="text-primary " style="font-size: 1.3em"> {{openparaanalise}}</span></th>
+                                <td colspan="7">&nbsp;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>

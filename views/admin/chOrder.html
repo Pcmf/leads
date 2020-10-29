@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--
+    Pesquisar em leads novas, por telefone, nif ou email, 
+    e colocar como ativa num determinado Gestor
+-->
+
+<div class="container">
+    <div class="row">
+        <div class="panel" style="min-height: 350px">
+            <div class="panel-heading">
+                <h3>Colocar um Processo em "Em Analise" num analista.</h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-xs-12">
+                    <div class="form-group-sm col-xs-2">
+                        <label >Nº Cliente </label>
+                        <input class="form-control no-spinner" string-to-number type="number" ng-model="lead"/>
+                    </div>
+                 
+                </div>
+
+                
+                <div class="col-xs-12">
+                    <br/>
+                    <div class="form-group-sm col-xs-4">
+                        <label>Atribuir a:</label>
+                        <select class="form-control" ng-model="g" ng-options="g.nome for g in users track by g.id"/></select>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="text-center">
+                    <button class="btn btn-success" ng-click="chLeadToAnalise(lead,g)"><i class="fa fa-save"></i> Guardar</button>
+                    <a href="#!/dashboard" class="btn btn-warning"><i class="fa fa-undo"></i> Voltar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+     
+
