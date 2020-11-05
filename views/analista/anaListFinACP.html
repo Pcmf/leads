@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<!--
+    Listar as LEADS finaciadas
+-->
+<div class="container">
+    <h3 class="text-center">Financiados - ACP 
+        <span class="pull-right form-inline" style="margin-right: 100px">
+           <i class="fa fa-search text-info"></i>
+           <input type="text" ng-model="searchFilter" class="form-control" placeholder="Filtrar por..." >         
+       </span>    
+    </h3>    
+    <table ng-table="paramsTable" class="table table-bordered table-condensed table-hover">
+        <thead class="bg-primary">
+            <tr>
+                <th>LEAD</th>
+                <th>Cliente</th>
+                <th>Processo</th>
+                <th>Parceiro</th>
+                <th>Montante</th>
+                <th>Data do Financiamento</th>
+                <th>Dias ACP</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="d in $data | filter: searchFilter">
+                <td><a href="#!/detLead/{{d.lead}}" class="btn btn-sm btn-success" title="Ver detalhes">{{d.lead}}</a></td>
+                <td>{{d.cliente}}</td>
+                <td>{{d.processo}}</td>
+                <td>{{d.parceiro}}</td>
+                <td>{{d.montante}}</td>
+                <td ng-if="d.diasAlerta<10">{{d.dtfinanciado}} </td>
+                <td ng-if="d.diasAlerta>=10" class="bg-danger">{{d.dtfinanciado}}</td>
+                    
+                <td ng-if="d.diasAlerta<10" class="text-center"> {{d.diasAlerta}}</td>
+                <td ng-if="d.diasAlerta>=10" class="bg-danger text-center"><strong>  {{d.diasAlerta}} </strong> </td>
+                <td >
+                    <button ng-click="anexarComprovativos(d.lead)" class="btn btn-sm btn-info" title="Anexar Comprovativos"><i class="fa fa-upload"></i></button>
+                    <button ng-click="anularPorFaltaComprovativo(d.lead)" class="btn btn-sm btn-danger" title="Anular por falta de Comprovativos"><i class="fa fa-times"></i></button>
+                </td>                
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <div class="text-center">
+        <button class="btn btn-warning" onclick="window.history.back()">Voltar</button>
+    </div>
+    
+</div>
+
+
+<!-- Modal para listar os comprovativos a anexar -->
+<script type="text/ng-template" id="modalAnexarComprovativosList.html" ng-controller="modalInstanceAnexarComprovativosList">  
+    <div class="modal-header bg-info">
+        <h3 class="modal-title">Anexar Comprovativos - LEAD: {{lead}}
+            <span class="closeModal" ng-click="closeModal()">X</span>
+        </h3>
+    </div>
+
+    <div class="panel-body">
+            <table class="table table-condensed table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Instituição</th>
+                        <th>Tipo</th>
+                        <th>Montante</th>
+                        <th>Recebido
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="c in comprovativos">
+                        <td>{{c.instituicao}}</td>
+                        <td>{{c.tipo}}</td>
+                        <td>{{c.montante}}</td>
+                        <td ng-if="c.status==1" class="text-success">SIM</td>
+                        <td ng-if="c.status==0" class="text-danger">NÃO</td> 
+                        <td class="text-right">
+                            <button ng-if="c.status==1" class="btn btn-success btn-sm" ng-click="verComprovativo(c)" title="Ver Comprovativo"><i class="fa fa-eye"></i></button>
+                   <!--         <button ng-if="c.status==1" ng-click="changeDoc(c)" class="btn btn-info btn-sm" title="Alterar a designação"><i class="fa fa-pencil-alt"></i></button> -->
+                            <button ng-if="c.status==1" ng-click="descarregarComprovativo(c)" class="btn btn-primary btn-sm" title="Descarregar para pasta temporaria"><i class="fa fa-download"></i></button>
+                            <button ng-if="c.status==0" ng-click="anexarComprovativo(c)" class="btn btn-info btn-sm" title="Anexar comprovativo"><i class="fa fa-upload"></i></button>
+                            <button ng-if="c.status==1" ng-click="removerComprovativo(c)" class="btn btn-danger btn-sm" title="Remover comprovativo"><i class="fa fa-times"></i></button>
+                            <button ng-if="c.status==0" ng-click="removerPedidoComprovativo(c)" class="btn btn-danger btn-sm" title="Remover pedido de comprovativo"><i class="fa fa-times"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        <div class="panel-footer text-center">
+            <button  class="btn btn-success" ng-click="finalizar(lead)" title="Finalizar o processo como financiado e todos os comprovativos recebidos."><i class="fa fa-check"> </i> Finalizar</button>
+            <button class="btn btn-warning" ng-click="closeModal()">Fechar</button>
+        </div>
+
+    </div>
+
+</script>
+
+<!-- Modal para anexar comprovativo -->
+<script type="text/ng-template" id="modalAnexarComprovativo.html" ng-controller="modalInstanceAnexarComprovativo">  
+    <div class="modal-header bg-info">
+        <h3 class="modal-title">Anexar Comprovativos - LEAD: {{lead}}
+            <span class="closeModal" ng-click="closeModal()">X</span>
+        </h3>
+    </div>
+    
+    <div class="modal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-8">
+            <form>
+                <div class="form-group">
+                <input class="form-control" type="file" ng-model="file" base-sixty-four-input on-change="onChange">
+                </div>
+
+                <table class="table table-bordered table-striped">
+                    <tr>
+                      <th>Ficheiro original</th>
+                      <th>Novo nome</th>
+                      <th>Tamanho (<i><small>KB</small></i>)</th>
+                    </tr>
+                    <tr>
+                      <td>{{file.filename}}</td>
+                      <td><span ng-show="file.filename">{{novonome+'.'+(file.filetype).substr((file.filetype).indexOf('/')+1)}}<span></td>
+                      <td>{{file.filesize / 1000}}</td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" ng-show="!file">
+                        <small><i>No file selected.</i></small>
+                      </td>
+                    </tr>
+                </table>
+                <br/>
+                <div class="form-group">
+                    <label>Nome do documento </label>
+                    <input class="form-control" type="text" ng-model="novonome" placeholder="Apenas se pretender alterar o original!!"/>
+                </div>
+                <br/><br/>
+
+            </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="text-center">
+            <button class="btn btn-success" ng-click="saveAttachedComprovativo()"><i class="fa fa-check"></i> Guardar</button>
+            <button class="btn btn-warning" ng-click="closeModal()"> Fechar</button>
+        </div>
+    </div>
+</script>
+
+
+<!-- Modal para visualizar documentação   -->
+<script type="text/ng-template" id="modalViewComp.html" ng-controller="modalInstanceViewComp">
+    <div class="modal-header bg-info">
+        <h3 class="modal-title">Documentação
+            <span class="closeModal" ng-click="closeModal()">X</span>
+        </h3>
+    </div>
+    <div class="modal-body">
+    <div class="text-center">
+        <h3 class='text-center'>{{nomedoc}}</h3>
+        <div class="text-center" id="viewDoc">
+            <button class="btn btn-sm" ng-repeat="p in pages" ng-click="changePage(p)">
+                <span ng-if="currPage == p" class="text-primary">Página {{p}}</span>
+                <span ng-if="currPage != p" >Página {{p}}</span>
+            </button>
+        </div>
+        <canvas id="previewDocCanvas2" height="800" width="800"></canvas>
+    </div>
+    </div>
+    <div class="modal-footer">
+        <div class="text-center">
+            <button class="btn btn-warning" ng-click="closeModal()">Fechar</button>
+        </div>
+    </div>
+</script>

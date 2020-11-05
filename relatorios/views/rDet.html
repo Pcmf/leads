@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<div class="container">
+    <div class="row">
+        <table ng-table="paramsTable" class="table table-responsive table-striped">
+            <thead class="thead-dark">
+                <tr><th colspan="8" class="text-center"><h4><strong class="text-primary"> {{fornecedor}}</strong></h4></th></tr>
+                <tr>
+                    <th>LEAD</th>
+                    <th>Valor</th>
+                    <th>Data de entrada</th>
+                    <th>Data do status</th>
+                    <th>Gestor</th>
+                    <th>Analista</th>
+                    <th>Informações</th>
+                    <th>Ações</th>
+                </tr>   
+            </thead>
+            <tbody>
+                <tr ng-repeat="ln in $data | orderBy:predicate:reverse | filter: searchFilter">
+                    <td>{{ln.id}}</td>
+                    <td>{{ln.valor | currency:'€'}}</td>
+                    <td>{{ln.dataentrada}}</td>
+                    <td>{{ln.datastatus}}</td>
+                    <td>{{ln.nomeGestor}}</td>
+                    <td>{{ln.nomeAnalista}}</td>
+                    <td>{{ln.informacoes}}</td>
+                    <td><a href="#!/detLead/{{ln.id}}"  class="btn btn-success" title="Ver detalhe"><i class="fa fa-eye"></i></a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center">
+        <button class="btn btn-warning" ng-click="goBack()">Voltar</button>
+    </div>
+</div>

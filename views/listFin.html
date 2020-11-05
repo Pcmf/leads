@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!--
+    Listar as LEADS financiadas
+-->
+<div class="container">
+    <h3 class="text-center">Financiados <small>no mês atual.</small></h3>
+    <table ng-table="paramsTable" class="table table-bordered table-condensed table-hover">
+        <thead class="bg-primary">
+            <tr>
+                <th>LEAD</th>
+                <th>Cliente</th>
+                <th>Processo</th>
+                <th>Parceiro</th>
+                <th>Montante</th>
+                <th>Data do Financiamento</th>
+                <th>Status</th>
+                <th>Analista</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="d in $data">
+                <td>{{d.lead}}</td>
+                <td>{{d.cliente}}</td>
+                <td>{{d.processo}}</td>
+                <td>{{d.parceiro}}</td>
+                <td ng-if="d.status ==25" class="bg-danger">{{d.montante | currency:'€'}}</td>
+                <td ng-if="d.status!=25">{{d.montante | currency:'€'}}</td>
+                <td>{{d.dtfinanciado}}</td>
+                <td>{{d.nomestatus}}</td>
+                <td>{{d.analista}}</td>                
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <div class="text-center">
+        <button class="btn btn-warning" onclick="window.history.back()">Voltar</button>
+    </div>
+    
+</div>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="container">
+<h3 ng-show="docType==3" class="text-center">Chegou Documentação
+        <span class="pull-right form-inline" style="margin-right: 100px">
+           <i class="fa fa-search text-info"></i>
+           <input type="text" ng-model="searchFilter" class="form-control" placeholder="Filtrar por..." >         
+       </span>
+</h3>
+<h3 ng-show="docType==1" class="text-center">Aguarda Documentação
+        <span class="pull-right form-inline" style="margin-right: 100px">
+           <i class="fa fa-search text-info"></i>
+           <input type="text" ng-model="searchFilter" class="form-control" placeholder="Filtrar por..." >         
+       </span>
+</h3>
+<h3 ng-show="docType==10" class="text-center">Documentação com Atraso
+        <span class="pull-right form-inline" style="margin-right: 100px">
+           <i class="fa fa-search text-info"></i>
+           <input type="text" ng-model="searchFilter" class="form-control" placeholder="Filtrar por..." >         
+       </span>
+</h3>        
+<h3 ng-show="docType==21" class="text-center">Documentação com Para Analista
+        <span class="pull-right form-inline" style="margin-right: 100px">
+           <i class="fa fa-search text-info"></i>
+           <input type="text" ng-model="searchFilter" class="form-control" placeholder="Filtrar por..." >         
+       </span>
+</h3>
+    
+<h3 ng-show="docType==36" class="text-center">Documentação Inserida pelo Cliente - Verificar
+        <span class="pull-right form-inline" style="margin-right: 100px">
+           <i class="fa fa-search text-info"></i>
+           <input type="text" ng-model="searchFilter" class="form-control" placeholder="Filtrar por..." >         
+       </span>
+</h3>
+<h3 ng-show="docType==39" class="text-center">BPS - Documentação Recebida - Verificar
+        <span class="pull-right form-inline" style="margin-right: 100px">
+           <i class="fa fa-search text-info"></i>
+           <input type="text" ng-model="searchFilter" class="form-control" placeholder="Filtrar por..." >         
+       </span>
+</h3>    
+    <table ng-table="paramsTable" class="table table-bordered table-hover">
+        <thead class="bg-primary">
+            <tr>
+                <th>LEAD</th>
+                <th>Fornecedor</th>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>NIF</th>
+                <th>email</th>
+                <th>Data Inicial</th>
+                <th ng-if="docType==3">Assunto</th>
+                <th ng-if="docType==36 || docType==37">Data de entrada</th>
+                <th ng-if="docType!=3">Data esperada</th>
+                <th ng-if="docType==36 || docType==37 || docType==39">Situação</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="p in $data | filter: searchFilter">
+                <th><a href="#!/detLead/{{p.lead}}" title="Ver detalhe">{{p.lead}}</a></th>
+                <th>{{p.fornecedornome}}</th>
+                <td>{{p.nome}}</td>
+                <td>{{p.telefone}}</td>
+                <td>{{p.nif}}</td>
+                <td>{{p.email}}</td>
+                <td >{{p.dtinicial}}</td>
+                <td ng-if="docType==3">{{p.assunto}}</td>
+                <td ng-if="docType==3 || docType==36 || docType==37">{{p.dataentrada}}</td>
+                <td ng-if="docType!=3">{{p.agendadata}}</td>
+                <td ng-if="(docType==36 || docType==37 || docType==39) && (p.status==37 || p.status==38 || p.status==40)" >{{p.statusnome}}</td>
+                <td ng-if="(docType==36 || docType==37 || docType==39) && (p.status==36 || p.status==39)" class="bg-success">{{p.statusnome}}</td>
+                <td ng-if="docType==3 || docType==36 || docType==37 || docType==39">
+                    <a href='#!/detLead/{{p.lead}}' class="btn btn-success btn-sm" title="Verificar documentação"><span class="fa fa-eye"></span></a>
+                </td>
+                <td ng-if="docType==1">
+                    <a href="#!/detLead/{{p.lead}}" class="btn btn-info btn-sm" title="Anexar Documentação"><span class="fa fa-upload"></span></a>
+                    <button class="btn btn-warning btn-sm" title="Agendar nova data" ng-click="newDataAgendaDoc(p.lead)"><span class="fa fa-clock"></span> </button> 
+                    <button class="btn btn-danger btn-sm" title="Anular" ng-click="anularLead(p)"><span class="fa fa-times"></span></button>                    
+                </td>
+                <td ng-if="docType==10">
+                    <a href="#!/detLead/{{p.lead}}" class="btn btn-info btn-sm" title="Anexar Documentação"><span class="fa fa-upload"></span></a>
+                    <button class="btn btn-warning btn-sm" title="Agendar nova data" ng-click="newDataAgendaDoc(p.lead)"><span class="fa fa-clock"></span> </button>
+                    <button class="btn btn-warning btn-sm" title="Enviar email com novo pedido" ng-click="sendNewPedido2(p)"><span class="fa fa-envelope"></span></button>
+                    <button class="btn btn-danger btn-sm" title="Anular" ng-click="anularLead(p)"><span class="fa fa-times"></span></button>                    
+                </td>
+                
+            </tr>
+        </tbody>
+    </table>
+    <div class="text-center">
+        <a href="#" class="btn btn-warning">Voltar</a>
+    </div>
+    <br/><br/><br/>
+</div>
+
+
+<!-- Modal para fazer anexação da documentação  -->
+<script type="text/ng-template" id="modalAnexarDocs.html" ng-controller="modalInstanceAnexarDocs"> 
+    <div class="modal-header bg-info">
+        <h3 class="modal-title">Anexar Documentação - LEAD: {{lead}}
+            <span class="closeModal" ng-click="closeModal()">X</span>
+        </h3>
+    </div>
+    
+    <div class="modal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-8">
+                    <form>
+                        <input  type="file" ng-model="files" multiple base-sixty-four-input on-change="onChange">
+
+                        <table class="table table-bordered table-striped">
+                            <tr>
+                              <th>Ficheiro original</th>
+                              <th>Tamanho (<i><small>KB</small></i>)</th>
+                            </tr>
+                            <tr ng-repeat="file in files">
+                              <td>{{file.filename}}</td>
+                              <td>{{file.filesize / 1000}}</td>
+                            </tr>
+                            <tr>
+                              <td colspan="2" ng-show="files.length == 0">
+                                <small><i>No file selected.</i></small>
+                              </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <div class="col-xs-12 bg-info" style="border: 1px solid">
+                            <label class="col-xs-12" style="font-size:1.3em">Confirmar documentação anexada</label>
+                            <ul class="list-unstyled col-xs-12 col-md-6" ng-repeat="docA in docs track by docA.id">
+                                <li>
+                                    <label>
+                                         <input class="checkbox-group" type="checkbox" checklist-model="da.docs" checklist-value="docA"/> 
+                                         {{docA.nomedoc}}
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-success" ng-click="sendToAnalise2(d,da,10)"><i class="fa fa-check"></i> Enviar para Análise</button>
+                            <button class="btn btn-info" ng-click="sendToAnalise2(d,da,11)"><i class="fa fa-warning"></i> Enviar para Análise com Documentação em Falta</button>
+                            <button class="btn btn-warning" ng-click="closeModal()"> Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<!-- Modal para alterar a data de agendamento da documentação -->
+
+<script type="text/ng-template" id="modalNovaData.html" ng-controller="modalInstanceNovaData"> 
+<div class="modal-header bg-info">
+<h3 class="modal-title">Nova data para receber a documentação  - <strong class="text-primary">{{lead}}</strong>
+        <span class="closeModal" ng-click="closeModal()">X</span>
+    </h3>
+</div>
+<form ng-submit="novaData(data)">
+    <div class="modal-body">
+        <div class="container">
+            <div class="row">
+                    <div class="form-group col-xs-4">
+                        <label for="dataAg">Selecione data</label>
+                        <input id="dataAg" name="data" class="form-control" type="date"  ng-model="data" required=""/> 
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="text-center">
+            <button class="btn btn-success" type="submit">Guardar</button>
+            <a class="btn btn-warning" ng-click="closeModal()">Cancelar</a>
+        </div>         
+    </div>
+</form> 
+</script>

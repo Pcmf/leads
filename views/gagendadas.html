@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="container">
+    <h3 class="text-center">Agendadas</h3>
+    <table ng-table="paramsTable" class="table table-bordered table-hover">
+        <thead class="bg-primary">
+            <tr>
+                <th>LEAD</th>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>NIF</th>
+                <th>Email</th>
+                <th>Tipo Agendamento</th>
+                <th>Data Agenda</th>
+                <th>Hora</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="a in $data">
+                <th><a href="#!/detLead/{{a.id}}">{{a.id}}</a></th>
+                <td>{{a.nome}}</td>
+                <td>{{a.telefone}}</td>
+                <td>{{a.nif}}</td>
+                <td>{{a.email}}</td>
+                <td>{{a.descricao}}</td>
+                <td>{{a.agendadata}}</td>
+       <!--         <td ng-if="a.agendadata == dateFormat(new Date(),'Y-m-d')">Hoje</td>-->
+                <td>{{a.agendahora}}</td>
+
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <div class="text-center">
+        <a href="#!/dashboard" class="btn btn-warning">Voltar</a>
+    </div>
+    <br/><br/>    
+</div>

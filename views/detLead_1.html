@@ -1,0 +1,2171 @@
+<!DOCTYPE html>
+<!--
+Vista de detalhes para usar como resultado da pesquisa 
+-->
+<div class="row painel-chamadas" style="width: 340px; height: 700px; position: fixed; top: 100px; right: 20px">
+    <span class="col-xs-10 col-xs-offset-1" ng-if="tipoUser == 'Gestor' || tipoUser == 'GRec' || tipoUser == 'Analista'" >
+        <button class="btn btn-warning btn-block" ng-if="temHistorico" ng-click="showHistorico(dl.id)">Histórico do Cliente</button>
+        <button class="btn btn-default btn-block" ng-click="foraDoExpediente()"><i class="fa fa-clock-o"> </i> Fora do Expediente</button>
+        <button  class="btn btn-default btn-block" ng-click="agendar(dl.id)"><i class="fa fa-calendar text-danger"> </i> Agendar</button>
+        <button ng-if="!onCall" class="btn btn-primary btn-block" ng-click="makeCall(dl.id)"><i class="fa fa-phone"> </i> Ligar</button>
+        <button ng-if="onCall" class="btn btn-danger btn-block" ng-click="makeCall(dl.id)"><i class="fa fa-phone"> </i> Desligar</button>
+        <button ng-if="onCall" class="btn btn-warning btn-block" ng-click="noAnswer(dl.id)"><i class="glyphicon glyphicon-phone-alt"> </i> Não atende</button>
+        <button ng-if="onCall" class="btn btn-default btn-block" ng-click="notAtrib(dl.id)"><i class="fa fa-phone-slash"> </i> Não atribuido</button>
+
+    </span>
+    <!-- Outras informações -->
+    <div class="form-group-sm col-xs-12">
+        <label for="outrainfo">Informações Internas</label>
+        <textarea id="outrainfo" class="form-control" rows="25" ng-model="ic.outrainfo"></textarea>
+        <br/><br/>
+        <span class="col-xs-10 col-xs-offset-1">
+            <button class="btn btn-primary btn-block" ng-click="updateOutraInfo(dl.id, ic.outrainfo)">Guardar</button>
+        </span>
+    </div>
+    
+</div>
+
+
+<div class="container" style="min-height: 500px">
+    <div class="row">
+        <!-- Informações sobre a LEAD -->
+        <div class="panel">
+            <div class="col-xs-12 panel-heading panel-primary"    ng-class="{'bg-red': dl.fornecedornome == 'BPS-Docs' || dl.fornecedornome == 'BPS-Premium-Docs'}" >
+                <div class="col-xs-5">
+                    <h4>CLIENTE:<span class="text-primary">  {{p.nome}}</span></h4>
+                </div>
+                <div class="col-xs-3">
+                    <h4>LEAD:<span class="text-white"> {{dl.id}} </span> Tipo: <span class="text-white">{{dl.tipo}}</span></h4>
+                </div>
+                <div class="col-xs-4">
+                    <h4><span class="pull-right">SITUAÇÃO: <span class="text-primary"> {{dl.nomestatus}}</span></span></h4>
+                </div>                
+                    
+            </div>
+            <div class="panel-body">
+                <div class="col-xs-12">
+                    <div class="form-group-sm col-sm-2">
+                        <label>Fornecedor</label>
+                        <input type="text" class="form-control"ng-model="dl.fornecedornome" readonly=""/>
+                    </div>
+                    <div class="form-group-sm col-sm-2">
+                        <label>LEAD original</label>
+                        <input type="text" class="form-control" ng-model="dl.idleadorig" readonly=""/>
+                    </div>
+                    <div class="form-group-sm col-sm-2">
+                        <label>Data Entrada</label>
+                        <input type="text" class="form-control" ng-model="dl.dataentrada" readonly=""/>
+                    </div>                
+                    <div class="form-group-sm col-sm-2">
+                        <label>Situação</label>
+                        <input ng-click="ativar(dl)" type="text" class="form-control" ng-model="dl.nomestatus" readonly=""/>
+                    </div>
+                    <div class="form-group-sm col-sm-2">
+                        <label>Data Situação</label>
+                        <input type="text" class="form-control" ng-model="dl.datastatus" readonly=""/>
+                    </div>
+                    <div class="form-group-sm col-sm-2" ng-if="tipoUser == 'Analista'">
+                        <label>Gestor</label>
+                        <input type="text" class="form-control" ng-model="dl.gestor" readonly=""/>
+                    </div>
+                    <div class="form-group-sm col-sm-2" ng-if="(tipoUser == 'Gestor'  || tipoUser == 'GRec') && dl.status >= 12">
+                        <label>Analista</label>
+                        <input type="text" class="form-control" ng-model="dl.analista" readonly=""/>
+                    </div> 
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group-sm col-sm-2">
+                        <label>Origem</label>
+                        <input type="text" class="form-control" ng-model="dl.nomelead" readonly=""/>
+                    </div>                    
+                    <div class="form-group-sm col-sm-5">
+                        <label>Situação do crédito</label>
+                        <input type="text" class="form-control" ng-model="dl.situacao" readonly=""/>
+                    </div>
+                    <div class="form-group-sm col-sm-5">
+                        <label>Informações </label>
+                        <input type="text" class="form-control" ng-model="dl.info" readonly=""/>
+                    </div>                    
+                </div>
+            </div>
+
+        </div>
+        <!-- TABS -->
+        <div id="tabs" class="col-xs-12">
+            <ul>
+                <li class="tabb" ng-repeat="tab in tabs" 
+                    ng-class="{active:isActiveTab(tab.id)}" 
+                    ng-click="onClickTab(tab)">
+                    {{tab.title}}
+                </li>
+            </ul>
+            <br/><br/>
+        </div>
+
+        <!--Dados do cliente   -->
+        <div id="zero.tpl" class="pn hide">
+            <div id="viewZero" class="">        
+                <div class="panel">
+                    <div class="panel-heading panel-primary">
+                        <h4><strong class="text-primary">{{dl.id}}</strong> - Informação do Cliente
+                            <button class="btn btn-warning pull-right" ng-if="temHistorico" ng-click="showHistorico(dl.id)">Histórico do Cliente</button>
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-xs-12">
+                            <div class="form-group-sm col-xs-10">
+                                <label>Nome </label>
+                                <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.nome" title="{{ic.nome}}"/>
+                            </div>
+                            <div class="form-group-sm col-xs-2">
+                                <label>Idade </label>
+                                <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.idade"/>
+                            </div>
+                            <div class="form-group-sm col-xs-3">
+                                <label>Telefone </label>
+                                <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.telefone"/>
+                            </div>
+                            <div class="form-group-sm col-xs-9">
+                                <label>Email </label>
+                                <input id="emailToCopy" ng-readonly="readOnly" class="form-control" type="text" ng-click="copyToClip()" ng-model="ic.email" title="Click para copiar"/>
+                            </div>
+                            <!-- Morada Postal -->
+                            <div ng-if="ic.moradarua || !readOnly">
+                                <div class="form-group-sm col-xs-6">
+                                    <label class="text-info">Rua </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.moradarua"/>
+                                </div> 
+                                <div class="form-group-sm col-xs-4">
+                                    <label class="text-info">Localidade </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.moradalocalidade"/>
+                                </div>                                
+                                <div class="form-group-sm col-xs-2">
+                                    <label class="text-info">Codigo Postal </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.moradacp"/>
+                                </div> 
+                            </div>
+                            <div class="form-group-sm col-xs-3">
+                                <label>NIF </label>
+                                <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.nif"/>
+                            </div>
+                            <div class="form-group-sm col-sm-2">
+                                <label>IRS</label>
+                                <input type="text" class="form-control" ng-model="ic.irs"  ng-readonly="readOnly"/>
+                            </div>                                
+                            <div class="form-group-sm col-xs-3">
+                                <label>Estado Civil </label>
+                                <select ng-readonly="readOnly" ng-disabled="readOnly" class="form-control" ng-model="ic.estadocivil">
+                                    <option ng-repeat="ec in estadoscivis" ng-value="ec.id" ng-selected="ic.estadocivil == ec.id">{{ec.nome}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group-sm col-xs-2">
+                                <label>Filhos </label>
+                                <input ng-readonly="readOnly" class="form-control" type="text"  ng-model="ic.filhos"/>
+                            </div>
+                            <div class="form-group-sm col-xs-4">
+                                <label>Setor </label>
+                                <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.profissao"/>
+                            </div>                                
+                            <div class="form-group-sm col-xs-2">
+                                <label>Tipo contrato </label>
+                                <select ng-readonly="readOnly" ng-disabled="readOnly" class="form-control" ng-model="ic.tipocontrato">
+                                    <option ng-repeat="tc in tiposcontrato" ng-value="tc.id" ng-selected="ic.tipocontrato == tc.id">{{tc.nome}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group-sm col-xs-2">
+                                <label>Mês inicio</label>
+                                <select class="form-control" ng-model="ic.mesinicio"  ng-disabled="readOnly" >
+                                    <option>..</option>
+                                    <option value="1" ng-selected="ic.mesinicio == 1">Janeiro</option>
+                                    <option value="2" ng-selected="ic.mesinicio == 2">Fevereiro</option>
+                                    <option value="3" ng-selected="ic.mesinicio == 3">Março</option>
+                                    <option value="4" ng-selected="ic.mesinicio == 4">Abril</option>
+                                    <option value="5" ng-selected="ic.mesinicio == 5">Maio</option>
+                                    <option value="6" ng-selected="ic.mesinicio == 6">Junho</option>
+                                    <option value="7" ng-selected="ic.mesinicio == 7">Julho</option>
+                                    <option value="8" ng-selected="ic.mesinicio == 8">Agosto</option>
+                                    <option value="9" ng-selected="ic.mesinicio == 9">Setembro</option>
+                                    <option value="10" ng-selected="ic.mesinicio == 10">Outubro</option>
+                                    <option value="11" ng-selected="ic.mesinicio == 11">Novembro</option>
+                                    <option value="12" ng-selected="ic.mesinicio == 12">Dezembro</option>
+                                </select>
+                            </div>                                
+                            <div class="form-group-sm col-xs-2">
+                                <label>Inicio </label>
+                                <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.anoinicio"/>
+                            </div>                                
+                            <div class="form-group-sm col-xs-2">
+                                <label>Vencimento </label>
+                                <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.vencimento"/>
+                            </div>                                
+                        </div>
+                        <!-- Habitação -->
+                        <div class="col-xs-12">
+                            <div class="form-group-sm col-sm-4">
+                                <label>Habitação</label>
+                                <select ng-readonly="readOnly" ng-disabled="readOnly" class="form-control" ng-model="ic.tipohabitacao">
+                                    <option ng-repeat="th in tiposhabitacao" ng-value="th.id" ng-selected="ic.tipohabitacao == th.id">{{th.nome}}</option>
+                                </select>                                    
+                            </div>
+                            <div class="form-group-sm col-sm-2">
+                                <label>Renda/Prestação</label>
+                                <input type="text" class="form-control"  ng-model="ic.valorhabitacao" ng-readonly="readOnly"/>
+                            </div>
+                            <div class="form-group-sm col-sm-2">
+                                <label>Inicio</label>
+                                <input type="text" class="form-control" ng-model="ic.anoiniciohabitacao" ng-readonly="readOnly"/>
+                            </div>                 
+                            <div class="form-group-sm col-sm-2">
+                                <label>Declarada</label>
+                                <input type="text" class="form-control" ng-model="ic.declarada" ng-readonly="readOnly"/>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="form-group-sm col-sm-1">
+                                <label class="text-info">2º Titular</label>
+                                <input type="checkbox" class="form-control" ng-model="ic.segundoproponente" ng-checked="ic.segundoproponente == 1"  ng-disabled="readOnly"/>
+                            </div> 
+                            <div ng-if="ic.segundoproponente == 1">
+                                <div class="form-group-sm col-xs-4">
+                                    <label class="text-info">Nome </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.nome2"/>
+                                </div>    
+                                <div class="form-group-sm col-xs-2">
+                                    <label class="text-info">Parentesco </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.parentesco2"/>
+                                </div>                                
+                                <div class="form-group-sm col-xs-1">
+                                    <label class="text-info">Idade </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.idade2"/>
+                                </div>
+                                <div class="form-group-sm col-xs-2">
+                                    <label class="text-info">Telefone </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.telefone2"/>
+                                </div>
+                                <div class="form-group-sm col-xs-2">
+                                    <label class="text-info">NIF </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.nif2"/>
+                                </div>
+                            </div>
+                            <div class="col-xs-12"  ng-if="ic.segundoproponente == 1">
+                                <div class="form-group-sm col-xs-3">
+                                    <label class="text-info">Setor </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.profissao2"/>
+                                </div>                                
+                                <div class="form-group-sm col-xs-3">
+                                    <label class="text-info">Tipo contrato </label>
+                                    <select ng-readonly="readOnly" ng-disabled="readOnly" class="form-control" ng-model="ic.tipocontrato2">
+                                        <option ng-repeat="tc in tiposcontrato" ng-value="tc.id" ng-selected="ic.tipocontrato2 == tc.id">{{tc.nome}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group-sm col-xs-2">
+                                    <label>Mês inicio</label>
+                                    <select class="form-control" ng-model="ic.mesinicio2"  ng-disabled="readOnly" >
+                                        <option>..</option>
+                                        <option value="1" ng-selected="ic.mesinicio2 == 1">Janeiro</option>
+                                        <option value="2" ng-selected="ic.mesinicio2 == 2">Fevereiro</option>
+                                        <option value="3" ng-selected="ic.mesinicio2 == 3">Março</option>
+                                        <option value="4" ng-selected="ic.mesinicio2 == 4">Abril</option>
+                                        <option value="5" ng-selected="ic.mesinicio2 == 5">Maio</option>
+                                        <option value="6" ng-selected="ic.mesinicio2 == 6">Junho</option>
+                                        <option value="7" ng-selected="ic.mesinicio2 == 7">Julho</option>
+                                        <option value="8" ng-selected="ic.mesinicio2 == 8">Agosto</option>
+                                        <option value="9" ng-selected="ic.mesinicio2 == 9">Setembro</option>
+                                        <option value="10" ng-selected="ic.mesinicio2 == 10">Outubro</option>
+                                        <option value="11" ng-selected="ic.mesinicio2 == 11">Novembro</option>
+                                        <option value="12" ng-selected="ic.mesinicio2 == 12">Dezembro</option>
+                                    </select>
+                                </div>                                         
+                                <div class="form-group-sm col-xs-2">
+                                    <label class="text-info">Inicio </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.anoinicio2"/>
+                                </div>                                
+                                <div class="form-group-sm col-xs-2">
+                                    <label class="text-info">Vencimento </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.vencimento2"/>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Habitação 2º titular -->
+                        <div class="col-xs-12"  ng-if="ic.segundoproponente == 1">
+                            <div class="form-group-sm col-sm-2">
+                                <label class="text-info">Mesma Habitação</label>
+                                <input type="checkbox" class="form-control" ng-model="mesmaHabitacao" ng-disabled="readOnly"/>
+                            </div>
+                            <div ng-if="!mesmaHabitacao">
+                                <div class="form-group-sm col-sm-4">
+                                    <label class="text-info">Habitação 2º</label>
+                                    <select ng-readonly="readOnly" ng-disabled="readOnly" class="form-control" ng-model="ic.tipohabitacao2">
+                                        <option ng-repeat="th in tiposhabitacao" ng-value="th.id" ng-selected="ic.tipohabitacao2 == th.id">{{th.nome}}</option>
+                                    </select>   
+                                </div>
+                                <div class="form-group-sm col-sm-2">
+                                    <label class="text-info">Renda/Prestação</label>
+                                    <input type="text" class="form-control"  ng-model="ic.valorhabitacao2" ng-readonly="readOnly"/>
+                                </div>
+                                <div class="form-group-sm col-sm-2">
+                                    <label class="text-info">Inicio</label>
+                                    <input type="text" class="form-control" ng-model="ic.anoiniciohabitacao2" ng-readonly="readOnly"/>
+                                </div>                 
+                                <div class="form-group-sm col-sm-2">
+                                    <label class="text-info">Declarada</label>
+                                    <input type="text" class="form-control" ng-model="ic.declarada2" ng-readonly="readOnly"/>
+                                </div> 
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="form-group-sm col-xs-12">
+                                <label>Outras Informações:</label>
+                                <textarea class="form-control" ng-readonly="readOnly" ng-model="ic.outrainfo"></textarea>
+                            </div>
+                            <div  ng-if="historic.length > 0"  class="form-group-sm col-xs-2">
+                                <label class="text-info">Ver </label>
+                                <button class="btn btn-warning btn-sm" ng-click="showHistorico(historic)">Histórico</button>
+                            </div> 
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--  Informação Financeira -->
+        <div id="one.tpl" class="pn show">
+            <div id="viewOne" class="">
+                <div class="panel">
+                    <div class="panel-heading panel-primary">
+                        <h4><strong class="text-primary">{{dl.id}}</strong> - Crédito Pretendido</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-xs-12">
+                            <div class="form-group-sm col-xs-2">
+                                <label>Vencimento</label>
+                                <input  class="form-control" type="text" ng-model="ic.vencimento" ng-change="checkParceiros()"/>
+                            </div>
+                            <div class="form-group-sm col-xs-2">
+                                <label>Venc. 2º Prop </label>
+                                <input  class="form-control" type="text" ng-model="ic.vencimento2" ng-change="checkParceiros()"/>
+                            </div>
+                            <div class="form-group-sm col-xs-2">
+                                <label>Venc x14/12 </label>
+                                <input  class="form-control" type="text" ng-model="ic.venc_cetelem" ng-change="checkParceiros()"/>
+                            </div>
+                            <div class="form-group-sm col-xs-2">
+                                <label>Venc x14/12 - 2T</label>
+                                <input  class="form-control" type="text" ng-model="ic.venc_cetelem2" ng-change="checkParceiros()"/>
+                            </div>                                
+                            <div class="form-group-sm col-xs-2">
+                                <label>O. Rend. </label>
+                                <input readonly="" class="form-control" type="text" ng-model="ic.outrosrendimentos"  ng-change="checkParceiros()"/>
+                            </div> 
+                            <div class="form-group-sm col-xs-2">
+                                <label>Rend. Liq. </label>
+                                <input readonly="" class="form-control" type="text" ng-model="RLiq"/>
+                            </div>                                 
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="form-group-sm col-xs-3">
+                                <label>Outros Créditos </label>
+                                <input   class="form-control" type="text" ng-model="ic.outroscreditos"  ng-change="checkParceiros()"/>
+                            </div>                        
+                            <div class="form-group-sm col-xs-3">
+                                <label>Renda / C.Hab. </label>
+                                <input  class="form-control" type="text" ng-model="ic.valorhabitacao" ng-change="checkParceiros()"/>
+                            </div>
+
+                            <div class="form-group-sm col-xs-3">
+                                <label>Filhos </label>
+                                <input  class="form-control" type="text" ng-model="ic.filhos"  ng-change="checkParceiros()"/>
+                            </div>
+                            <div class="form-group-sm col-xs-3">
+                                <label>Rend. Liq. 14/12 </label>
+                                <input readonly="" class="form-control" type="text" ng-model="RLiqCt"/>
+                            </div> 
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="form-group-sm col-xs-2">
+                                <label for="montante">Valor Pretendido</label>
+                                <input id="montante" name="montante" string-to-number  class="form-control no-spinner" min="0" type="number" ng-model="ic.valorpretendido" ng-readonly="readOnly"/>
+                            </div>
+                            <div class="form-group-sm col-xs-2">
+                                <label for="tipoLead">Tipo Crédito</label>                
+                                <select id="tipoLead" class="form-control" ng-model="ic.tipocredito" ng-readonly="readOnly">
+                                    <option value="CP" ng-selected="ic.tipocredito == 'CP'">C. Pessoal</option>
+                                    <option value="CC" ng-selected="ic.tipocredito == 'CC'">C. Consolidado</option>
+                                    <option value="CT" ng-selected="ic.tipocredito == 'CT'">Cartão  Crédito</option>
+                                    <option value="AU" ng-selected="ic.tipocredito == 'AU'">Auto</option>
+                                    <option value="CHCC" ng-selected="ic.tipocredito == 'CHCC'">Consolidado com  CH</option>
+                                    <option value="CH1" ng-selected="ic.tipocredito == 'CH1'">CH 1ª Hipoteca</option>
+                                    <option value="CH2" ng-selected="ic.tipocredito == 'CH2'">CH 2ª Hipoteca</option>
+                                </select>
+                            </div>                
+                            <div class="form-group-sm col-xs-2">
+                                <label for="numprestacoes">Prazo </label>
+                                <input id="numprestacoes" class="form-control no-spinner" string-to-number  min="0" type="number" ng-model="ic.prazopretendido" ng-readonly="readOnly"/>
+                            </div>
+                            <div class="form-group-sm col-xs-1">
+                                <label for="valorprestacao">Prestação </label>
+                                <input id="valorprestacao" class="form-control no-spinner" string-to-number  min="0" type="number" ng-model="ic.prestacaopretendida"  ng-readonly="readOnly"/>
+                            </div>
+                            <div class="form-group-sm col-xs-1">
+                                <label for="diaprestatacao">Dia Pag. </label>
+                                <input id="diaprestacao" class="form-control"  type="text" ng-model="ic.diaprestacao"  ng-readonly="readonly"/>
+                            </div>
+                            <div class="form-group-sm col-xs-4">
+                                <label for="finalidade">Finalidade</label>
+                                <input id="finalidade" name="finalidade" class="form-control" type="text" ng-model="ic.finalidade"  ng-readonly="readOnly"/>
+                            </div>
+                        </div>
+                        <!-- Valores da Simulação-->
+                        <div class="col-xs-12">
+                            <h6 class="text-primary text-uppercase">Valores da simulação</h6>
+                            <div class="form-group-sm col-xs-2">
+                                <input  class="form-control" type="text" ng-model="s.valorpretendido" ng-change="checkParceiros()"/>
+                            </div>
+                            <div class="form-group-sm col-xs-2">
+                                <select class="form-control" ng-model="s.tipocredito" ng-change="checkParceiros()">
+                                    <option value="CP" ng-selected="s.tipocredito == 'CP'">Pessoal</option>
+                                    <option value="CC" ng-selected="s.tipocredito == 'CC'">Consolidado</option>
+                                    <option value="AU" ng-selected="s.tipocredito == 'AU'">Automovel</option>
+                                    <option value="CHCC" ng-selected="ic.tipocredito == 'CHCC'">Consolidado com  CH</option>
+                                    <option value="CH1" ng-selected="ic.tipocredito == 'CH1'">CH 1ª Hipoteca</option>
+                                    <option value="CH2" ng-selected="ic.tipocredito == 'CH2'">CH 2ª Hipoteca</option>
+                                </select>
+                            </div> 
+                            <div class="form-group-sm col-xs-2">
+                                <input  class="form-control" type="text" ng-model="s.prazopretendido" ng-change="checkParceiros()"/>
+                            </div>                                  
+                            <div class="form-group-sm col-xs-1">
+                                <input  class="form-control" type="text" ng-model="s.prestacaopretendida" ng-change="checkParceiros()"/>
+                            </div>  
+
+                            <div class="form-group-inline col-xs-2">
+                                <label>2º titular</label>
+                                <select class="form-control" ng-model="s.segundoproponente" ng-change="checkParceiros()">
+                                    <option value="1" ng-selected="s.segundoproponente == 1">Sim</option>
+                                    <option value="0" ng-selected="s.segundoproponente == 0">Não</option>
+                                </select>
+                            </div>  
+
+                            <div class="col-xs-3"  style="margin-top: 20px; margin-bottom: 20px">
+                                <button class="btn btn-block btn-warning" ng-click="getSimulacoes(dl.id)">
+                                    Simulações Guardadas
+                                </button>
+                            </div>
+
+                        </div>   
+
+                        <div class="col-xs-12">
+                            <hr style="border: 1px solid #002752">
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th colspan="3" class="text-center text-info">Outros Rendimentos  &nbsp;&nbsp;
+                                            <button class="btn btn-default btn-sm" ng-click="addNewOR = !addNewOR" title="Adicionar linha."><i class="fa fa-plus"></i></button>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>Tipo de rendimento</th>
+                                        <th>Valor</th>
+                                        <th>Periocidade</th>
+                                        <th>Usar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="r in rendimentos">
+                                        <td class="text-white">{{r.tiporendimento}}</td>
+                                        <td class="text-white">{{r.valorrendimento}}€</td>
+                                        <td class="text-white">{{r.periocidade}}</td>
+                                        <td ng-if="r.usar == 0" class="text-danger">Não</td>
+                                        <td ng-if="r.usar == 1" class="text-primary">Sim</td>
+                                    </tr>
+                                    <tr ng-if="addNewOR">
+                                        <td class="text-white">
+                                            <input type="text" ng-model="or.tiporendimento"/>
+                                        </td>
+                                        <td>
+                                            <input type="number" ng-model="or.valorrendimento"/>
+                                        </td>
+                                        <td>
+                                            <select name="periocidade" ng-model="or.periocidade">
+                                                <option value="Mes">Mensal</option>
+                                                <option value="Ano">Anual</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary" ng-click="saveLinhaOR(or)" title="Guarda a nova linha"><i class="fa fa-check"></i></button>
+                                        </td>
+                                    </tr>                                           
+                                </tbody>
+                            </table>
+                            <!-- Outros Creditos -->
+                            <br/>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th colspan="4" class="text-center text-info">Outros Créditos &nbsp;&nbsp;
+                                            <button class="btn btn-default btn-sm" ng-click="addNewOC = !addNewOC" title="Adicionar linha."><i class="fa fa-plus"></i></button>
+                                        </th>
+                                    </tr>                        
+                                    <tr>
+                                        <th>Tipo de Crédito</th>
+                                        <th>Valor Crédito</th>
+                                        <th>Prestação</th>
+                                        <th>Liquidar</th>
+                                        <th>Opc Analista</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="c in creditos">
+                                        <td class="text-white">{{c.tipocredito}}</td>
+                                        <td class="text-white">{{c.valorcredito}}€</td>
+                                        <td class="text-white">{{c.prestacao}}€</td>
+                                        <td class="text-white" ng-if="c.liquidar == 1">SIM</td>
+                                        <td class="text-danger" ng-if="c.liquidar == 0">NÃO</td>
+                                        <td ng-if="c.adminchoice == 0" class="text-danger">Não</td>
+                                        <td ng-if="c.adminchoice == 1" class="text-primary">Sim</td>
+                                    </tr>
+                                    <tr ng-if="addNewOC">
+                                        <td class="text-white">
+                                            <input type="text" ng-model="oc.tipocredito"/>
+                                        </td>
+                                        <td>
+                                            <input type="number" ng-model="oc.valorcredito"/>
+                                        </td>
+                                        <td>
+                                            <input type="number" ng-model="oc.prestacao"/>
+                                        </td>
+                                        <td>
+                                            <select class="" ng-model="oc.liquidar">
+                                                <option ng-value="1">Sim</option>
+                                                <option ng-value="0">Não</option>
+                                            </select>
+                                            <button class="btn btn-sm btn-primary" ng-click="saveLinha(oc)" title="Guarda a nova linha"><i class="fa fa-check"></i></button>
+                                        </td>
+                                    </tr>                                       
+                                </tbody>
+                            </table>   
+                        </div>
+
+                        <!-- Listagem dos resultados aplicados ás regras dos parceiros -->
+                        <div class="col-xs-12">
+                            <hr style="border: 1px solid #002752">
+                            <h4 class="text-center text-info">Parceiros Financeiros</h4>
+                            <table class="table table-bordered table-hover table-striped">
+                                <thead class="thead thead-dark">
+                                    <tr>
+                                        <th>Parceiro</th>
+                                        <th>Tipo crédito</th>
+                                        <th>Tx esforço</th>
+                                        <th>Disp. Orçamental</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="p in parceirosChk">
+                                        <th ng-class="p.parceiroOk" title="{{p.motivo}}">{{p.nome}}</th>
+                                        <td>{{p.tc_descricao}}</td>
+                                        <td class="text-primary text-right">{{p.txEsf}} %</td>
+                                        <td ng-if="p.disp > 0" class="text-primary text-right" >{{p.disp}} €</td>
+                                        <td ng-if="p.disp <= 0" class="text-danger text-right" >{{p.disp}} €</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Formulario do processo -->
+        <div id="ten.tpl" class="pn hide">
+            <div id="viewTen" class="">
+                <div class="panel">
+                    <div class="panel-heading panel-primary">
+                        <h4><strong class="text-primary">{{dl.id}}</strong> - Processo</h4>
+                    </div>
+                    <!-- Dados Pessoais -->
+                    <div class="panel-body">
+                        <div class="col-xs-12">
+                            <label class="text-primary text-uppercase">Dados Pessoais</label>
+                        </div>
+                        <ul class="nav nav-pills">
+                            <li role="presentation" ng-class="firstT"><a href="" ng-click="titular = 'primeiro'; secondT = ''; firstT = 'active'">1º Titular</a></li>
+                            <li role="presentation" ng-class="secondT"><a href="" ng-click="titular = 'segundo'; secondT = 'active'; firstT = ''">2º Titular</a></li>
+                            <li role="presentation" ng-if="p.segundoproponente == 1"><i class="fa fa-check fa-2x text-success"></i></li> 
+                        </ul>
+                        <!-- PAINEL do 1º TITULAR -->
+                        <div class="primeiro-titular" ng-show="titular == 'primeiro'">
+                            <div class="col-xs-12">
+                                <div class="form-group col-xs-6">
+                                    <label  ngclipboard data-clipboard-target="#nome">Nome</label>
+                                    <input id="nome" class="form-control" type="text" ng-model="p.nome">
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label  ngclipboard data-clipboard-target="#datanascimento">Data de nascimento</label>
+                                    <input id="datanascimento" class="form-control" type="text" ng-model="p.datanascimento" placeholder="dd-mm-aaaa">
+                                </div> 
+                                <div class="form-group col-xs-3">
+                                    <label ngclipboard data-clipboard-target="#nif">NIF</label>
+                                    <input id="nif" class="form-control" type="text" ng-model="p.nif">
+                                </div> 
+                                <!-- segunda linha -->
+                                <div class="form group col-xs-4">
+                                    <label >Documento Identificação</label>
+                                    <select  class="form-control" ng-model="p.tipodoc">
+                                        <option  ng-repeat="d in tiposdoc track by d.id" ng-selected='p.tipodoc == d.id' ng-value="d.id">{{d.nome}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label ngclipboard data-clipboard-target="#numdoc">Numero Documento</label>
+                                    <input id="numdoc" class="form-control" type="text" ng-model="p.numdocumento">
+                                </div>                                     
+                                <div class="form-group col-xs-2">
+                                    <label ngclipboard data-clipboard-target="#validade">Validade</label>
+                                    <input id="validade" class="form-control" type="text" ng-model="p.validade"  style="font-size: 1.1em" placeholder="dd-mm-aaaa">
+                                </div> 
+                                <div class="form-group col-xs-3">
+                                    <label>Nacionalidade</label>
+                                    <select class="form-control" ng-model="p.nacionalidade">
+                                        <option value="portuguesa" ng-selected="p.nacionalidade == ''">portuguesa</option>
+                                        <option ng-repeat="n in nacionalidades"  ng-value="n.nacionalidade" ng-selected="n.nacionalidade == p.nacionalidade">{{n.nacionalidade}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-xs-4">
+                                    <label>Estado Civil</label>
+                                    <select class="form-control" ng-model="p.estadocivil" >
+                                        <option ng-repeat="ec in estadoscivis track by ec.id" ng-selected="p.estadocivil == ec.id" ng-value="ec.id">{{ec.nome}}</option>
+                                    </select>
+                                </div> 
+                                <div class="form-group col-xs-2">
+                                    <label ngclipboard data-clipboard-target="#filhos">Filhos</label>
+                                    <input id="filhos" class="form-control" type="text" ng-model="p.filhos">
+                                </div>
+                                <div class="form-group col-xs-2">
+                                    <label>2º Titular</label>
+                                    <input class="form-control" type="checkbox" ng-model="p.segundoproponente"
+                                           ng-change="clear2TitularDados(p.segundoproponente)"
+                                           ng-checked="p.segundoproponente == 1">
+                                </div>
+
+                            </div> 
+
+                            <!-- Morada e contactos -->
+                            <div class="col-xs-12">
+                                <label class="text-primary text-uppercase">Morada e contactos</label>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="form-group col-xs-3">
+                                    <label>Tipo de Habitação</label>
+                                    <select class="form-control" ng-model="p.tipohabitacao" >
+                                        <option ng-repeat="th in tiposhabitacao track by th.id" ng-selected='p.tipohabitacao == th.id' ng-value="th.id">{{th.nome}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label  ngclipboard data-clipboard-target="#desde">Desde</label>
+                                    <input id="desde" class="form-control" type="text" ng-model="p.anoiniciohabitacao">
+                                </div> 
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="form-group col-xs-6">
+                                    <label  ngclipboard data-clipboard-target="#morada">Morada</label>
+                                    <input id="morada" class="form-control" type="text" ng-model="p.morada">
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label  ngclipboard data-clipboard-target="#loc">Localidade</label>
+                                    <input id="loc" class="form-control" type="text" ng-model="p.localidade">
+                                </div>  
+                                <div class="form-group col-xs-3">
+                                    <label ngclipboard data-clipboard-target="#cp">Codigo Postal</label>
+                                    <input id="cp" class="form-control" type="text" ng-model="p.cp">
+                                </div>                                 
+                            </div>  
+
+                            <!-- Contactos e emails -->
+                            <div class="col-xs-12">
+                                <div class="form-group col-xs-3">
+                                    <label ngclipboard data-clipboard-target="#tel">Telefone</label>
+                                    <input id="tel" class="form-control" type="text" ng-model="p.telefone">
+                                </div>
+                                <div class="form-group col-xs-6">
+                                    <label ngclipboard data-clipboard-target="#email">Email</label>
+                                    <input id="email" class="form-control" type="text" ng-model="p.email">
+                                </div> 
+                            </div>
+                            <!-- Dados Profissionais -->
+                            <div class="col-xs-12">
+                                <label class="text-primary text-uppercase">Dados Profissionais</label>
+                            </div>
+                            <div class="col-xs-12">
+
+                                <div class="form-group col-xs-3">
+                                    <label>Sector</label>
+                                    <select class="form-control" ng-model="p.sector">
+                                        <option value="Privado" ng-selected="p.sector == 'privado'">Privado</option>
+                                        <option value="Publico" ng-selected="p.sector == 'publico'">Publico</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label>Tipo Contrato</label>
+                                    <select class="form-control" ng-model="p.tipocontrato">
+                                        <option ng-repeat="tc in tiposcontrato track by tc.id" ng-selected='p.tipocontrato == tc.id' ng-value="tc.id">{{tc.nome}}</option>
+                                    </select>
+                                </div> 
+                                <div class="form-group col-xs-2">
+                                    <label ngclipboard data-clipboard-target="#dsd">Desde Ano</label>
+                                    <input id="dsd" class="form-control" type="text" ng-model="p.desde">
+                                </div>
+                                <div class="form-group col-xs-2">
+                                    <label ngclipboard data-clipboard-target="#dsd">Mês</label>
+                                    <select class="form-control" ng-model="p.desdemes">
+                                        <option value="1" ng-selected="p.desdemes == 1">Jan</option>
+                                        <option value="2" ng-selected="p.desdemes == 2">Fev</option>
+                                        <option value="3" ng-selected="p.desdemes == 3">Mar</option>
+                                        <option value="4" ng-selected="p.desdemes == 4">Abr</option>
+                                        <option value="5" ng-selected="p.desdemes == 5">Mai</option>
+                                        <option value="6" ng-selected="p.desdemes == 6">Jun</option>
+                                        <option value="7" ng-selected="p.desdemes == 7">Jul</option>
+                                        <option value="8" ng-selected="p.desdemes == 8">Ago</option>
+                                        <option value="9" ng-selected="p.desdemes == 9">Set</option>
+                                        <option value="10" ng-selected="p.desdemes == 10">Out</option>
+                                        <option value="11" ng-selected="p.desdemes == 11">Nov</option>
+                                        <option value="12" ng-selected="p.desdemes == 12">Dez</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-xs-6">
+                                    <label ngclipboard data-clipboard-target="#emp">Nome da Empresa</label>
+                                    <input id="emp" class="form-control" type="text" ng-model="p.nomeempresa">
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label ngclipboard data-clipboard-target="#nifemp">NIF Empresa</label>
+                                    <input id="nifemp" class="form-control" type="text" ng-model="p.nifempresa">
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label ngclipboard data-clipboard-target="#tlf">Telefone</label>
+                                    <input id="tlf" class="form-control" type="text" ng-model="p.telefoneempresa">
+                                </div>
+                            </div>
+
+                            <!-- Dados Bancarios -->
+                            <div class="col-xs-12">
+                                <label class="text-primary text-uppercase">Dados Bancarios</label>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="form-group col-xs-6">
+                                    <label ngclipboard data-clipboard-target="#iban">IBAN</label>
+                                    <input id="iban" class="form-control" type="text" ng-model="p.iban">
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label  ngclipboard data-clipboard-target="#dsdiban">Desde</label>
+                                    <input id="dsdiban" class="form-control" type="text" ng-model="p.ibandesde">
+                                </div> 
+                                <div class="form-group col-xs-3">
+                                    <label  ngclipboard data-clipboard-target="#diaprest">Dia Pagamento</label>
+                                    <input id="diaprest" class="form-control" type="text" ng-model="p.diaprestacao">
+                                </div>  
+                            </div> 
+                            <div class="col-xs-12">
+                                <button class="btn btn-success btn-block" ng-click="saveProcesso(p)">GUARDAR</button>
+                            </div> 
+                        </div>
+                        <!-- Painel do segundo titular -->
+                        <div class="segundo-titular" ng-show="titular == 'segundo'">
+                            <div class="col-xs-12">
+                                <div class="form-group col-xs-2">
+                                    <label>2º Titular</label>
+                                    <input class="form-control" type="checkbox" ng-model="p.segundoproponente" ng-change="clear2TitularDados(p.segundoproponente)"
+                                           ng-checked="p.segundoproponente == true || p.segundoproponente == 1">
+                                </div>
+                                <div class="form-group col-xs-4"  ng-if="p.segundoproponente == true || p.segundoproponente == 1">
+                                    <label>Relação Familiar</label>
+                                    <select class="form-control" ng-model="p.relacaofamiliar" >
+                                        <option ng-repeat="rf in relacoesfamiliares track by rf.id" ng-selected="p.relacaofamiliar == rf.id" ng-value="rf.id">{{rf.descricao}}</option>
+                                    </select>
+                                </div>  
+                            </div>
+                            <!--Dados pessoais do segundo titular-->
+                            <div class="col-xs-12" ng-if="p.segundoproponente == true || p.segundoproponente == 1">
+                                <div class="form-group col-xs-6">
+                                    <label ngclipboard data-clipboard-target="#nome2">Nome do 2º titular</label>
+                                    <input id="nome2" class="form-control" type="text" ng-model="p.nome2">
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label  ngclipboard data-clipboard-target="#dtnasc2">Data de nascimento 2ºT</label>
+                                    <input id="dtnasc2" class="form-control" type="text" ng-model="p.datanascimento2">
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label  ngclipboard data-clipboard-target="#nif2">NIF 2º titular</label>
+                                    <input id="nif2" class="form-control" type="text" ng-model="p.nif2">
+                                </div>                                 
+                                <!-- segunda linha -->
+                                <div class="form group col-xs-4">
+                                    <label>Documento Identificação 2ºT</label>
+                                    <select class="form-control" ng-model="p.tipodoc2">
+                                        <option ng-repeat="d in tiposdoc track by d.id" ng-selected='p.tipodoc2 == d.id' ng-value="d.id">{{d.nome}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label  ngclipboard data-clipboard-target="#numdoc2">Numero Documento 2ºT</label>
+                                    <input id="numdoc2" class="form-control" type="text" ng-model="p.numdocumento2">
+                                </div>                                     
+                                <div class="form-group col-xs-2">
+                                    <label  ngclipboard data-clipboard-target="#validade2">Validade 2ºT</label>
+                                    <input id="validade2" class="form-control" type="text" ng-model="p.validade2"  style="font-size: 1.1em">
+                                </div> 
+                                <div class="form-group col-xs-3">
+                                    <label  ngclipboard data-clipboard-target="#nac2">Nacionalidade 2ºT</label>
+                                    <select class="form-control" ng-model="p.nacionalidade2">
+                                        <option value="portuguesa" ng-selected="p.nacionalidade2 == ''">portuguesa</option>
+                                        <option ng-repeat="n in nacionalidades"  ng-value="n.nacionalidade" ng-selected="n.nacionalidade == p.nacionalidade2">{{n.nacionalidade}}</option>
+                                    </select>
+                                </div>                                
+                            </div>
+                            <!-- Morada e contactos -->
+                            <div class="col-xs-12">
+                                <label class="text-primary text-uppercase">Morada e contactos</label>
+                            </div>
+
+                            <!-- morada 2º Titular -->
+                            <div ng-if="(p.segundoproponente == true || p.segundoproponente == 1) && (!p.mesmahabitacao || p.mesmahabitacao == 0)">
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-3">
+                                        <label>Tipo de Habitação 2º</label>
+                                        <select class="form-control" ng-model="p.tipohabitacao2" >
+                                            <option ng-repeat="th in tiposhabitacao track by th.id" ng-selected='p.tipohabitacao2 == th.id' ng-value="th.id">{{th.nome}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-xs-3">
+                                        <label  ngclipboard data-clipboard-target="#desde2">Desde</label>
+                                        <input id="desde2" class="form-control" type="text" ng-model="p.anoiniciohabitacao2">
+                                    </div> 
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-6">
+                                        <label ngclipboard data-clipboard-target="#morada2">Morada do 2º titular</label>
+                                        <input id="morada2" class="form-control" type="text" ng-model="p.morada2">
+                                    </div>
+                                    <div class="form-group col-xs-3">
+                                        <label ngclipboard data-clipboard-target="#loc2">Localidade</label>
+                                        <input id="loc2" class="form-control" type="text" ng-model="p.localidade2">
+                                    </div>  
+                                    <div class="form-group col-xs-3">
+                                        <label ngclipboard data-clipboard-target="#cp2">Codigo Postal</label>
+                                        <input id="cp2" class="form-control" type="text" ng-model="p.cp2">
+                                    </div>                                 
+                                </div>  
+                            </div>
+                            <!-- Contactos e emails -->
+                            <div class="col-xs-12">
+                                <div ng-if="p.segundoproponente == true || p.segundoproponente == 1">
+                                    <div class="form-group col-xs-3">
+                                        <label ngclipboard data-clipboard-target="#tel2">Telefone 2ºT</label>
+                                        <input id="tel2" class="form-control" type="text" ng-model="p.telefone2">
+                                    </div>
+                                    <div class="form-group col-xs-6">
+                                        <label ngclipboard data-clipboard-target="#email2">Email 2º Titular</label>
+                                        <input id="email2" class="form-control" type="text" ng-model="p.email2">
+                                    </div> 
+                                </div>
+                            </div>
+                            <!-- Dados Profissionais -->
+                            <!-- Segundo titular -->
+                            <div class="col-xs-12" ng-if="p.segundoproponente == true || p.segundoproponente == 1">
+
+                                <div class="form-group col-xs-3">
+                                    <label>Sector 2ºT</label>
+                                    <select class="form-control" ng-model="p.sector2">
+                                        <option value="Privado" ng-selected="p.sector2 == 'Privado'">Privado</option>
+                                        <option value="Publico" ng-selected="p.sector2 == 'Publico'">Publico</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label>Tipo Contrato 2ºT</label>
+                                    <select class="form-control" ng-model="p.tipocontrato2">
+                                        <option ng-repeat="tc in tiposcontrato track by tc.id" ng-selected='p.tipocontrato2 == tc.id' ng-value="tc.id">{{tc.nome}}</option>
+                                    </select>
+                                </div> 
+                                <div class="form-group col-xs-2">
+                                    <label ngclipboard data-clipboard-target="#dsd2">Desde 2ºT</label>
+                                    <input id="dsd2" class="form-control" type="text" ng-model="p.desde2">
+                                </div>
+                                <div class="form-group col-xs-2">
+                                    <label>Mês</label>
+                                    <select class="form-control" ng-model="p.desdemes2">
+                                        <option value="1" ng-selected="p.desdemes2 == 1">Jan</option>
+                                        <option value="2" ng-selected="p.desdemes2 == 2">Fev</option>
+                                        <option value="3" ng-selected="p.desdemes2 == 3">Mar</option>
+                                        <option value="4" ng-selected="p.desdemes2 == 4">Abr</option>
+                                        <option value="5" ng-selected="p.desdemes2 == 5">Mai</option>
+                                        <option value="6" ng-selected="p.desdemes2 == 6">Jun</option>
+                                        <option value="7" ng-selected="p.desdemes2 == 7">Jul</option>
+                                        <option value="8" ng-selected="p.desdemes2 == 8">Ago</option>
+                                        <option value="9" ng-selected="p.desdemes2 == 9">Set</option>
+                                        <option value="10" ng-selected="p.desdemes2 == 10">Out</option>
+                                        <option value="11" ng-selected="p.desdemes2 == 11">Nov</option>
+                                        <option value="12" ng-selected="p.desdemes2 == 12">Dez</option>
+                                    </select>
+                                </div>                                
+                                <div class="form-group col-xs-6">
+                                    <label ngclipboard data-clipboard-target="#emp2">Nome da Empresa 2ºT</label>
+                                    <input id="emp2" class="form-control" type="text" ng-model="p.nomeempresa2">
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label ngclipboard data-clipboard-target="#nifemp2">NIF Empresa 2ºT</label>
+                                    <input id="nifemp2" class="form-control" type="text" ng-model="p.nifempresa2">
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <label ngclipboard data-clipboard-target="#tlf2">Telefone 2ºT</label>
+                                    <input id="tlf2" class="form-control" type="text" ng-model="p.telefoneempresa2">
+                                </div>                                   
+                            </div>
+                            <!-- Botão para guardar -->
+                            <div class="col-xs-12">
+                                <button class="btn btn-success btn-block" ng-click="saveProcesso(p)">GUARDAR</button>
+                            </div>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <!-- Documentos pedidos e recebidos -->
+        <div id="two.tpl" class="pn hide">
+            <div id="viewTwo" class="">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h4><strong class="text-primary">{{dl.id}}</strong> - Documentação Pedida / Recebida 
+                            <span ng-if="speedup" class="pull-right">
+                                NIF <strong class="text-primary">{{speedup.nif}}</strong>
+                                e senha das Finanças <strong class="text-primary">{{speedup.senha}}</strong>
+                                <label style="margin-left: 20px">Visto: 
+                                    <input type="checkbox" name="speedupVisto" ng-model="speedup.visto" ng-change="markAsViewed()">
+                                </label>
+                            </span>
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-condensed table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Documento Pedido</th>
+                                    <th>Ficheiro</th>
+                                    <th>Data Recebido</th>
+                                    <th>Recebido</th>
+                                    <th>Situação</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="d in docs">
+                                    <td>{{d.nomedoc}}</td>
+                                    <td>{{d.nomefx}}</td>
+                                    <td>{{d.datarecebido}}</td>
+                                    <td ng-if="d.recebido == 1" class="text-success">SIM</td>
+                                    <td ng-if="d.recebido == 0" class="text-danger">NÃO</td> 
+                                    <td ng-if="d.notok == 1" class="text-danger" title="{{d.problem}}" style="cursor:pointer">Invalido</td>
+                                    <td ng-if="d.aproved == 1" class="text-success">Aprovado</td> 
+                                    <td ng-if="!d.aproved && !d.notok && d.recebido==1">Por validar</td> 
+                                    <td ng-if="!d.aproved && !d.notok && d.recebido ==0">&nbsp;</td> 
+                                    <td class="text-right">
+                                        <button ng-if="d.recebido == 1 && d.nomefx" class="btn btn-success btn-sm" ng-click="verDoc(d)" title="Ver documentos"><i class="fa fa-eye"></i></button>
+                                        <button ng-if="d.recebido == 1 && d.nomefx" class="btn btn-info btn-sm" ng-click="mergeDoc(d)" title="Juntar documento ao existente"><i class="fa fa-plus-square"></i></button>
+                                        <button ng-if="d.recebido == 1 && d.nomefx" ng-click="changeDoc(d)" class="btn btn-info btn-sm" title="Alterar a designação"><i class="fa fa-pencil-alt"></i></button>
+                                        <button ng-if="d.recebido == 1 && d.nomefx" ng-click="descarregarDoc(d)" class="btn btn-primary btn-sm" title="Descarregar para pasta temporaria"><i class="fa fa-download"></i></button>
+                                        <button ng-if="d.recebido == 0" ng-click="anexarDoc(d, dl.id)" class="btn btn-info btn-sm" title="Anexar documento"><i class="fa fa-upload"></i></button>
+                                        <button ng-if="d.recebido == 1 && d.nomefx" ng-click="removerDoc(d, dl.id)" class="btn btn-danger btn-sm" title="Remover documento"><i class="fa fa-times"></i></button>
+                                        <button ng-if="d.recebido == 0" ng-click="cancelarPedidoDoc(d, dl.id)" class="btn btn-warning btn-sm" title="Cancelar pedido"><i class="fa fa-times"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="panel-footer text-center">
+                            <button ng-if="(tipoUser == 'Gestor' || tipoUser == 'GRec' ) && (dl.status == 8 || dl.status == 36 || dl.status == 38 || dl.status == 39)"
+                                    class="btn btn-primary pull-left" ng-click="agendaBP22(dl)"><i class="fa fa-calendar"> </i> Ag. BP</button>
+                            <button ng-if="dl.status == 21" class="btn btn-success" ng-click="docsOk(dl.id)" title="Volta a por o processo como pendente.">
+                                <i class="fa fa-check"> </i> Documentação OK</button>
+                            <button ng-if="(tipoUser == 'Gestor' || tipoUser == 'GRec') && (dl.status == 8 || dl.status == 36 || dl.status == 37 || dl.status == 38 || dl.status == 39) || sendToAnalise"
+                                    class="btn btn-success" ng-click="processForm(dl.id)"><i class="fa fa-arrow-right"> </i> Envia para Analise</button>
+                            <button class="btn btn-warning pull-right" ng-click="anexarDocExtra()"><i class="fa fa-upload"> </i> Documento Extra</button>
+                            <button ng-if="dl.status < 10 || dl.status == 21 || dl.status == 36 || dl.status == 37 || dl.status == 38 || dl.status == 39 && tipoUser != 'Administrador'" 
+                                    class="btn btn-info" ng-click="pedirDoc(dl.id)"><i class="fa fa-envelope"> </i> Pedir Documentação</button>
+                            <button class="btn btn-primary" ng-click="descarregarDocs(dl.id)"><i class="fa fa-download"> </i> Descarregar Todos</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Registo de contactos -->
+        <div id="three.tpl" class="pn hide">
+            <div id="viewThree" class="">
+                <div class="panel">
+                    <div class="panel-heading panel-primary">
+                        <h4><strong class="text-primary">{{dl.id}}</strong> - Contactos</h4>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-condensed" ng-show="contactos != ''">
+                            <thead>
+                                <tr>
+                                    <th colspan="3" class="text-center">Historico de Contactos</th>
+                                </tr>
+                                <tr>
+                                    <th ng-click="reverse = !reverse" style="cursor:pointer" title="Click para ordenar">Data &uarr;&darr;</th>
+                                    <th>Motivo</th>
+                                    <th>Utilizador</th>
+                                    <th>Tipo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="c in contactos| orderBy: 'data': reverse">
+                                    <td>{{c.data}}</td>
+                                    <td>{{c.descricao}}</td>
+                                    <td>{{c.nome}}</td>
+                                    <td>{{c.tipo}}</td>
+                                </tr>
+                            </tbody>
+                        </table>  
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Financiamentos -->
+        <div id="four.tpl" class="pn hide">
+            <div id="viewFour" class="">
+                <div class="panel">
+                    <div class="panel-heading panel-primary">
+                        <h4><strong class="text-primary">{{dl.id}}</strong> - Financiamentos</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group-sm col-xs-12">
+                            <!-- Registo dos financiamentos -->
+                            <table class="table table-condensed" ng-show="financiamentos != ''">
+                                <thead>
+                                    <tr>
+                                        <th colspan="10" class="text-center">Registo dos Pedidos de Financiamento</th>
+                                    </tr>                        
+                                    <tr>
+                                        <th>Processo</th>
+                                        <th>Parceiro</th>
+                                        <th>Tipo</th>
+                                        <th>Montante</th>
+                                        <th>Prazo</th>
+                                        <th>Prestação</th>
+                                        <th>Contrato Cliente -></th>
+                                        <th>Meio</th>
+                                        <th>Contrato Parceiro</th>
+                                        <th>Data</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="f in financiamentos">
+                                        <td>{{f.processo}}</td>
+                                        <td>{{f.nome}}</td>
+                                        <td>{{f.tipocredito}}</td>
+                                        <td>{{f.montante}}</td>
+                                        <td>{{f.prazo}}</td>
+                                        <td>{{f.prestacao}}</td>
+                                        <td>{{f.dtcontratocliente}}</td>
+                                        <td>{{f.formaenvio}}</td>
+                                        <td>{{f.dtcontratoparceiro}}</td>
+                                        <td>{{f.datastatus}}</td>
+                                        <td>{{f.statusnome}}</td>
+                                        <td ng-if="f.outrainfo"><i class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-html="true" title="Informações: {{f.outrainfo}}"> </i></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>  
+                        <!- Listagem dos contratos de financiamento -->
+                        <div class="form-group-sm col-xs-12">
+                            <hr/>
+                            <h4 class="text-center text-primary" ng-show="contratos == ''">Não há Contratos Anexados</h4>
+                            <table class="table table-condensed" ng-show="contratos != ''">
+                                <thead>
+                                    <tr>
+                                        <th colspan="10" class="text-center">Contratos de financiamento</th>
+                                    </tr>                        
+                                    <tr>
+                                        <th>Descrição</th>
+                                        <th>Data</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="c in contratos">
+                                        <td>{{c.nome}}</td>
+                                        <td>{{c.data}}</td>
+                                        <td>
+                                            <button  class="btn btn-success btn-sm" ng-click="verContrato(c)" title="Ver contrato"><i class="fa fa-eye"></i></button>
+                                            <button  ng-click="descarregarContrato(c)" class="btn btn-primary btn-sm" title="Descarregar para pasta temporaria"><i class="fa fa-download"></i></button>
+                                            <button  ng-if="tipoUser == 'Analista'" ng-click="removerContrato(c)" class="btn btn-danger btn-sm" title="Remover contrato"><i class="fa fa-times"></i></button>                                                
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table> 
+                            <p class="text-center">
+                                <button ng-if="tipoUser == 'Analista'" class="btn btn-info" ng-click="anexarContrato(dl.id)"><i class="fa fa-upload"> </i> Anexar Novo Contrato</button>
+                            </p>
+                        </div>                            
+                    </div>
+                </div>
+            </div>
+        </div>            
+        <!-- Informações e Rejeições -->
+        <div id="five.tpl" class="pn hide">
+            <div id="viewFive" class="">
+                <div class="panel">
+                    <div class="panel-heading panel-primary">
+                        <h4><strong class="text-primary">{{dl.id}}</strong> - Informações</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group-sm col-xs-12">
+                            <label>Rejeições:</label>
+                            <textarea rows="5" class="form-control" ng-readonly="readOnly || tipoUser == 'Gestor'  || tipoUser == 'GRec'" ng-model="rejeicoes"></textarea>
+                        </div>                            
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group-sm col-xs-12">
+                            <label>Outras Informações:</label>
+                            <textarea rows="5" class="form-control" ng-readonly="readOnly || tipoUser == 'Analista'" ng-model="ic.outrainfo"></textarea>
+                        </div>                            
+                    </div>                        
+                </div>
+            </div>
+        </div> 
+        <!-- Notas e Observações do Analista-->
+        <div id="six.tpl" class="pn hide">
+            <div id="viewSix" class="">
+                <div class="panel">
+                    <div class="panel-heading panel-primary">
+                        <h4><strong class="text-primary">{{dl.id}}</strong> - Notas</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group-sm col-xs-12">
+                            <label>Notas:</label>
+                            <textarea rows="6" class="form-control" ng-model="ic.nota" ng-readonly="readOnly || tipoUser == 'Gestor' || tipoUser == 'GRec'"></textarea>
+                        </div>                            
+                    </div>
+                    <div class="panel-footer">
+                        <button ng-if="readOnly && tipoUser == 'Analista'" class="btn btn-info" ng-click="editarNota()"><i class="fa fa-pencil-alt"></i> Editar</button>
+                        <button ng-if="!readOnly && tipoUser == 'Analista'" class="btn btn-primary" ng-click="salvarNota(dl.id)"><i class="fa fa-save"></i> Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>          
+        <!-- Comprovativos de pagamento-->
+        <div id="seven.tpl" class="pn hide">
+            <div id="viewSeven" class="">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h4><strong class="text-primary">{{dl.id}}</strong> - Comprovativos Pedidos / Recebidos </h4>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-condensed table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Instituição</th>
+                                    <th>Tipo</th>
+                                    <th>Montante</th>
+                                    <th>Data Pedido</th>
+                                    <th>Recebido</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="c in comprovativos">
+                                    <td>{{c.instituicao}}</td>
+                                    <td>{{c.tipo}}</td>
+                                    <td>{{c.montante}}</td>
+                                    <td>{{c.datapedido}}</td>
+                                    <td ng-if="c.status == 1" class="text-success">SIM</td>
+                                    <td ng-if="c.status == 0" class="text-danger">NÃO</td> 
+                                    <td class="text-right">
+                                        <button ng-if="c.status == 1" class="btn btn-success btn-sm" ng-click="verComprovativo(c)" title="Ver Comprovativo"><i class="fa fa-eye"></i></button>
+                                        <button ng-if="c.status == 1" ng-click="descarregarComprovativo(c)" class="btn btn-primary btn-sm" title="Descarregar para pasta temporaria"><i class="fa fa-download"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>   
+
+        </div>
+        <!-- Cartões de Credito-->
+        <div id="eight.tpl" class="pn hide">
+            <div id="viewEight" class="">
+                <div class="panel" style="min-height: 100px;">
+                    <div class="panel-heading">
+                        <h4><strong class="text-primary">{{dl.id}}</strong> - Cartões de Credito </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-xs-12" ng-if="cc">
+                            <div class="form-group-sm col-xs-2">
+                                <label >Data de Sugestão</label>
+                                <input  class="form-control"  type="text" ng-model="cc.sugerido" ng-readonly="readOnly"/>
+                            </div>           
+                            <div class="form-group-sm col-xs-2">
+                                <label>Forma de sugestão </label>
+                                <input class="form-control"  type="text" ng-model="cc.formasugestao" ng-readonly="readOnly"/>
+                            </div>
+                            <div class="form-group-sm col-xs-2">
+                                <label>Situação </label>
+                                <input class="form-control" type="text" ng-if="cc.status == 1" value="Sugerido"  ng-readonly="readOnly"/>
+                                <input class="form-control" type="text" ng-if="cc.status == 2" value="Aceite pelo cliente"  ng-readonly="readOnly"/>
+                                <input class="form-control" type="text" ng-if="cc.status == 3" value="Cliente não interessado"  ng-readonly="readOnly"/>
+                                <input class="form-control" type="text" ng-if="cc.status == 4" value="Pré-aprovado"  ng-readonly="readOnly"/>
+                                <input class="form-control" type="text" ng-if="cc.status == 5" value="Atribuido"  ng-readonly="readOnly"/>
+                                <input class="form-control" type="text" ng-if="cc.status == 6" value="Recusado pelo parceiro"  ng-readonly="readOnly"/>
+                                <input class="form-control" type="text" ng-if="cc.status == 7" value="Ativado pelo cliente"  ng-readonly="readOnly"/>
+                                <input class="form-control" type="text" ng-if="cc.status == 9" value="Cancelado"  ng-readonly="readOnly"/>
+                                <input class="form-control" type="text" ng-if="cc.status == 8" value="Não ativou no prazo"  ng-readonly="readOnly"/>
+                            </div>
+
+                            <div class="form-group-sm col-xs-2">
+                                <label>Data da Situação </label>
+                                <input class="form-control" type="text" ng-if="cc.status == 1" ng-model="cc.sugerido"  ng-readonly="readOnly"/>
+                                <input class="form-control" type="text" ng-if="cc.status == 2" ng-model="cc.dataresposta"   ng-readonly="readOnly"/>
+                                <input class="form-control" type="text" ng-if="cc.status == 3" ng-model="cc.dataresposta"   ng-readonly="readOnly"/>
+                                <input class="form-control" type="text" ng-if="cc.status == 4" ng-model="cc.datarespostaparceiro"  ng-readonly="readOnly"/>
+                                <input class="form-control" type="text" ng-if="cc.status == 5" ng-model="cc.datarespostafinal"   ng-readonly="readOnly"/>
+                                <input class="form-control" type="text" ng-if="cc.status == 6" ng-model="cc.datarespostafinal"  ng-readonly="readOnly"/>
+                                <input class="form-control" type="text" ng-if="cc.status == 7" ng-model="cc.dataativado"   ng-readonly="readOnly"/>
+                                <input class="form-control" type="text" ng-if="cc.status == 9" ng-model="cc.sugerido"  ng-readonly="readOnly"/>
+                                <input class="form-control" type="text" ng-if="cc.status == 8" value="na"  ng-readonly="readOnly"/>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+        </div>   
+        <!-- Comunicações com o cliente-->
+        <div id="nine.tpl" class="pn hide">
+            <div id="viewNine" class="">
+                <div class="panel" style="min-height: 400px;">
+
+                    <div class="panel-heading">
+                        <h4><strong class="text-primary">{{dl.id}}</strong> - Comunicações com Cliente</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-5">
+                                <h4 class="text-info text-center" ng-if="comunicacoes">Histórico de comunicações</h4>
+                                <h4 class="text-info text-center" ng-if="!comunicacoes">Não existem comunicações</h4>
+                                <div class="panel panel-default"  ng-repeat="c in comunicacoes">
+                                    <div class="panel-heading" ng-click="selected = $index; show = !show">{{c.data}} - {{c.assunto}}</div>
+                                    <div ng-show="selected == $index && show" class="panel-body">
+                                        <textarea class="form-control" rows="4">{{c.texto}}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6 bg-info">
+                                <h4 class="text-center">Criar email</h4>
+                                <div class="form-group">
+                                    <label>Enviar para</label>
+                                    <input class="form-control" type="text" ng-model="ic.email" readonly>
+                                </div>                                        
+                                <div class="form-group">
+                                    <label>Assunto</label>
+                                    <input class="form-control" type="text" ng-model="e.assunto">
+                                </div>
+                                <div class="form-group">
+                                    <label>Texto <small>(Atenção! O [Exmo(a) Nome Cliente] é incluido automaticamente)</small></label>
+                                    <textarea class="form-control" rows="6" ng-model="e.texto"></textarea>
+                                </div>
+                                <div class="text-center">
+                                    <button class="btn btn-warning" ng-click="e = {}"><i class="fa fa-eraser"></i> Limpar</button>
+                                    <button class="btn btn-default" ng-click="enviarComunicacao(e)"><i class="fa fa-envelope text-danger"></i> Enviar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>            
+
+    <div class="text-center">
+        <br/>
+        <div class="btn-group dropup" ng-if="(dl.status == 14 || dl.status == 15) && tipoUser == 'Administrador'">
+            <button type="button" class="btn btn-success" ng-click="confirmOrReanalise(dl.id, 22, 1)">Enviar para Reanalise</button>
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu"  >
+                <li ng-repeat="u in utilizadores| orderBy:'nome' " ng-if="u.tipo == 'Analista'" 
+                    ng-click="confirmOrReanalise(dl.id, u.id, 1)">{{u.nome}}</li>
+            </ul>
+        </div>
+
+
+        <button class="btn btn-primary" ng-if="(dl.status == 14 || dl.status == 15 || dl.status == 18 || dl.status == 19) && tipoUser == 'Analista'" ng-click="changeToReanalise(dl.id)">Re-analise</button> 
+        <button class="btn btn-danger" ng-if="(dl.status == 14 || dl.status == 15) && tipoUser == 'Administrador'" ng-click="confirmOrReanalise(dl.id, 0, 0)">Confirma Rejeição</button> 
+        <button class="btn btn-warning" onclick="window.history.back()"><i class="fa fa-undo"> </i> Voltar</button>
+        <div class="pull-right">
+            <!--  <button class="btn btn-info" ng-if="!editar && dl.status<13" ng-click="editarLead()"><i class="fa fa-pencil-alt"> </i> Editar</button>  -->
+            <button class="btn btn-info" ng-if="!editar && tipoUser != 'Administrador'" ng-click="editarLead()"><i class="fa fa-pencil-alt"> </i> Editar</button>
+            <button class="btn btn-primary" ng-if="editar" ng-click="gravarLead(dl.id)"><i class="fa fa-save"> </i> Guardar</button>
+            <span>&nbsp;&nbsp;&nbsp;</span>        
+            <button class="btn btn-danger" ng-if="(dl.status != 3 && dl.status != 4 && dl.status != 5 && dl.status < 12) || dl.status == 36 || dl.status == 37 || dl.status == 38 || dl.status == 39" 
+                    ng-click="rejeitarLead(dl)"><i class="fa fa-eraser"> </i> Rejeitar</button>
+            <span>&nbsp;&nbsp;&nbsp;</span>
+            <button class="btn btn-default" ng-if="ic.nome != 'rgpd' && tipoUser != 'Administrador'" ng-click="delRGPD(dl.id)"><i class="fa fa-eraser"> </i> RGPD - Eliminar</button>
+        </div>
+    </div>
+    <br/><br/><br/>
+</div>
+
+
+<!-- Modal para fazer anexação da documentação  -->
+<script type="text/ng-template" id="modalAnexarDocsPesq.html" ng-controller="modalInstanceAnexarDocsPesq"> 
+    <div class="modal-header bg-info">
+    <h3 class="modal-title">{{item.op}} Documentação - LEAD: {{lead}}
+    <span class="closeModal" ng-click="closeModal()">X</span>
+    </h3>
+    </div>
+
+    <div class="modal-body">
+    <h4>{{doc.nomedoc}}</h4>
+    <form>
+    <!--  <input  type="file" ng-model="file" base-sixty-four-input on-change="onChange"> -->
+    <input type="file" accept="image/*, application/pdf" ng-upload-change="compressImage($event)">
+    <table class="table table-bordered table-striped">
+    <tr>
+    <th>Ficheiro original</th>
+    <th>Novo nome</th>
+    <th>Tamanho (<i><small>KB</small></i>)</th>
+    </tr>
+    <tr>
+    <td>{{file.filename}}</td>
+    <td><span ng-show="file.filename">{{novonome=doc.sigla+'.'+(file.filetype).substr((file.filetype).indexOf('/')+1)}}<span></td>
+    <td ng-if="file.filesize >= maxFileSize" class="text-danger">{{file.filesize / 1000}}</td>
+    <td ng-if="file.filesize < maxFileSize">{{file.filesize / 1000}}</td>
+    </tr>
+    <tr>
+    <td colspan="2" ng-show="!file">
+    <small><i>No file selected.</i></small>
+    </td>
+    </tr>
+    <tr ng-if="file.filesize >= maxFileSize" class="text-danger">
+    <td colspan="3">
+    <small><i>Ficheiro demasiado grande!!</i></small>
+    </td>
+    </tr>
+    </table>
+    <br/>
+    <div class="text-center">
+    <button ng-disabled="file.filesize >= maxFileSize" class="btn btn-success" ng-click="saveAttachedDoc()"><i class="fa fa-check"></i> Guardar</button>
+    <button class="btn btn-warning" ng-click="closeModal()"> Cancelar</button>
+    </div>
+    </form>
+    </div>
+</script>
+
+<!-- Modal para Pedir Doc. Seleciona o tipo de pedido de documentação.
+    TODO- Preenche a morada ou confirma o email -  Regista a data espectavél da receção dos documentos   -->
+<script type="text/ng-template" id="modalPedirDoc.html" ng-controller="modalInstancePedirDoc">
+    <div class="modal-header bg-info">
+    <h3 class="modal-title"><strong class="text-primary">{{lead}}</strong> - Documentação Necessária
+    <span class="closeModal" ng-click="closeModal()">X</span>
+    </h3>
+    </div>
+
+    <div class="modal-body">
+    <div class="container">
+    <div class="row">
+
+    <!-- Listagem dos documentos a pedir, com check box para selecionar -->
+    <div class=" col-xs-12">
+    <ul class="list-unstyled col-xs-12 col-md-6" ng-repeat="doc in docs track by doc.id">
+    <li>
+    <label>
+    <input class="checkbox-group" type="checkbox" checklist-model="d.docs" checklist-value="doc"/> 
+    {{doc.nomedoc}}
+    </label>
+    </li>
+    </ul>
+    </div>
+    <div class="form-group col-xs-12 col-md-6">
+    <br/>
+    <label>Outro Documento</label>
+    <input class="form-control" type='text' ng-model="outroDoc"/>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="modal-footer">
+    <div class="text-center">
+    <button class="btn btn-success" ng-click="enviarPedidoDocEmFalta(lead,d)">Pedir documentação em falta e a selecionada</button>
+    <button class="btn btn-success" ng-click="enviarPedidoDoc(d)">Pedir Apenas a Selecionado</button>
+    <a class="btn btn-warning" ng-click="closeModal()">Cancelar</a>
+    </div>         
+    </div>
+</script>
+
+<!-- Modal para alterar a designação de um documento -->
+<script type="text/ng-template" id="modalChangeDoc.html" ng-controller="modalInstanceChangeDoc">  
+    <div class="modal-header bg-info">
+    <h3 class="modal-title">Alterar designação do Documento - LEAD: {{docOrig.lead}}
+    <span class="closeModal" ng-click="closeModal()">X</span>
+    </h3>
+    </div>
+
+    <div class="modal-body">
+    <div class="container">
+    <h4 class="text-primary"><strong>{{docOrig.nomedoc}}</strong></h4>
+    <!-- Listagem dos documentos a pedir, com check box para selecionar -->
+    <ul class="list-unstyled col-xs-12 col-md-6" ng-repeat="doc in docs track by doc.id">
+    <li>
+    <label>
+    <input class="checkbox-group" type="checkbox"  checklist-model="d.docs" checklist-value="doc"/> 
+    {{doc.nomedoc}}
+    </label>
+    </li>
+    </ul>
+
+    <br/><br/>
+    </div>        
+    </div>
+    <div class="modal-footer">
+    <div class="text-center">
+    <button class="btn btn-success" ng-click="saveChange(d)"><i class="fa fa-check"></i> Guardar</button>
+    <button class="btn btn-warning" ng-click="closeModal()"> Cancelar</button>
+    </div>
+    </div>
+</script>
+
+<!-- Modal para anexar comprovativo -->
+<script type="text/ng-template" id="modalAnexarComprovativo.html" ng-controller="modalInstanceAnexarComprovativo">  
+    <div class="modal-header bg-info">
+    <h3 class="modal-title">Anexar Comprovativos - LEAD: {{lead}}
+    <span class="closeModal" ng-click="closeModal()">X</span>
+    </h3>
+    </div>
+
+    <div class="modal-body">
+    <div class="container">
+    <div class="row">
+    <div class="col-xs-8">
+    <form>
+    <div class="form-group">
+    <input class="form-control" type="file" ng-model="file" base-sixty-four-input on-change="onChange">
+    </div>
+
+    <table class="table table-bordered table-striped">
+    <tr>
+    <th>Ficheiro original</th>
+    <th>Novo nome</th>
+    <th>Tamanho (<i><small>KB</small></i>)</th>
+    </tr>
+    <tr>
+    <td>{{file.filename}}</td>
+    <td><span ng-show="file.filename">{{novonome+'.'+(file.filetype).substr((file.filetype).indexOf('/')+1)}}<span></td>
+    <td>{{file.filesize / 1000}}</td>
+    </tr>
+    <tr>
+    <td colspan="3" ng-show="!file">
+    <small><i>No file selected.</i></small>
+    </td>
+    </tr>
+    </table>
+    <br/>
+    <div class="form-group">
+    <label>Nome do documento </label>
+    <input class="form-control" type="text" ng-model="novonome" placeholder="Apenas se pretender alterar o original!!"/>
+    </div>
+    <br/><br/>
+
+    </form>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="modal-footer">
+    <div class="text-center">
+    <button class="btn btn-success" ng-click="saveAttachedComprovativo()"><i class="fa fa-check"></i> Guardar</button>
+    <button class="btn btn-warning" ng-click="closeModal()"> Fechar</button>
+    </div>
+    </div>
+</script>
+
+<!-- Modal para fazer anexação da documentação EXTRA -->
+<script type="text/ng-template" id="modalAnexarDocsExtra.html" ng-controller="modalInstanceAnexarDocsExtra">  
+    <div class="modal-header bg-info">
+    <h3 class="modal-title">Anexar Documento - LEAD: {{lead}}
+    <span class="closeModal" ng-click="closeModal()">X</span>
+    </h3>
+    </div>
+
+    <div class="modal-body">
+    <div class="container">
+    <div class="row">
+    <div class="col-xs-8">
+    <form>
+    <!--   <input  type="file" ng-model="file" base-sixty-four-input on-change="onChange"> -->
+    <input type="file" accept="image/*, application/pdf" ng-upload-change="compressImage2($event)">
+    <table class="table table-bordered table-striped">
+    <tr>
+    <th>Ficheiro original</th>
+    <th>Novo nome</th>
+    <th>Tamanho (<i><small>KB</small></i>)</th>
+    </tr>
+    <tr>
+    <td>{{file.filename}}</td>
+    <td><span ng-show="file.filename">{{novonome+'.'+(file.filetype).substr((file.filetype).indexOf('/')+1)}}<span></td>
+    <td>{{file.filesize / 1000}}</td>
+    </tr>
+    <tr>
+    <td colspan="2" ng-show="!file">
+    <small><i>No file selected.</i></small>
+    </td>
+    </tr>
+    </table>
+    <br/><br/>
+    <!-- Listagem dos documentos a pedir, com check box para selecionar -->
+    <ul class="list-unstyled col-xs-12 col-md-6" ng-repeat="doc in docs track by doc.id">
+    <li>
+    <label>
+    <input class="checkbox-group" type="checkbox" ng-click="upNovoNome(d)" checklist-model="d.docs" checklist-value="doc"/> 
+    {{doc.nomedoc}}
+    </label>
+    </li>
+    </ul>
+
+    <br/><br/>
+    </form>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="modal-footer">
+    <div class="text-center">
+    <button class="btn btn-success" ng-click="saveAttachedDocExtra()"><i class="fa fa-check"></i> Guardar</button>
+    <button class="btn btn-warning" ng-click="closeModal()"> Cancelar</button>
+    </div>
+    </div>
+</script>
+
+
+<!-- Modal para fazer anexação de um contrato-->
+<script type="text/ng-template" id="modalAnexarContrato2.html" ng-controller="modalInstanceAnexarContrato2">  
+    <div class="modal-header bg-info">
+    <h3 class="modal-title">Anexar Contrato - LEAD: {{lead}}
+    <span class="closeModal" ng-click="closeModal()">X</span>
+    </h3>
+    </div>
+
+    <div class="modal-body">
+    <div class="container">
+    <div class="row">
+    <div class="col-xs-8">
+    <input  type="file" ng-model="file" base-sixty-four-input on-change="onChange">
+
+    <table class="table table-bordered table-striped">
+
+    <tr>
+    <th>Ficheiro original</th>
+    <th>Novo nome</th>
+    <th>Tamanho (<i><small>KB</small></i>)</th>
+    </tr>
+    <tr>
+    <td>{{file.filename}}</td>
+    <td><span ng-show="file.filename">{{novonome+'.'+(file.filetype).substr((file.filetype).indexOf('/')+1)}}<span></td>
+    <td>{{file.filesize / 1000}}</td>
+    </tr>
+    <tr>
+    <td colspan="2" ng-show="!file">
+    <small><i>No file selected.</i></small>
+    </td>
+    </tr>
+    </table>
+
+    <br/><br/>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="modal-footer">
+    <div class="text-center">
+    <button class="btn btn-success" ng-click="anexarContrato()"><i class="fa fa-check"></i> Guardar</button>
+    <button class="btn btn-warning" ng-click="closeModal()"> Cancelar</button>
+    </div>
+    </div>
+</script>
+
+<!-- Modal para visualizar Comprovativos   -->
+<script type="text/ng-template" id="modalViewComp1.html" ng-controller="modalInstanceViewComp1">
+    <div class="modal-header bg-info">
+    <h3 class="modal-title">Documentação - {{nomedoc}}
+    <span class="closeModal" ng-click="closeModal()">X</span>
+    </h3>
+    </div>
+    <h1 ng-if="!show">Aguarde</h1>
+    <div class="modal-body" ng-if="show">
+    <iframe ng-if="imagePath" ng-src="{{imagePath}}" width="800px" height="800px"></iframe>
+    </div>
+    <div class="modal-footer">
+    <div class="text-center">
+    <button class="btn btn-warning" ng-click="closeModal()">Fechar</button>
+    </div>
+    </div>
+</script>
+
+
+<!-- Modal para fazer agendamento  -->
+<script type="text/ng-template" id="modalAgendamento.html" ng-controller="modalInstanceAgendamento"> 
+    <div class="modal-header bg-info">
+    <h3 class="modal-title">Agendar Novo Contacto LEAD: {{ag.lead}}
+    <span class="closeModal" ng-click="closeModal()">X</span>
+    </h3>
+    </div>
+
+    <div class="modal-body">
+    <form>
+    <div class="form-group">
+    <label>Selecione data</label>
+    <input class="form-control" type="date" ng-model="ag.data"/>
+    </div>
+    <div class="form-group">
+    <label>Hora</label>
+    <input class="form-control" type="time" ng-model="ag.hora"/>
+    </div>
+    <div class="form-group">
+    <label>Observações</label>
+    <textarea class="form-control" rows="3" ng-model="ag.obs"></textarea>
+    </div>
+    <br/>
+    <div class="text-center">
+    <button class="btn btn-success" ng-click="saveAgendamento(ag)"><i class="fa fa-check"></i> Guardar</button>
+    <button class="btn btn-warning" ng-click="closeModal()"> Cancelar</button>
+    </div>
+    </form>
+    </div>
+</script>
+
+<!-- Modal para mostrar historico -->
+<script type="text/ng-template" id="modalHistorico.html" ng-controller="modalInstanceHistorico">
+    <div class="modal-header bg-info">
+    <h3 class="modal-title">Lista de LEADS do mesmo cliente
+    <span class="closeModal" ng-click="closeModal()">X</span>
+    </h3>
+    </div>
+    <div class="modal-body">
+    <table class="table table-condensed">
+    <thead class="bg-primary">
+    <tr>
+    <th>LEAD</th>
+    <th>Nome</th>
+    <th>NIF</th>
+    <th>Email</th>
+    <th>Telefone</th>
+    <th>Montante</th>
+    <th>Situação</th>
+    <th>Data situação</th>
+    <th>Gestor</th>
+    <th>Analista</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="l in lista">
+    <td ng-click="openHistoricoLeadDetail(l.id)"><span class="text-primary">{{l.id}}</span></td>
+    <td>{{l.nome}}</td>
+    <td>{{l.nif}}</td>
+    <td>{{l.email}}</td>
+    <td>{{l.telefone}}</td>
+    <td>{{l.montante}}</td>
+    <td>{{l.status}}</td>
+    <td>{{l.datastatus}}</td>
+    <td>{{l.usernome}}</td>
+    <td>{{l.analista}}</td>
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    <div class="modal-footer">
+    <div class="text-center">
+    <button class="btn btn-warning" ng-click="closeModal()"><i class="fa fa-undo"> </i>Voltar</button>
+         <button class="btn btn-danger" ng-click="anularRepetida()" title="Anula a lead puxada porque está repetida. Não envia emails!">
+    <i class="fa fa-times"> </i> Anular por estar repetida
+    </button> 
+    </div>
+    </div>
+
+</script>
+
+<!-- Modal para mostrar detalhe de uma LEAD do Historico  -->
+<script type="text/ng-template" id="modalHistoricoLeadsDetail.html" ng-controller="modalInstanceHistoricoLeadsDetail">
+    <div class="modal-header bg-info">
+    <h3 class="modal-title">Detalhe <span class="text-white">{{dl.id}} - {{dl.tipo}}</span>
+    <span class="closeModal" ng-click="closeModal()">X</span>
+    </h3>
+    </div>
+    <div class="modal-body">
+
+    <!-- Informações sobre a LEAD -->
+    <div class="panel">
+    <div class="panel-heading panel-primary">
+    <h4>Informação da LEAD </h4>
+    </div>
+    <div class="panel-body">
+    <div class="col-xs-12">
+    <div class="form-group-sm col-sm-2">
+    <label>Fornecedor</label>
+    <input type="text" class="form-control" ng-model="dl.fornecedornome" readonly=""/>
+    </div>
+    <div class="form-group-sm col-sm-2">
+    <label>LEAD original</label>
+    <input type="text" class="form-control" ng-model="dl.idleadorig" readonly=""/>
+    </div>
+    <div class="form-group-sm col-sm-2">
+    <label>Data Entrada</label>
+    <input type="text" class="form-control" ng-model="dl.dataentrada" readonly=""/>
+    </div>                
+    <div class="form-group-sm col-sm-2">
+    <label>Situação</label>
+    <input ng-click="ativar(dl)" type="text" class="form-control" ng-model="dl.nomestatus" readonly=""/>
+    </div>
+    <div class="form-group-sm col-sm-2">
+    <label>Data Situação</label>
+    <input type="text" class="form-control" ng-model="dl.datastatus" readonly=""/>
+    </div>
+    <div class="form-group-sm col-sm-2" ng-if="tipoUser=='Analista'">
+    <label>Gestor</label>
+    <input type="text" class="form-control" ng-model="dl.gestor" readonly=""/>
+    </div>
+    <div class="form-group-sm col-sm-2" ng-if="(tipoUser=='Gestor' || tipoUser == 'GRec') && dl.status>=12">
+    <label>Analista</label>
+    <input type="text" class="form-control" ng-model="dl.analista" readonly=""/>
+    </div> 
+    </div>
+    <div class="col-xs-12">
+    <div class="form-group-sm col-sm-2">
+    <label>Origem</label>
+    <input type="text" class="form-control" ng-model="dl.nomelead" readonly=""/>
+    </div>                    
+    <div class="form-group-sm col-sm-5">
+    <label>Situação do crédito</label>
+    <input type="text" class="form-control" ng-model="dl.situacao" readonly=""/>
+    </div>
+    <div class="form-group-sm col-sm-5">
+    <label>Informações </label>
+    <input type="text" class="form-control" ng-model="dl.info" readonly=""/>
+    </div>                    
+    </div>
+    </div>
+    </div>
+
+
+    <!--Dados do cliente   -->
+    <div class="panel">
+    <div class="panel-heading panel-primary"> 
+    <h4><strong class="text-primary"></strong>Informação do Cliente</h4>
+    </div>
+    <div class="panel-body">
+    <div class="col-xs-12">
+    <div class="form-group-sm col-xs-10">
+    <label>Nome </label>
+    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.nome" title="{{ic.nome}}"/>
+    </div>
+    <div class="form-group-sm col-xs-2">
+    <label>Idade </label>
+    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.idade"/>
+    </div>
+    <div class="form-group-sm col-xs-3">
+    <label>Telefone </label>
+    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.telefone"/>
+    </div>
+    <div class="form-group-sm col-xs-9">
+    <label>Email </label>
+    <input id="emailToCopy" ng-readonly="readOnly" class="form-control" type="text" ng-click="copyToClip()" ng-model="ic.email" title="Click para copiar"/>
+    </div>
+    <!-- Morada Postal -->
+    <div ng-if="ic.moradarua || !readOnly">
+    <div class="form-group-sm col-xs-6">
+    <label class="text-info">Rua </label>
+    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.moradarua"/>
+    </div> 
+    <div class="form-group-sm col-xs-4">
+    <label class="text-info">Localidade </label>
+    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.moradalocalidade"/>
+    </div>                                
+    <div class="form-group-sm col-xs-2">
+    <label class="text-info">Codigo Postal </label>
+    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.moradacp"/>
+    </div> 
+    </div>
+    <div class="form-group-sm col-xs-3">
+    <label>NIF </label>
+    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.nif"/>
+    </div>
+    <div class="form-group-sm col-sm-2">
+    <label>IRS</label>
+    <input type="text" class="form-control" ng-model="ic.irs"  ng-readonly="readOnly"/>
+    </div>                                
+    <div class="form-group-sm col-xs-3">
+    <label>Estado Civil </label>
+    <select readonly disabled="" class="form-control" ng-model="ic.estadocivil">
+    <option ng-repeat="ec in estadoscivis" ng-value="ec.id" ng-selected="ic.estadocivil==ec.id">{{ec.nome}}</option>
+    </select>
+    </div>
+    <div class="form-group-sm col-xs-2">
+    <label>Filhos </label>
+    <input ng-readonly="readOnly" class="form-control" type="text"  ng-model="ic.filhos"/>
+    </div>
+    <div class="form-group-sm col-xs-4">
+    <label>Profissão </label>
+    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.profissao"/>
+    </div>                                
+    <div class="form-group-sm col-xs-4">
+    <label>Tipo contrato </label>
+    <input readonly class="form-control" type="text" ng-model="ic.nomecontrato"/>
+    </div>
+    <div class="form-group-sm col-xs-2">
+    <label>Inicio </label>
+    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.anoinicio"/>
+    </div>                                
+    <div class="form-group-sm col-xs-2">
+    <label>Vencimento </label>
+    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.vencimento"/>
+    </div>                                
+    </div>
+    <!-- Habitação -->
+    <div class="col-xs-12">
+    <div class="form-group-sm col-sm-4">
+    <label>Habitação</label>
+    <input type="text" class="form-control" ng-model="ic.nomehabitacao" ng-readonly="true"/>
+    </div>
+    <div class="form-group-sm col-sm-2" ng-if="ic.valorhabitacao>0">
+    <label>Renda/Prestação</label>
+    <input type="text" class="form-control"  ng-model="ic.valorhabitacao" ng-readonly="true"/>
+    </div>
+    <div class="form-group-sm col-sm-2">
+    <label>Inicio</label>
+    <input type="text" class="form-control" ng-model="ic.anoiniciohabitacao" ng-readonly="readOnly"/>
+    </div>                 
+    <div class="form-group-sm col-sm-2" ng-if="ic.declarada">
+    <label>Declarada</label>
+    <input type="text" class="form-control" ng-model="ic.declarada" ng-readonly="readOnly"/>
+    </div>
+    <div class="form-group-sm col-sm-2" ng-if="ic.mesmahabitacao">
+    <label class="text-info">Mesma</label>
+    <input type="text" class="form-control" ng-model="ic.mesmahabitacao" ng-readonly="readOnly"/>
+    </div>
+    <div ng-if="ic.mesmahabitacao=='Não'">
+    <div class="form-group-sm col-sm-4">
+    <label class="text-info">Habitação 2º</label>
+    <input type="text" class="form-control" ng-model="ic.nomehabitacao2" ng-readonly="true"/>
+    </div>
+    <div class="form-group-sm col-sm-2" ng-if="ic.valorhabitacao2>0">
+    <label class="text-info">Renda/Prestação</label>
+    <input type="text" class="form-control"  ng-model="ic.valorhabitacao2" ng-readonly="readOnly"/>
+    </div>
+    <div class="form-group-sm col-sm-2">
+    <label class="text-info">Inicio</label>
+    <input type="text" class="form-control" ng-model="ic.anoiniciohabitacao2" ng-readonly="readOnly"/>
+    </div>                 
+    <div class="form-group-sm col-sm-2" ng-if="ic.declarada2">
+    <label class="text-info">Declarada</label>
+    <input type="text" class="form-control" ng-model="ic.declarada2" ng-readonly="readOnly"/>
+    </div> 
+    </div>
+    </div>
+    <div class="col-xs-12">
+    <div class="form-group-sm col-xs-2">
+    <label class="text-info">Parentesco </label>
+    <input readonly class="form-control" type="text" ng-model="ic.parentesco2"/>
+    </div>                                
+    <div class="form-group-sm col-xs-2">
+    <label class="text-info">Idade 2º Prop. </label>
+    <input readonly class="form-control" type="text" ng-model="ic.idade2"/>
+    </div>
+    <div class="form-group-sm col-xs-3">
+    <label class="text-info">Telefone </label>
+    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.telefone2"/>
+    </div>
+    <div class="form-group-sm col-xs-3">
+    <label class="text-info">NIF </label>
+    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.nif2"/>
+    </div>
+    <div class="form-group-sm col-xs-4">
+    <label class="text-info">Profissão </label>
+    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.profissao2"/>
+    </div>                                
+    <div class="form-group-sm col-xs-4">
+    <label class="text-info">Tipo contrato </label>
+    <input readonly class="form-control" type="text" ng-model="ic.nomecontrato2"/>
+    </div> 
+    <div class="form-group-sm col-xs-2">
+    <label class="text-info">Inicio </label>
+    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.anoinicio2"/>
+    </div>                                
+    <div class="form-group-sm col-xs-2">
+    <label class="text-info">Vencimento </label>
+    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.vencimento2"/>
+    </div>
+    <div class="form-group-sm col-xs-12">
+    <label>Outras Informações:</label>
+    <textarea class="form-control" ng-readonly="readOnly" ng-model="ic.outrainfo"></textarea>
+    </div>
+    <div  ng-if="historic.length>0"  class="form-group-sm col-xs-2">
+    <label class="text-info">Ver </label>
+    <button class="btn btn-warning btn-sm" ng-click="showHistorico(historic)">Histórico</button>
+    </div> 
+
+    </div>
+    </div>
+    </div>     
+
+    <!--  Credito Pretendido/Rendimentos/Despesas  -->        
+    <div class="panel">
+    <div class="panel-heading panel-primary">
+    <h4><strong class="text-primary"></strong>Crédito Pretendido</h4>
+    </div>
+    <div class="panel-body">
+    <div class="col-xs-12">
+    <div class="form-group-sm col-xs-2">
+    <label for="montante">Valor Pretendido</label>
+    <input id="montante" name="montante" string-to-number  class="form-control no-spinner" min="0" type="number" ng-model="ic.valorpretendido" ng-readonly="readOnly"/>
+    </div>
+    <div class="form-group-sm col-xs-2">
+    <label for="tipoLead">Tipo Crédito</label>                
+    <select id="tipoLead" class="form-control" ng-model="ic.tipocredito" ng-readonly="readOnly">
+    <option value="CP" ng-selected="ic.tipocredito=='CP'">CP</option>
+    <option value="CC" ng-selected="ic.tipocredito=='CC'">CC</option>
+    <option value="AU" ng-selected="ic.tipocredito=='AU'">Auto</option>
+    </select>
+    </div>                
+    <div class="form-group-sm col-xs-2">
+    <label for="numprestacoes">Prazo </label>
+    <input id="numprestacoes" class="form-control no-spinner" string-to-number  min="0" type="number" ng-model="ic.prazopretendido" ng-readonly="readOnly"/>
+    </div>
+    <div class="form-group-sm col-xs-2">
+    <label for="valorprestacao">Prestação </label>
+    <input id="valorprestacao" class="form-control no-spinner" string-to-number  min="0" type="number" ng-model="ic.prestacaopretendida"  ng-readonly="readOnly"/>
+    </div>
+    <div class="form-group-sm col-xs-4">
+    <label for="finalidade">Finalidade</label>
+    <input id="finalidade" name="finalidade" class="form-control" type="text" ng-model="ic.finalidade"  ng-readonly="readOnly"/>
+    </div>
+    </div>
+    <div class="col-xs-8 col-xs-offset-2">
+    <br/>
+    <table class="table table-condensed" ng-show="rendimentos!=''">
+    <thead>
+    <tr>
+    <th colspan="3" class="text-center">Outros Rendimentos</th>
+    </tr>
+    <tr>
+    <th>Tipo de rendimento</th>
+    <th>Valor</th>
+    <th>Periocidade</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="r in rendimentos">
+    <td class="text-white">{{r.tiporendimento}}</td>
+    <td class="text-white">{{r.valorrendimento}}€</td>
+    <td class="text-white">{{r.periocidade}}</td>
+    </tr>
+    </tbody>
+    </table>
+    <!-- Outros Creditos -->
+    <br/>
+    <table class="table table-condensed" ng-show="creditos!=''">
+    <thead>
+    <tr>
+    <th colspan="3" class="text-center">Outros Créditos</th>
+    </tr>                        
+    <tr>
+    <th>Tipo de Crédito</th>
+    <th>Valor Crédito</th>
+    <th>Prestação</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="c in creditos">
+    <td class="text-white">{{c.tipocredito}}</td>
+    <td class="text-white">{{c.valorcredito}}€</td>
+    <td class="text-white">{{c.prestacao}}€</td>
+    </tr>
+    </tbody>
+    </table>   
+    </div>
+    </div>
+    </div>
+
+    <!-- Documentos pedidos e recebidos -->
+    <div class="panel">
+    <div class="panel-heading">
+    <h4><strong class="text-primary"></strong>Documentação Pedida / Recebida </h4>
+    </div>
+    <div class="panel-body">
+    <table class="table table-condensed table-striped table-hover">
+    <thead>
+    <tr>
+    <th>Documento Pedido</th>
+    <th>Ficheiro</th>
+    <th>Recebido</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="d in docs">
+    <td>{{d.nomedoc}}</td>
+    <td>{{d.nomefx}}</td>
+    <td ng-if="d.recebido==1" class="text-success">SIM</td>
+    <td ng-if="d.recebido==0" class="text-danger">NÃO</td> 
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    </div>
+
+    <!-- Registo de contactos -->
+
+    <div class="panel">
+    <div class="panel-heading panel-primary">
+    <h4><strong class="text-primary"></strong>Contactos</h4>
+    </div>
+    <div class="panel-body">
+    <table class="table table-condensed" ng-show="contactos!=''">
+    <thead>
+    <tr>
+    <th colspan="3" class="text-center">Historico de Contactos</th>
+    </tr>
+    <tr>
+    <th>Data</th>
+    <th>Motivo</th>
+    <th>Gestor</th>
+    <th>Analista</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="c in contactos">
+    <td>{{c.data}}</td>
+    <td>{{c.descricao}}</td>
+    <td>{{c.gestor}}</td>
+    <td>{{c.analista}}</td>
+    </tr>
+    </tbody>
+    </table>  
+    </div>
+    </div>
+
+    <!-- Financiamentos -->
+    <div class="panel">
+    <div class="panel-heading panel-primary">
+    <h4><strong class="text-primary"></strong>Financiamentos</h4>
+    </div>
+    <div class="panel-body">
+    <div class="form-group-sm col-xs-12">
+    <!-- Registo dos financiamentos -->
+    <table class="table table-condensed" ng-show="financiamentos!=''">
+    <thead>
+    <tr>
+    <th colspan="10" class="text-center">Registo dos Pedidos de Financiamento</th>
+    </tr>                        
+    <tr>
+    <th>Processo</th>
+    <th>Parceiro</th>
+    <th>Montante</th>
+    <th>Prazo</th>
+    <th>Prestação</th>
+    <th>Contrato Cliente -></th>
+    <th>Meio</th>
+    <th>Contrato Parceiro</th>
+    <th>Data</th>
+    <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="f in financiamentos">
+    <td>{{f.processo}}</td>
+    <td>{{f.nome}}</td>
+    <td>{{f.montante}}</td>
+    <td>{{f.prazo}}</td>
+    <td>{{f.prestacao}}</td>
+    <td>{{f.dtcontratocliente}}</td>
+    <td>{{f.formaenvio}}</td>
+    <td>{{f.dtcontratoparceiro}}</td>
+    <td>{{f.datastatus}}</td>
+    <td>{{f.statusnome}}</td>
+    <td ng-if="f.outrainfo">{{f.outrainfo}}"></td>
+    </tr>
+    </tbody>
+    </table>
+    </div>                            
+    </div>
+    </div>
+
+    <!-- Informações e Rejeições -->
+    <div class="panel">
+    <div class="panel-heading panel-primary">
+    <h4><strong class="text-primary"></strong>Informações</h4>
+    </div>
+    <div class="panel-body">
+    <div class="form-group-sm col-xs-12">
+    <label>Rejeições:</label>
+    <textarea rows="5" class="form-control" ng-readonly="readOnly || tipoUser=='Gestor' || tipoUser == 'GRec'" ng-model="rejeicoes"></textarea>
+    </div>                            
+    </div>
+    <div class="panel-body">
+    <div class="form-group-sm col-xs-12">
+    <label>Outras Informações:</label>
+    <textarea rows="5" class="form-control" ng-readonly="readOnly || tipoUser=='Analista'" ng-model="ic.outrainfo"></textarea>
+    </div>                            
+    </div>                        
+    </div>
+
+    <!-- Notas e Observações do Analista-->
+    <div class="panel">
+    <div class="panel-heading panel-primary">
+    <h4><strong class="text-primary"></strong>Notas</h4>
+    </div>
+    <div class="panel-body">
+    <div class="form-group-sm col-xs-12">
+    <label>Notas:</label>
+    <textarea rows="6" class="form-control" ng-model="ic.nota" ng-readonly="readOnly || tipoUser=='Gestor' || tipoUser == 'GRec'"></textarea>
+    </div>                            
+    </div>
+    </div> 
+    </div>
+</script>
+
+<!-- Modal para listar Simulações guardadas -->
+<script type="text/ng-template" id="modalGetSimulaDet.html" ng-controller="modalInstanceGetSimulaDet"> 
+    <div class="modal-header bg-info">
+    <h3 class="modal-title">Simulações Guardadas
+    <span class="closeModal" ng-click="closeModal()">X</span>
+    </h3>
+    </div>
+    <div>
+    <table class="table table-condensed table-hover" style="width:80%; margin:auto">
+    <thead>
+    <tr>
+    <th>#</th>
+    <th>Tipo</th>
+    <th>Valor</th>
+    <th>Prestaçao</th>
+    <th>Prazo</th>
+    <th>2 ª Titular</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="s in simulacoes" ng-click="selectSimula(s)">
+    <th>{{s.linha}}</th>
+    <td>{{s.tipocredito}}</td>
+    <td>{{s.valorpretendido}}</td>
+    <td>{{s.prestacaopretendida}}</td>
+    <td>{{s.prazopretendido}}</td>
+    <td ng-if="s.segundoproponente==1">Sim</td>
+    <td ng-if="s.segundoproponente==0">Não</td>
+    </tr>
+    </tbody>
+    </table>
+
+    <br/>
+    <div class="text-center">
+    <button class="btn btn-warning" ng-click="closeModal()"> Cancelar</button>
+    </div>
+    </div>
+</script>

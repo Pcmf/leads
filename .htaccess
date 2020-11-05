@@ -1,0 +1,20 @@
+#Options +FollowSymlinks
+# Turn rewrite engine on
+RewriteEngine on
+# Cors
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Access-Control-Allow-Origin"
+Header always set Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
+
+#POST do LOGIN e update DeviceID
+RewriteRule ^auth/([0-9a-zA-z$./]+) restful/restful.php?url=auth&token=$1 [L,QSA]
+RewriteRule ^auth restful/restful.php?url=auth [L,QSA]
+#GET LEAD info with phone number
+RewriteRule ^info/([0-9a-zA-z$./]+)/([0-9a-zA-z$./]+) restful/restful.php?url=info&id=$1&telefone=$2 [L,QSA] 
+RewriteRule ^info restful/restful.php?url=info [L,QSA] 
+RewriteRule ^logo restful/restful.php?url=logo [L,QSA] 
+
+RewriteRule ^bpsdocs bpsDocsRest/restful.php?url=docs [L,QSA] 
+RewriteRule ^crcons CRRest/restfull.php?url=crc [L,QSA] 
+
+RewriteRule ^leads restleads/restfull.php?url=leads [L,QSA] 

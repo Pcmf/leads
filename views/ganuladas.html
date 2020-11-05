@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="container">
+    <h3 class="text-center">Anuladas
+        <span class="pull-right form-inline" style="margin-right: 100px">
+           <i class="fa fa-search text-info"></i>
+           <input type="text" ng-model="searchFilter" class="form-control" placeholder="Filtrar por..." >         
+       </span>    
+    </h3>
+    <table ng-table="paramsTable" class="table table-bordered table-hover">
+        <thead class="bg-primary">
+            <tr>
+                <th>LEAD</th>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>NIF</th>
+                <th>Email</th>
+                <th>Motivo</th>
+                <th>Data</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+   <!--         <tr ng-repeat="a in anuladas">  -->
+            <tr ng-repeat="a in $data | filter: searchFilter"> 
+                <td>{{a.id}}</td>
+                <td>{{a.nome}}</td>
+                <td>{{a.telefone}}</td>
+                <td>{{a.nif}}</td>
+                <td>{{a.email}}</td>
+                <td>{{a.descricao}}</td>
+                <td>{{a.datastatus}}</td>
+                <td>
+                    <a ng-if="a.docpedida" href="#!/detLead/{{a.id}}" class="btn btn-success btn-sm" title="Puxar e ver detalhes"><i class="fa fa-check"></i> Ativar</a>
+                    <a ng-if="!a.docpedida && a.nome!='rgpd'"  href="#!/gcontact/{{a.id}}" class="btn btn-success btn-sm" title="Puxar e ver detalhes"><i class="fa fa-check"></i> Ativar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br/><br/>
+    <div class="text-center">
+        <a href="#!/dashboard" class="btn btn-warning">Voltar</a>
+    </div>
+    <br/><br/>    
+</div>

@@ -1,0 +1,33 @@
+<div class="container">
+    <h3 class="text-center">Processos submetidos por Cofidis Directo</h3>
+    <br/>
+    <div class="">
+        <table ng-table="paramsTable" class="table table-condensed table-hover">
+            <thead class="bg-primary">
+                <tr>
+                    <th>Lead</th>
+                    <th>Proceso</th>
+                    <th>Data submetido</th>
+                    <th>Situação</th>
+                    <th>Montante</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="p in $data">
+                    <th><a href="#!detLead/{{p.lead}}">{{p.lead}}</a></th>
+                    <th>{{p.processo}}</th>
+                    <td>{{p.data}}</td>
+                    <td>{{p.statusnome}}</td>
+                    <td>
+                        <input type="text" ng-model="p.valorfinanciado" ng-readonly="p.status!=28" ng-show="p.status==28 || p.status==30"/>
+                    </td>
+                    <td ng-show="p.status==28">
+                        <button class="btn btn-sm btn-success" ng-click="resposta(p, 30)"><i class="fa fa-thumbs-up"></i></button>
+                        <button class="btn btn-sm btn-danger" ng-click="resposta(p,31)"><i class="fa fa-thumbs-down"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

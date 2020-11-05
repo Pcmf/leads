@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!--
+    Ver e editar as sugestões de CC
+-->
+<div class="container">
+    <div class="text-center text-primary">
+        <h3>Sugerido ao Cliente</h3>
+            <span class="pull-right form-inline" style="margin-right: 100px">
+           <i class="fa fa-search text-info"></i>
+           <input type="text" ng-model="searchFilter" class="form-control" placeholder="Filtrar por..." >         
+       </span>
+    </div>
+    <table ng-table="paramsTable" class="table table-condensed table-hover">
+        <thead>
+            <tr>
+                <th>LEAD</th>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Data Sugerido</th>
+                <th>Forma Sugestão</th>
+                <th>Status Financiamento</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="s in $data | filter: searchFilter">
+                <td><a href="#!detLead/{{s.lead}}">{{s.lead}}</a></td>
+                <td>{{s.nome}}</td>
+                <td>{{s.telefone}}</td>
+                <td>{{s.sugerido}}</td>
+                <td>{{s.formasugestao}}</td>
+                <td>{{s.status}}</td>
+                <td>
+                    <button class="btn btn-success" ng-click="respostaCliente(s.lead,1)" title="Aceite pelo cliente. Submeter ao parceiro."><i class="fa fa-thumbs-up"></i></button>
+                    <button class="btn btn-danger" ng-click="respostaCliente(s.lead,0)" title="Recusado ou sem resposta."><i class="fa fa-thumbs-down"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p>&nbsp;</p>
+    <div class="text-center">
+        <a class="btn btn-warning" href="#!/cc"><i class="fa fa-undo"> </i> Voltar</a>
+    </div>
+</div>

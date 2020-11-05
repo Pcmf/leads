@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<!--
+    Listar e editar a situação dos contratos. 
+    Registar datas de envio e permitir anexar documentação do contrato
+-->
+
+<div class="container">
+            <div class="panel panel-success ph">
+              <div class="panel-heading">
+                <h3 class="panel-title">Situação dos contratos</h3>
+              </div>
+              <div class="panel-body">
+
+                      <table  ng-table="paramsTable"  class="table table-condensed table-hover">
+                          <thead class="text-success">
+                              <tr>
+                                  <th>LEAD</th>
+                                  <th>Nome</th>
+                                  <th>Telefone</th>
+                                  <th>Data Aceite</th>
+                                  <th>Situação</th>
+                                  <th>Situação do contrato</th>
+                                  <th>Data Situação</th>
+                                  <th>Ações</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr ng-repeat="lc in $data">
+                                  <td>
+                                      <a href="#!detLead/{{lc.lead}}">
+                                          {{lc.lead}}</a></td>
+                                  <td>{{lc.nome}}</td>
+                                  <td>{{lc.telefone}}</td>
+                                  <td>{{lc.datarespostaparceiro}}</td>
+                                  <td>{{lc.statusnome}}</td>
+                                  <td ng-if="!lc.contratoenviado">Por enviar</td>
+                                  <td ng-if="lc.contratoenviado && !lc.enviadoparceiro">Enviado ao cliente</td>
+                                  <td ng-if="lc.contratoenviado && lc.enviadoparceiro">Enviado ao parceiro</td>
+                                  <td ng-if="!lc.contratoenviado && !lc.enviadoparceiro"></td>
+                                  <td ng-if="lc.contratoenviado && !lc.enviadoparceiro">{{lc.contratoenviado}}</td>
+                                  <td ng-if="lc.contratoenviado && lc.enviadoparceiro">{{lc.enviadoparceiro}}</td>
+                                  <td>
+                                      <button class="btn btn-info" ng-if="!lc.contratoenviado && !lc.enviadoparceiro" ng-click="enviadoParaCliente(lc.lead)"><i class="fa fa-envelope"></i> Enviado Cliente</button>
+                                       <button class="btn btn-success" ng-if="lc.contratoenviado && !lc.enviadoparceiro" ng-click="anexarContrato(lc.lead)"><i class="fa fa-upload"></i> Anexar Contrato</button>
+                                       
+                                       <button class="btn btn-success" ng-if="lc.enviadoparceiro && !lc.datarespostafinal" ng-click="aprovacaoFinal(lc.lead,1)"><i class="fa fa-check"></i> Aprovado</button>
+                                       <button class="btn btn-warning" ng-if="lc.enviadoparceiro && !lc.datarespostafinal" ng-click="aprovacaoFinal(lc.lead,0)"><i class="fa fa-times"></i> Recusado</button>
+                                       
+                                       <button class="btn btn-primary" ng-if="lc.datarespostafinal && lc.respostafinalparceiro==1" ng-click="ativado(lc.lead,1)"><i class="fa fa-check"></i> Ativado</button>
+                                       <button class="btn btn-info" ng-if="lc.datarespostafinal && lc.respostafinalparceiro==1" ng-click="ativado(lc.lead,0)"><i class="fa fa-times"></i> Não Ativado</button>
+                                       <button class="btn btn-danger pull-right" ng-click="anularCC(lc.lead)" title="Cancelar pedido"><i class="fa fa-times"></i></button>
+                                  </td>
+                              </tr>
+                          </tbody>
+                      </table>                      
+                </div>
+                <div class="penel-body text-center">
+                    <a class="btn btn-warning" href="#!/cc"><i class="fa fa-undo"> </i> Voltar</a>
+                </div>
+          </div>
+</div>
+
+
+<!-- Modal para fazer anexação do contrato -->
+<script type="text/ng-template" id="modalAnexarContratoCC.html" ng-controller="modalInstanceAnexarContratoCC">  
+    <div class="modal-header bg-info">
+        <h3 class="modal-title">Anexar Contrato - LEAD: {{lead}}
+            <span class="closeModal" ng-click="closeModal()">X</span>
+        </h3>
+    </div>
+    
+    <div class="modal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-8">
+            <form>
+
+                <div class="form-group">
+                <input class="form-control" type="file" ng-model="file" base-sixty-four-input on-change="onChange">
+                </div>
+
+                <br/>
+
+            </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="text-center">
+            <button class="btn btn-success" ng-click="saveAttachedDoc()"><i class="fa fa-check"></i> Anexar e Enviar para Parceiro</button>
+            <button class="btn btn-warning" ng-click="closeModal()"> Cancelar</button>
+        </div>
+    </div>
+</script>
+
+
+<!-- Modal para cancelar CC -->
+<script type="text/ng-template" id="modalCancelarCC.html" ng-controller="modalInstanceCancelarCC">  
+    <div class="modal-header bg-info">
+        <h3 class="modal-title">Cancelar Cartão de Credito - LEAD: {{lead}}
+            <span class="closeModal" ng-click="closeModal()">X</span>
+        </h3>
+    </div>
+    
+    <div class="modal-body">
+        <form class="form-group">
+            <label>Motivo</label>
+            <textarea class="form-control" ng-model="motivo"></textarea>
+            <button class="btn btn-success" ng-click="guardarCancelado()"><i class="fa fa-save"></i> Guardar</button>
+            <button class="btn btn-warning" ng-click="cancelar()"><i class="fa fa-undo"></i> Voltar</button>
+        </form>
+    </div>
+    </script>

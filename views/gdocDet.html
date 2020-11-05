@@ -1,0 +1,119 @@
+
+<div class="container-fluid">
+<div class="row">
+    <div class="col-sm-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Dados da LEAD - {{lead}}
+            </div>
+            <div class="panel-body">
+                <ul class="list-unstyled">
+                    <li>{{docsPed[0].nome}}  <span class="pull-right">Idade: {{docsPed[0].idade}}</span></li>
+                    <li><strong>NIF: </strong>{{docsPed[0].nif}}</li>
+                    <li>Profissão: {{docsPed[0].profissao}}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Documentação Recebida
+            </div>
+            <div class="panel-body">
+                <ul class="list-unstyled" ng-repeat="docC in docsConf">
+                    <li><i class="fa fa-check text-success"> </i> <label>{{docC.nomefx}}</label></li>
+                </ul>                
+                <ul class="list-unstyled" ng-repeat="doc in docsRec">
+                    <li id="{{$index}}" ng-click="showDoc(doc)" class="hoverHand">
+                        {{doc.fxname}}
+                        <span class="pull-right" ng-click="deleteDoc(doc)"><i class="fa fa-times text-danger" title="Eliminar este documento!"></i></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                Documentação Pedida
+            </div>
+            <div class="panel-body form-group">
+
+                <ul class="list-unstyled" ng-repeat="docP in docsPed track by docP.linha">
+                    <li ng-if="docP.recebido!=1"><label><input ng-disabled="!enableCk" class="checkbox-group" type="checkbox" checklist-model="c.docsPed" checklist-value="docP" ng-change="chekboxToglle()" /> - {{docP.nomedoc}}</label></li>
+                </ul>
+                <button ng-disabled="!enableCk" class="btn btn-success btn-sm pull-right" ng-click="confirmDoc(c)"><i class="fa fa-check"> </i>Validar</button>
+                <!-- SELECT para escolher mais documentos -->
+                <br/>
+                <div class="form-group">
+                    <label>Mais documentos</label>
+                    <select class="form-control" ng-model="od.doc" ng-options="doc.nomedoc for doc in docsPed track by doc.linha">
+                        <option value=""></option>
+                    </select>
+                </div> 
+                <button ng-disabled="!enableCk" class="btn btn-success btn-sm pull-right" ng-click="confirmDocExt(od)"><i class="fa fa-check"> </i>Validar Extra</button>
+                
+                
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-success btn-block" ng-click="sendToAnalise(lead,'full')"><i class="fa fa-check"></i> Enviar para Análise</button>
+                <button class="btn btn-warning btn-block" ng-click="sendToAnalise(lead,'inc')"><i class="fa fa-exclamation-triangle"></i> Enviar para Análise. Documentação em Falta</button>
+                <button class="btn btn-info btn-block" ng-click="sendNewPedido(lead)"><i class="fa fa-envelope"></i> Pedir novamente</button>
+                <button class="btn btn-danger btn-block" ng-click="rejeitarLead(lead)"><i class="fa fa-times"></i> Rejeitar</button>
+                <button class="btn btn-default btn-block" onclick="window.history.back()"> Voltar </button>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-sm-8 text-center">
+        <h3 class='text-center'>Documentação para a LEAD: {{lead}}</h3>
+        <div class="text-center" id="pgs">
+            <button class="btn btn-sm" ng-repeat="p in pages" ng-click="changePage(p)">
+                <span ng-if="currPage == p" class="text-primary">Página {{p}}</span>
+                <span ng-if="currPage != p" >Página {{p}}</span>
+            </button>
+        </div>
+        <canvas id="previewCanvas" height="800" width="800"></canvas>
+    </div>
+   
+</div>
+ <br/><br/>
+
+</div>
+
+
+<!-- Modal para mostrar uma check list para pedir documentação -->
+<script type="text/ng-template" id="modalAskForDocs.html" ng-controller="modalInstanceAskForDocs">
+<div class="modal-header bg-info">
+    <h3 class="modal-title">Documentação Necessária
+        <span class="closeModal" ng-click="closeModal()">X</span>
+    </h3>
+</div>
+<form>
+    <div class="modal-body">
+        <!-- Listagem dos documentos a pedir, com check box para selecionar -->
+        <div class="container">
+        <div class="row">
+        <div class="form-group col-xs-10">
+                <ul class="list-unstyled col-xs-12 col-md-6" ng-repeat="doc in docs track by doc.id">
+                    <li>
+                        <label>
+                             <input class="checkbox-group" type="checkbox" checklist-model="d.docs" checklist-value="doc"/> 
+                             {{doc.nomedoc}}
+                        </label>
+                    </li>
+                </ul>
+        <div>
+        <div class="form-group col-xs-10">
+        <br/>
+            <label>Descrição para diversos</label>
+            <textarea class="form-control" ng-model="outroTipoDoc"></textarea>
+        </div>
+        </div>
+        </div>
+    </div>
+    <div class="modal-footer col-xs-8">
+        <div class="text-center">
+            <button class="btn btn-success" ng-click="pedirDoc()">Enviar Pedido</button>
+            <a class="btn btn-warning" ng-click="closeModal()">Cancelar</a>
+        </div>         
+    </div>
+</form> 
+</script>

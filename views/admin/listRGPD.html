@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--
+*       Listar as leads que estejam protegidas por motivo RGPD
+*
+*   Permitir visualizar dados pessoais.
+* 
+-->
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 class="text-center text-primary">Listagem de leads protegidas - RGPD</h3>
+        </div>
+        <div class="col-xs-12">
+            <table class="table table-responsive table-striped">
+                <thead>
+                    <tr class="bg-primary">
+                        <th>LEAD</th>
+                        <th>Nome</th>
+                        <th>NIF</th>
+                        <th>Telefone</th>
+                        <th>Email</th>
+                        <th>Data de RGPD</th>
+                        <td>Ações</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="l in leadsList">
+                        <td>{{l.lead}}</td>
+                        <td>{{l.nome}}</td>
+                        <td>{{l.nif}}</td>
+                        <td>{{l.telefone}}</td>
+                        <td>{{l.email}}</td>
+                        <td>{{l.dataRgpd}}</td>
+                        <td>
+                            <button class="btn btn-success" ng-click="reativarLead(l)">Re-ativar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<!--
+    Show list of actual users and a form to edit or create news
+-->
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Fornecedores de LEADS
+                <input class="input-sm" type="text" ng-model="searchFlt" placeholder="" title="Pesquisar"/>
+ <!--               <span class="pul-right" style="margin-right: 10px">
+                    <i ng-show="flt==='tipo'" ng-click="changeOrderBy('nome')" class="glyphicon glyphicon-sort-by-alphabet" title="Ordenar alfabéticamente"></i>
+                    <i ng-show="flt==='nome'" ng-click="changeOrderBy('tipo')" class="glyphicon glyphicon-text-height" title="Ordernar por tipo de utilizador"></i>
+                </span> -->
+            </h3>
+            <div class="listPainel">
+                <h4 ng-show="suppliers.length===0">Não há dados</h4>
+                <ul ng-repeat="s in suppliers | orderBy: flt | filter:searchFlt" class="list-group">
+                    <li class="list-unstyled {{s.tipo}}">
+                        <button class="btn btn-block {{s.tipo}}" ng-click="editSupplier(s)" title="Clicar para ver detalhe.">{{s.nome}} - {{s.empresa}}</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="col-md-6" style="border-left: #269abc groove medium;">
+            <h3>Fornecedor</h3>
+            <form  ng-submit="saveSupplier(edit)">
+                <div class="form-group">
+                    <label>Empresa:</label>
+                    <input class="form-control" ng-model="edit.empresa" type="text" required="required"/>
+                </div>
+                <div class="form-group">
+                    <label>Nome de LEAD: </label>
+                    <input class="form-control" ng-model="edit.nome" type="text" required="required"/>
+                </div>
+                <div class="form-group">
+                    <label>Email: </label>
+                    <input class="form-control" ng-model="edit.email" type="email" required="required"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Outras informações: </label>
+                    <textarea class="form-control" cols="30" rows="3" ng-model="edit.outrainfo"></textarea>
+                </div>
+                <div class="form-inline">
+                    <label>Telefone:</label>
+                    <input class="form-control" ng-model="edit.telefone" type="tel" required="required"/>
+                </div>                
+                <div class="form-inline">
+                    <label>Usa API</label>
+                    <label>
+                    <input type="radio" ng-model="edit.api" value="1"/>
+                    Sim
+                    </label>
+                    <label>
+                    <input type="radio" ng-model="edit.api" value="0"/>
+                    Não
+                    </label>                
+                </div>
+                <div class="form-inline" ng-show="edit.api==1">
+                    <label>Password: </label>
+                    <input ng-if="edit.api==1" class="form-control" ng-model="edit.password" type="text" required="required"/>
+                </div>
+                <br/>
+                <div class="form-inline">
+                    <label>Ativa </label>
+                    <label>
+                    <input type="radio" ng-model="edit.ativo" value="1"/>
+                    Sim
+                    </label>
+                    <label>
+                    <input type="radio" ng-model="edit.ativo" value="0"/>
+                    Não
+                    </label>                
+                </div>
+                <br/>
+                    <button class="btn btn-success" type="submit">Guardar</button>
+                    <button class="btn btn-warning" ng-click="clear()">Limpar</button>
+                    <button ng-show="edit.id" type="button" class="btn btn-sm btn-danger pull-right" ng-click="removeUser(edit)"><i class="fa fa-trash"></i></button>
+            </form>
+        </div>
+    </div>
+</div>
+<br/><br/>

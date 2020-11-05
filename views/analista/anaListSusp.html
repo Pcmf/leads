@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--
+    Listar as LEADS recusadas
+-->
+<div class="container">
+    <h3 class="text-center text-primary text-uppercase">Suspensos
+        <span class="pull-right form-inline" style="margin-right: 100px">
+           <i class="fa fa-search text-info"></i>
+           <input type="text" ng-model="searchFilter" class="form-control" placeholder="Filtrar por..." >         
+       </span>    
+    </h3>     
+    <table ng-table="paramsTable" class="table table-bordered table-condensed table-hover">
+        <thead class="bg-primary">
+            <tr>
+                <th>LEAD</th>
+                <th>Cliente</th>
+                <th>Parceiro</th>
+                <th>Processo</th>
+                <th>Montante Aprovado</th>
+                <th>Data Status</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="d in $data | filter: searchFilter">
+                <th><a href="#!/detLead/{{d.lead}}" title="Ver detalhes">{{d.lead}}</a></th>
+                <td>{{d.cliente}}</td>
+                <td>{{d.parceiro}}</td>
+                <td>{{d.processo}}</td>
+                <td>{{d.montante}}</td>
+                <td>{{d.datastatus}}</td>
+                <th>
+                    <button class="btn btn-success" ng-click="ativar(d.lead)" title="Volta a colocar como aprovada!">
+                        <i class="fa fa-undo"></i> Ativar
+                    </button>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <div class="text-center">
+        <button class="btn btn-warning" onclick="window.history.back()">Voltar</button>
+    </div>
+    
+</div>

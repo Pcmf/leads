@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="container">
+    <h3 class="text-center">Processos Em Analise ou Pendentes
+        <span class="pull-right form-inline" style="margin-right: 100px">
+           <i class="fa fa-search text-info"></i>
+           <input type="text" ng-model="searchFilter" class="form-control" placeholder="Filtrar por..." >         
+       </span>    
+    </h3>    
+    <table ng-table="paramsTable" class="table table-condensed table-hover">
+            <thead class="bg-success">
+                <tr>
+                    <th>
+                        <a href="" ng-click="sortType = 'lead'; sortReverse = !sortReverse">
+                            LEAD
+                            <span ng-show="sortType == 'lead' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'lead' && sortReverse" class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
+                  <th>Nome</th>
+                  <th>Tipo</th>
+                  <th>NIF</th>
+                  <th>Montante</th>
+                  <th>Parceiros e Status</th>
+               <!--   <th></th> -->
+              </tr>
+          </thead>
+          <tbody>
+              <tr ng-repeat="p in $data | filter: searchFilter | orderBy: sortType : sortReverse" 
+                  ng-click="seeDetailAnalise(p.lead)"
+                  class="hoverHand">
+
+                  <td><a href="#!/form1/{{p.lead}}">{{p.lead}}</a></td>
+                  <td>{{p.nome}}</td>
+                  <td>{{p.tipo}}</td>
+                  <td>{{p.nif}}</td>
+                  <td>{{p.valorpretendido}} €</td>
+                  <td ng-if="p.status!= 13">{{p.stsnome}} <span style="padding-left: 35px">{{p.dtstatus}}</span></td>
+                  <td ng-if="p.status==13">
+                      <table>
+                          <tbody>
+                              <tr ng-repeat="ln in p.parcerias">
+                                  <td style="padding-right: 25px;">{{ln.parceiro}}</td>
+                                  <td style="padding-right: 35px;">{{ln.status}}</td>
+                                  <td>{{ln.datastatus}}</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </td>
+           <!--       <td>
+                      <a href="#!/form1/{{p.lead}}" class="btn btn-sm btn-success">
+                          <i class="fa fa-arrow-right"></i>
+                      </a>
+                  </td> -->
+              </tr>
+          </tbody>
+      </table>
+    <div class="text-center">
+        <button onclick="window.history.back()" class="btn btn-warning"><i class="fa fa-undo"> </i> Voltar</button>
+    </div>
+    <br/><br/>
+</div>

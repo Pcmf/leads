@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <time-line></time-line>
+        </div>
+    </div>
+    
+    <div class="row">
+    <!-- Painel esquerdo com informação das leads -->
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h4 class="text-center">GESTORES</h4>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Px Novas</th>
+                                <th>Puxadas</th>
+                                <th>Não Atendidas</th>
+                                <th>Anuladas</th>
+                                <th>Aguardam documentação</th>
+                                <th>Na Analise</th>
+                                <th>Aprovados</th>
+                                <th>Financiados</th>
+                                <th>Rejeitados</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="g in byGestor">
+                                <td class="text-primary"><a href="#!/listG/{{g.id}}/all/{{tml}}">{{g.gestor}}</a></td>
+                                <td class="text-center">{{g.puxadas}}</td>
+                                <td class="text-center">{{g.tentativas}}</td>
+                                <td class="text-center"><a href="#!/listG/{{g.id}}/natn/{{tml}}">{{g.naoatendidas}}</a></td>
+                                <td class="text-center"><a href="#!/listG/{{g.id}}/nul/{{tml}}">{{g.anuladas}}</a></td>
+                                <td class="text-center"><a href="#!/listG/{{g.id}}/agdoc/{{tml}}">{{g.agdocs}}</a></td>
+                                <td class="text-center"><a href="#!/listG/{{g.id}}/anl/{{tml}}">{{g.analise}}</a></td>
+                                <td class="text-center"><a href="#!/listG/{{g.id}}/apv/{{tml}}">{{g.aprovados}}</a></td>
+                                <td class="text-center"><a href="#!/listG/{{g.id}}/fin/{{tml}}">{{g.financiados}}</a></td>
+                                <td class="text-center"><a href="#!/listG/{{g.id}}/rjt/{{tml}}">{{g.rejeitados}}</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

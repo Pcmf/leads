@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--
+    Listar as LEADS financiadas
+-->
+<div class="container">
+    <h3 class="text-center">Lista das leads com Senhas de Finaças.</h3>
+    <table ng-table="paramsTable" class="table table-bordered table-condensed table-hover">
+        <thead class="bg-primary">
+            <tr>
+                <th>Lead</th>
+                <th>NIF</th>
+                <th>Senha das Financas</th>
+                <th>Data de entrada</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="d in data">
+                <td><a href="#!/detLead/{{d.lead}}">{{d.lead}}</a></td>
+                <td>{{d.nif}}</td>
+                <td>{{d.senha}}</td>
+                <td>{{d.data}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <div class="text-center">
+        <button class="btn btn-warning" onclick="window.history.back()">Voltar</button>
+    </div>
+    
+</div>

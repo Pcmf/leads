@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!--
+    Pesquisar em leads novas, por telefone, nif ou email, 
+    e colocar como ativa num determinado Gestor
+-->
+
+<div class="container">
+    <div class="row">
+        <div class="panel" style="min-height: 500px">
+            <div class="panel-heading">
+                <h3>Pesquisar em LEADS novas e atribuir a um gestor.</h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-xs-12">
+                    <div class="form-group-sm col-xs-2">
+                        <label for="telefone">Telefone </label>
+                        <input id="telefone" name="telefone" class="form-control no-spinner" string-to-number type="number" ng-model="c.telefone"/>
+                    </div>
+                    <div class="form-group-sm col-xs-4">
+                        <label for="email">Email </label>
+                        <input id="email" class="form-control" type="text"  ng-model="c.email"/>
+                    </div>
+                    <div class="form-group-sm col-xs-2">
+                        <label for="nif">NIF </label>
+                        <input id="nif" name="nif" class="form-control no-spinner" string-to-number  type="number"  ng-model="c.nif"/>
+                    </div>
+                    <div class="form-group-sm col-xs-2">
+                        <label>&nbsp;</label>
+                        <button class="form-control btn btn-primary" ng-click="searchNew(c)"><i class="fa fa-search"></i> Procurar</button>
+                    </div>
+                    <div class="form-group-sm col-xs-2">
+                        <label>&nbsp;</label>
+                        <button class="form-control btn btn-warning" ng-click="clean()"><i class="fa fa-eraser"></i> Limpar</button>
+                    </div>                    
+                </div>
+                <div class="col-xs-12">
+                    <small class="text-info">Usar apenas um campo para pesquisa!</small>
+                </div>
+                <div class="col-xs-12">
+                <br/><h4>Resultado:</h4>
+                <table class="table table-condensed table-bordered">
+                    <thead class="bg-primary">
+                        <tr>
+                            <th>LEAD</th>
+                            <th>Tipo</th>
+                            <th>Fornecedor</th>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>NIF</th>
+                            <th>Email</th>
+                            <th>Montante</th>
+                            <th>Atribuir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="result" ng-repeat="r in result">
+                            <td>{{r.id}}</td>
+                            <td>{{r.tipo}}</td>
+                            <td>{{r.fornecedor}}</td>
+                            <td>{{r.nome}}</td>
+                            <td>{{r.telefone}}</td>
+                            <td>{{r.nif}}</td>
+                            <td>{{r.email}}</td>
+                            <td>{{r.montante}}</td>
+                            <td>
+                                <input class="form-control" type="radio" name="atr" ng-value="r.id" ng-model="l.atr"/>
+                            </td>
+                        </tr>
+                        <tr ng-if="!result.length" colspan="9">
+                            <td>
+                                <small class="text-info">Não há dados para esta pesquisa!</small>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                </div>
+                <div class="col-xs-12">
+                    <br/>
+                    <div class="form-group-sm col-xs-4">
+                        <label>Atribuir a:</label>
+                        <select class="form-control" ng-model="g" ng-options="g.nome for g in gestores track by g.id"/></select>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="text-center">
+                    <button class="btn btn-success" ng-click="atribuirLead(l.atr,g)"><i class="fa fa-save"></i> Guardar</button>
+                    <a href="#!/dashboard" class="btn btn-warning"><i class="fa fa-undo"></i> Voltar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+     
+

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<div class="container-fluid">
+    <h3 class="text-center">Pendentes de Financiamento</h3>
+    
+    <table class="table table-condensed table-hover">
+        <thead class="bg-success">
+            <tr>
+                <th>
+                        LEAD
+                </th>
+                <th>Cliente</th>
+                <th>
+                    <a href="" ng-click="sortType = 'processo'; sortReverse = !sortReverse">
+                        Processo
+                        <span ng-show="sortType == 'processo' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortType == 'processo' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <a href="" ng-click="sortType = 'nome'; sortReverse = !sortReverse">
+                        Parceiro
+                        <span ng-show="sortType == 'nome' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortType == 'nome' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>                
+                </th>
+                <th>Tipo Crédito</th>
+                <th>Montante</th>
+                <th>Data de Aprovado</th>
+                <th>Situação do contrato</th>
+                <th>Data da situação</th>
+                <th>Metodo</th>
+                <th>Financiamento</th>
+                <th>Documentos</th>
+            </tr>
+        </thead>
+        <tbody class="">
+            <tr ng-repeat="r in resultados | orderBy: sortType : sortReverse">
+                <td><a href="#!/detLead/{{r.lead}}"  title="Ver detalhes">{{r.lead}}</a></td>
+                <td>{{r.nome_cliente}}</td>
+                <td>{{r.processo}}</td>
+                <td>{{r.nome}}</td>
+                <td>{{r.tipo}}</td>
+                <td>{{r.montante}}</td>
+                <td>{{r.dtaprovado}}</td>
+                <td>
+                    <button class="btn btn-sm btn-block btn-danger" ng-show="r.dtcontratocliente==null" ng-click="enviarContratoCliente(r)" title="Click para alterar estado!">Por Enviar / Fazer Chamada</button>
+                    <button class="btn btn-sm btn-block btn-primary" ng-show="(r.formaenvio!=null && r.formaenvio!='Ass.Digital' && r.dtcontratoparceiro==null && r.dt2via==null && r.incompleto ==null)"  ng-click="enviarContrato(r)" title="Click para registar envio para o Parceiro.">Enviado para o cliente</button>
+                    <button class="btn btn-sm btn-block btn-warning" ng-show="(r.formaenvio!=null && r.formaenvio!='Ass.Digital' && r.dtcontratoparceiro==null && r.incompleto !=null)"  ng-click="enviarContrato(r)" title="Incompleto.">Incompleto</button>
+                    <button class="btn btn-sm btn-block btn-primary" ng-show="(r.formaenvio=='Ass.Digital' && r.dtcontratoparceiro==null)"  ng-click="registarFinal(r)" title="Validação de Assinatura Digital.">Validar Ass. Digital</button>
+                    <button class="btn btn-sm btn-block btn-info" ng-show="r.dt2via && r.dtcontratoparceiro==null"  ng-click="enviarContratoParceiro(r)" title="Click para registar envio para o Parceiro.">Enviado 2ª Via</button>
+                    <button class="btn btn-sm btn-block btn-success" ng-show="r.dtcontratoparceiro" ng-click="registarFinal(r)" title="Click para finalizar.">Enviado para o parceiro</button>
+                </td>
+                <td>
+                  <span class="text-danger" ng-show="r.dtcontratocliente==null">n.a</span>
+                  <span class="text-primary" ng-show="(r.formaenvio!=null && r.dtcontratoparceiro==null)">{{r.dtcliente}}</span>
+                  <span class="text-success" ng-show="r.dtcontratoparceiro!=null">{{r.dtparceiro}}</span>
+                </td>
+                <td class="text-center" ng-if="r.formaenvio=='Email'"><span ng-click="changeForma(r)" ng-show="r.dtcontratoparceiro==null" class="fa fa-at fa-2x" title="Enviado por email"></span></td>
+                <td class="text-center" ng-if="r.formaenvio=='Correio'"><span ng-click="changeForma(r)" ng-show="r.dtcontratoparceiro==null"  class="fa fa-envelope fa-2x" title="Enviado por correio"></span></td>
+                <td class="text-center" ng-if="r.formaenvio=='Presencial'"><span ng-click="changeForma(r)" ng-show="r.dtcontratoparceiro==null"  class="fa fa-male fa-2x" title="Presencialmente"></span></td>
+                <td class="text-center" ng-if="r.formaenvio=='Ass.Digital'"><span ng-click="changeForma(r)" ng-show="r.dtcontratoparceiro==null"  class="fa fa-keyboard fa-2x" title="Assinatura digital"></span></td>
+                <td class="" ng-if="!r.formaenvio">&nbsp;</td>
+                <td class="text-center">
+                    <button class="btn btn-warning" title="Ver ou alterar dados do financiamento" ng-click="changeFinanc(r)"><i class="fa fa-dollar"></i></button>
+                </td>
+                <td>
+                    <button class="btn btn-info" ng-click="descarregarDocs(r.lead)" title="Descarregar documentos"><i class="fa fa-download"> </i></button>
+                    <button class="btn btn-success" ng-click="upContrato(r.lead)" title="Anexar contrato!"><i class="fa fa-upload"> </i></button>
+                    <button class="btn btn-warning" ng-click="downContratos(r.lead)" title="Descarregar contrato(s)!"><i class="fa fa-download"> </i></button>
+                    <button class="btn btn-danger" ng-click="desistencia(r.lead)" title="Desistencia!"><i class="fa fa-thumbs-down"> </i></button>
+                    <button class="btn btn-primary" ng-click="imprimir(r.lead)" title="Imprimir envelope!"><i class="fa fa-print"> </i></button>
+                    <button class="btn btn-default" ng-click="suspender(r.lead)" title="Colocar em suspenso!"><i class="fa fa-hourglass-start"> </i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="text-center">
+        <a href="#!/dashboard" class="btn btn-warning"><i class="fa fa-undo"> </i> Voltar</a>
+    </div>
+    <br/><br/>
+</div>
+
+
+
+<!-- Modal para alterar os dados do financiamento -->
+<script type="text/ng-template" id="modalChangeFinanciamento.html" ng-controller="modalInstanceChangeFinanciamento">
+        <div class="modal-header bg-info">
+            <h3 class="modal-title">Dados do Financiamento
+                <span class="closeModal" ng-click="closeModal()">X</span>
+            </h3>
+        </div> 
+        
+        <div class="modal-body">
+                <form>
+                <div class="form-group-sm col-xs-2">
+                    <label>Parceiro </label>
+                    <input class="form-control" ng-model="sbm.nome" readonly/>
+                </div>  
+                <div class="form-group-sm col-xs-2">
+                    <label>Nº Processo </label>
+                    <input  class="form-control no-spinner" type="text" ng-model="sbm.processo" readonly />
+                </div>  
+                <div class="form-group-sm col-xs-2">
+                    <label>Montante </label>
+                    <input  class="form-control no-spinner" type="number" string-to-number ng-model="sbm.montante"/>
+                </div>  
+                <div class="form-group-sm col-xs-2">
+                    <label>Tipo </label>
+                    <select  class="form-control" type="text" ng-model="sbm.tipocredito" value="{{sbm.tipocredito}}">
+                        <option value="CP">CP</option>
+                        <option value="CC">CC</option>
+                        <option value="AU">Auto</option>
+                    </select>
+                </div>  
+                <div class="form-group-sm col-xs-1">
+                    <label>Prazo </label>
+                    <input  class="form-control no-spinner" type="number" string-to-number ng-model="sbm.prazo"/>
+                </div>  
+                <div class="form-group-sm col-xs-1">
+                    <label>Prestação </label>
+                    <input  class="form-control no-spinner" type="number" string-to-number ng-model="sbm.prestacao"/>
+                </div> 
+
+                <div class="form-group-sm col-xs-2">
+                    <label>Status</label>
+                    <select class="form-control" ng-model="sbm.status" ng-value="sbm[$index].stsfinanciamento" ng-change="submitProcess(sbm)">
+                        <option value="1" >Em Analise</option>
+                        <option value="2" >Pré-Aprovado</option>
+                        <option value="6" >Aprovado</option>
+                        <option value="5">Recusado</option>
+                        <option value="4">Incompleto</option>
+                        <option value="3">Motivo F</option>
+                        <option value="9">Cancelado</option>
+                        <option value="11" >Pré-Aprovado CrtEnv</option>
+                    </select>
+                </div>
+                <h4>&nbsp;</h4>
+                <div class="form-group">
+                    <label>Justificação</label>
+                    <textarea class="form-control" rows="3" ng-model="justificacao" ></textarea>
+                </div>
+               
+
+                <div class="text-center">  
+                    <h1>&nbsp;</h1>
+                    <button class="btn btn-success" ng-click="saveChanges(sbm)"><i class="fa fa-save"> </i> Guardar</button>
+                    <button class="btn btn-warning" ng-click="closeModal()"> Cancelar</button>
+                </div> 
+                </form>
+        </div>
+        
+</script>
+
+
+<!-- MODAL para selecionar a forma de envio do Contrato para assinar -->
+<script type="text/ng-template" id="modalEnvioContrato.html" ng-controller="modalInstanceEnvioContrato">
+    <div class="modal-header bg-info">
+        <h3 class="modal-title">Forma de envio do Contrato
+            <span class="closeModal" ng-click="closeModal()">X</span>
+        </h3>
+        <div style="display:flow-root">
+            <button  class="{{contactedByG}} pull-left" ng-click="contactedByGestor()"><i class="fa fa-user"> </i> Contactado pelo Gestor</button>
+            <button ng-if="!onCall" class="btn btn-primary pull-right" ng-click="makeCall()"><i class="fa fa-phone"> </i> Ligar</button>
+            <button ng-if="onCall" class="btn btn-danger pull-right" ng-click="makeCall()"><i class="fa fa-phone"> </i> Desligar</button>
+            <button ng-if="onCall" class="btn btn-warning pull-right" ng-click="noAnswer()"><i class="fa fa-phone-slash"> </i> Não atende</button>
+        </div>
+        
+        <span  class="clear pull-right text-danger">{{situacaoChamada}}</span>
+    </div>
+    <div class="modal-body">
+    <div class="form-inline">
+        <div class="form-group">
+            <label>
+            <input  type="radio" ng-model="envContrato" value="Email"/>
+            Por Email</label>
+        </div>
+        <div class="form-group">
+            <label>
+            <input  type="radio" ng-model="envContrato" value="Correio"/>
+            Por Correio</label>
+        </div>
+        <div class="form-group"> 
+            <label>
+            <input  type="radio" ng-model="envContrato" value="Presencial"/>
+            Presencial</label>
+        </div>
+        <div class="form-group"> 
+            <label>
+            <input  type="radio" ng-model="envContrato" value="Ass.Digital"/>
+            Assinatura Digital</label>
+        </div>
+        </div><br/>
+        <div class="form-group">
+        <label>Outras Informações:</label>
+        <textarea class="form-control" ng-model="outraInfo" rows="4"></textarea>
+        </div>
+        <div class="modal-footer text-center">
+            <button class="btn btn-success" ng-click="updateInfo()"><i class="fa fa-save"> </i>Guardar</button>
+            <button class="btn btn-warning" ng-click="closeModal()">Cancelar</button>
+        </div>
+    </div>
+</script>
+
+<!-- MODAL para finalizar : pode Fechar como Financiado, Recusado, Desistiu -->
+<script type="text/ng-template" id="modalFinalizeFin.html" ng-controller="modalInstanceFinalizeFin">
+    <div class="modal-header bg-info">
+        <h3 class="modal-title">Fechar o Processo de Financiamento
+            <span class="closeModal" ng-click="closeModal()">X</span>
+        </h3>
+    </div>
+    <div class="modal-body" style="min-height:400px">
+    <div class="form-inline">
+        <div class="form-group">
+            <label>
+            <input  type="radio" ng-model="stsFin" value="7"/>
+            Financiado</label>
+        </div>
+        <div class="form-group">
+            <label>
+            <input  type="radio" ng-model="stsFin" value="5"/>
+            Recusado</label>
+        </div>
+        <div class="form-group">
+            <label>
+            <input  type="radio" ng-model="stsFin" value="10"/>
+            Desistiu</label>
+        </div>
+        <div class="form-group">
+            <label>
+            <input  type="radio" ng-model="stsFin" value="9"/>
+            Re-analise</label>
+        </div>
+        <br/>
+        <div class="form-group">
+            <label>
+            <input  type="radio" ng-model="stsFin" value="23"/>
+            Financiado - aguardar comprovativo de pagamento</label>
+        </div>
+        </div>
+        <br/>
+        <!-- Recusa -->
+        <div ng-if="stsFin==5">
+            <div class="form-inline">
+                    <label>Motivo: </label>
+                    <select class="form-control" ng-model="op.motivoTipo">
+                        <option value="Não reúne condições">Não reúne condições</option>
+                        <option value="outro motivo a registar">Outro motivo a registar</option>
+                        <option value="outros">Outros</option>
+                    </select>
+            </div>
+            <div class="form-group">
+                <label>Outros Motivos</label>
+                <textarea class="form-control" rows="3" ng-model="op.motivo"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Observações interrnas:</label>
+                <textarea class="form-control" rows="3" ng-model="op.obs"></textarea>
+            </div>
+        </div>
+        <!-- financiamento ACP -->
+         <div ng-show="stsFin==23">
+                <div class="" ng-repeat="comp in comprovativos track by $index">
+                    <div class="form-group-sm col-xs-5">
+                        <label ng-if="$index==0">Instituição </label>
+                        <input class="form-control" type="text" ng-model="c.comp[$index].instituicao"/>
+                    </div>
+                    <div class="form-group-sm col-xs-3">
+                        <label ng-if="$index==0">Tipo </label>
+                        <input class="form-control"  type="text" ng-model="c.comp[$index].tipo"/>
+                    </div>
+                    <div class="form-group-sm col-xs-2">
+                        <label ng-if="$index==0">Montante </label>
+                        <input class="form-control no-spinner" min="0" string-to-number  type="number" ng-model="c.comp[$index].montante"/>
+                    </div>
+                    <div class="form-group-sm col-xs-1">
+                        <label ng-if="$index==0">&nbsp;</label>
+                        <a ng-if="$index==0" class="btn btn-sm" title="Adicionar uma linha" ng-click="addLineComprovativos()"><i class="fa fa-plus-circle"></i></a>
+                        <a ng-if="$index>0" class="btn btn-sm" title="Remover linha" ng-click="removeLineComprovativos()"><i class="fa fa-minus-circle text-danger"></i></a>
+                    </div>
+            </div>
+        </div>
+        <div class="form-group" ng-show="stsFin!=23">
+            <label>Outras Informações:</label>
+            <textarea class="form-control" ng-model="outraInfo" rows="3"></textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="text-center">"
+            <button class="btn btn-success" ng-click="updateFinal()"><i class="fa fa-save"> </i>Guardar</button>
+            <button class="btn btn-warning" ng-click="closeModal()">Cancelar</button>
+        </div>
+    </div>
+    
+</script>
+<!-- MODAL para registar Desistencia-->
+<script type="text/ng-template" id="modalDesistencia.html" ng-controller="modalInstanceDesistencia">
+    <div class="modal-header bg-info">
+        <h3 class="modal-title">Fechar o Processo de Financiamento como Desistência
+            <span class="closeModal" ng-click="closeModal()">X</span>
+        </h3>
+    </div>
+    <div class="modal-body">
+
+    <div class="form-group">
+        <label>Motivo de desistência:</label>
+        <textarea class="form-control" ng-model="motivo" rows="4"></textarea>
+    </div>
+        <div class="modal-footer text-center">
+            <button class="btn btn-success" ng-click="updateInfo()"><i class="fa fa-save"> </i>Guardar</button>
+            <button class="btn btn-warning" ng-click="closeModal()">Cancelar</button>
+        </div>
+    </div>
+</script>
+
+<!-- MODAL para selecionar se vai enviar para o parceiro ou vai enviar segunda via -->
+<script type="text/ng-template" id="modalEnvioSegundaVia.html" ng-controller="modalInstanceEnvioSegundaVia">
+    <div class="modal-header bg-info">
+        <h3 class="modal-title">Enviar Contrato
+            <span class="closeModal" ng-click="closeModal()">X</span>
+        </h3>
+    </div>
+    
+    <div class="modal-body">
+    <div class="form-inline">
+        <div class="form-group">
+            <label>
+            <input  type="radio" ng-model="envContrato" value="Parceiro"/>Enviar para Parceiro</label>
+        </div>
+        <div class="form-group">
+            <label>
+            <input  type="radio" ng-model="envContrato" value="segundaVia"/>Enviar 2ª Via</label>
+        </div>
+        <div class="form-group">
+            <label>
+            <input  type="radio" ng-model="envContrato" value="incompleto"/>Incompleto</label>
+        </div>
+        </div>
+        <br/>
+        <div class="form-group">
+        <label>Outras Informações:</label>
+        <textarea class="form-control" ng-model="outraInfo" rows="4"></textarea>
+        </div>
+        <div class="modal-footer text-center">
+            <button class="btn btn-success" ng-click="updateInfo()"><i class="fa fa-save"> </i>Guardar</button>
+            <button class="btn btn-warning" ng-click="closeModal()">Cancelar</button>
+        </div>
+    </div>
+</script>
+
+<!-- Modal para fazer anexação do contrato -->
+<script type="text/ng-template" id="modalAnexarContrato.html" ng-controller="modalInstanceAnexarContrato">  
+    <div class="modal-header bg-info">
+        <h3 class="modal-title">Anexar Documento - LEAD: {{lead}}
+            <span class="closeModal" ng-click="closeModal()">X</span>
+        </h3>
+    </div>
+    
+    <div class="modal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-8">
+            <form>
+                <div class="form-group text-center">
+                    <label>Contrato
+                        <input class="form-control" type="radio" name="tipodoc" ng-model="c.tipodoc" value="1"/> <!-- contrato -->
+                    </label>
+                    <label>Documento Extra
+                        <input disabled class="form-control" type="radio" name="tipodoc" ng-model="c.tipodoc" value="2"/> <!-- documento extra -->
+                    </label>
+                </div>
+
+                <div class="form-group">
+                <input class="form-control" type="file" ng-model="file" base-sixty-four-input on-change="onChange">
+                </div>
+
+                <table class="table table-bordered table-striped">
+                    <tr>
+                      <th>Ficheiro original</th>
+                      <th>Novo nome</th>
+                      <th>Tamanho (<i><small>KB</small></i>)</th>
+                    </tr>
+                    <tr>
+                      <td>{{file.filename}}</td>
+                      <td><span ng-show="file.filename">{{novonome+'.'+(file.filetype).substr((file.filetype).indexOf('/')+1)}}<span></td>
+                      <td>{{file.filesize / 1000}}</td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" ng-show="!file">
+                        <small><i>No file selected.</i></small>
+                      </td>
+                    </tr>
+                </table>
+                <br/>
+                <div class="form-group">
+                    <label>Nome do documento </label>
+                    <input class="form-control" type="text" ng-model="novonome" placeholder="Apenas se pretender alterar o original!!"/>
+                </div>
+                <br/><br/>
+
+            </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="text-center">
+            <button class="btn btn-success" ng-click="saveAttachedDoc()"><i class="fa fa-check"></i> Guardar</button>
+            <button class="btn btn-warning" ng-click="closeModal()"> Cancelar</button>
+        </div>
+    </div>
+</script>
+
+
+
+<!-- Modal para alterar a forma de envio do contrato -->
+<script type="text/ng-template" id="modalFormaEnvio.html" ng-controller="modalInstanceFormaEnvio">  
+    <div class="modal-header bg-info">
+        <h3 class="modal-title">Alterar a foma de envio do contrato
+            <span class="closeModal" ng-click="closeModal()">X</span>
+        </h3>
+    </div>
+    
+    <div class="modal-body">
+        <div class="form-inline">
+            <div class="form-group">
+                <label>
+                <input  type="radio" ng-model="envContrato" value="Email" ng-change="changeForma()"/>
+                Por Email</label>
+                </div>
+                <div class="form-group">
+                    <label>
+                    <input  type="radio" ng-model="envContrato" value="Correio" ng-change="changeForma()"/>
+                    Por Correio</label>
+                </div>
+                <div class="form-group"> 
+                    <label>
+                    <input  type="radio" ng-model="envContrato" value="Presencial" ng-change="changeForma()"/>
+                    Presencial</label>
+                </div>
+            </div><br/>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-warning" ng-click="closeModal()"> Cancelar</button>
+        </div>
+</script>

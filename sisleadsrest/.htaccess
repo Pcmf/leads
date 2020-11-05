@@ -1,0 +1,96 @@
+#Options +FollowSymlinks
+# Turn rewrite engine on
+RewriteEngine on
+# Cors
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Access-Control-Allow-Origin"
+Header always set Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
+#POST do LOGIN 
+#RewriteRule ^auth/([0-9a-zA-z$./]+) restful/restful.php?url=auth&token=$1 [L,QSA]
+
+#Obter a lista de documentação necessária 
+RewriteRule ^docsnec/([0-9/]+) index.php?url=docsnec&lead=$1 [L,QSA]
+RewriteRule ^doclist index.php?url=doclist [L,QSA]
+
+RewriteRule ^leads/([0-9/]+)/([0-9/]+) index.php?url=leads&user=$1&id=$2 [L,QSA]
+RewriteRule ^leads/([0-9/]+) index.php?url=leads&user=$1 [L,QSA]
+
+RewriteRule ^lead/([0-9/]+) index.php?url=lead&lead=$1 [L,QSA]
+RewriteRule ^leadsts/([0-9/]+) index.php?url=leadsts&lead=$1 [L,QSA]
+RewriteRule ^upleads/([0-9/]+) index.php?url=upleads&lead=$1 [L,QSA]
+RewriteRule ^create index.php?url=create [L,QSA]
+
+RewriteRule ^login index.php?url=login [L,QSA]
+RewriteRule ^cltlogin index.php?url=cltlogin [L,QSA]
+
+RewriteRule ^doc/([0-9/]+)/([0-9/]+) index.php?url=doc&lead=$1&linha=$2 [L,QSA]
+RewriteRule ^docs/([0-9/]+)/([0-9/]+) index.php?url=docs&lead=$1&tipodoc=$2 [L,QSA]
+RewriteRule ^docs/([0-9/]+) index.php?url=docs&lead=$1 [L,QSA]
+RewriteRule ^docsp/([0-9/]+) index.php?url=docsp&lead=$1 [L,QSA]
+RewriteRule ^docs index.php?url=docs [L,QSA]
+
+RewriteRule ^updocs/([a-z/]+) index.php?url=updocs&func=$1 [L,QSA]
+RewriteRule ^savedocs/([0-9/]+) index.php?url=savedocs&lead=$1 [L,QSA]
+
+RewriteRule ^getdata/([0-9a-zA-Z_/]+) index.php?url=getdata&tabela=$1 [L,QSA]
+
+RewriteRule ^processos/([0-9/]+)/([0-9/]+) index.php?url=processos&user=$1&lead=$2 [L,QSA]
+RewriteRule ^processos/([0-9/]+) index.php?url=processos&user=$1 [L,QSA]
+RewriteRule ^processos index.php?url=processos [L,QSA]
+
+RewriteRule ^dashboard/([0-9/]+) index.php?url=dashboard&user=$1 [L,QSA]
+RewriteRule ^dashdir/([0-9/]+) index.php?url=dashdir&user=$1 [L,QSA]
+RewriteRule ^dash/([0-9/]+) index.php?url=dash&user=$1 [L,QSA]
+
+RewriteRule ^mural/([0-9/]+) index.php?url=mural&user=$1 [L,QSA]
+RewriteRule ^mural index.php?url=mural [L,QSA]
+
+RewriteRule ^users index.php?url=users [L,QSA]
+
+RewriteRule ^search/([0-9a-zA-Z_/]+)/([0-9a-zA-Z_/]+)  index.php?url=search&type=$1&data=$2 [L,QSA]
+
+RewriteRule ^call index.php?url=call [L,QSA]
+
+RewriteRule ^notas index.php?url=notas [L,QSA]
+
+RewriteRule ^autoag index.php?url=autoag [L,QSA]
+RewriteRule ^agendar index.php?url=agendar [L,QSA]
+
+RewriteRule ^askdocs/([0-9/]+)/([0-9/]+) index.php?url=askdocs&user=$1&lead=$2 [L,QSA]
+
+RewriteRule ^cofidis/([0-9/]+) index.php?url=cofidis&user=$1 [L,QSA]
+
+RewriteRule ^list/([0-9/]+)/([0-9/]+) index.php?url=list&user=$1&tipo=$2 [L,QSA]
+
+RewriteRule ^anular/([0-9/]+)/([0-9/]+) index.php?url=anular&user=$1&lead=$2 [L,QSA]
+
+RewriteRule ^cltcr/([0-9/]+) index.php?url=cltcr&lead=$1 [L,QSA]
+RewriteRule ^cltpass/([A-Z/]+) index.php?url=cltpass&type=$1 [L,QSA]
+RewriteRule ^cltchg/([0-9/]+) index.php?url=cltchg&lead=$1 [L,QSA]
+RewriteRule ^cltupimg index.php?url=cltupimg [L,QSA]
+RewriteRule ^cltupcomp index.php?url=cltupcomp [L,QSA]
+RewriteRule ^cltcomp/([0-9/]+)/([0-9/]+) index.php?url=cltcomp&lead=$1&linha=$2 [L,QSA]
+RewriteRule ^cltcomp/([0-9/]+) index.php?url=cltcomp&lead=$1 [L,QSA]
+RewriteRule ^cltcomp index.php?url=cltcomp [L,QSA]
+RewriteRule ^cltdocs/([0-9/]+) index.php?url=cltdocs&lead=$1 [L,QSA]
+RewriteRule ^cltdocs index.php?url=cltdocs [L,QSA]
+RewriteRule ^cltdocped/([0-9/]+)/([0-9/]+) index.php?url=cltdocped&lead=$1&linha=$2 [L,QSA]
+
+RewriteRule ^saveform/([0-9/]+) index.php?url=saveform&lead=$1 [L,QSA]
+RewriteRule ^upform/([0-9/]+) index.php?url=upform&lead=$1 [L,QSA]
+
+RewriteRule ^dgest/([0-9/]+) index.php?url=dgest&lead=$1 [L,QSA]
+
+RewriteRule ^processo/([0-9/]+) index.php?url=processo&lead=$1 [L,QSA]
+
+RewriteRule ^prtpro/([0-9/]+) index.php?url=prtpro&lead=$1 [L,QSA]
+
+RewriteRule ^upstatus index.php?url=upstatus [L,QSA]
+#CC Portal
+RewriteRule ^ccview index.php?url=ccview [L,QSA]
+#Report
+RewriteRule ^report/([0-9/]+)/([0-9/]+)/([0-9/]+)/([0-9/]+)/([^/]+)  index.php?url=reportlist&forn=$1&data1=$2&data2=$3&tipo=$4&motivo=$5 [L,B]
+RewriteRule ^report/([0-9/]+)/([0-9/]+)/([0-9/]+) index.php?url=report&forn=$1&data1=$2&data2=$3 [L,QSA]
+# Process-form para Gestor Externo
+RewriteRule ^processform/([0-9/]+) index.php?url=processform&lead=$1 [L,QSA]
+RewriteRule ^processform index.php?url=processform [L,QSA]

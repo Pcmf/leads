@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<!--
+    Vista inicial do Gestor. Aqui serão apresentadas as principais informações
+    sobre as LEADS e as principais ações.
+-->
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <!-- Novas -->
+            <div class="col-sm-4">
+                <div class="panel ph" style="background-color: green; color: white; height: 250px">
+                    <div class="panel-heading">
+                        <!--   <h3 class="panel-title">Disponiveis</h3> -->
+                    </div>
+                    <div class="panel-body">
+                        <div  ng-if="userData.tipo == 'Gestor'">
+                            <div ng-if="(novas + agendaAtiva + ativa + agendaDoc) > 0">
+                                <div class="col-xs-4">
+                                    <h4>Novas</h4>
+                                    <h1 class="text-default" style="font-size: {{n}}em; margin-top: 5px">{{+novas + +ativa}}</h1>
+                                    <h4>Agendadas</h4>
+                                    <h1 class="text-default" style="font-size: {{n}}em; margin-top: 5px">{{agendadasAtivas}}</h1>
+                                </div>
+                                <div class="col-xs-8 text-center"  ng-if="(+novas + +agendaAtiva + +ativa + +agendaDoc) > 0">
+                                    <button class="btn btn-lg btn-default deco-none" ng-click="puxarLead()" style="color: green">
+                                        PUXAR<i class="fa fa-chevron-right fa-4x"> </i> 
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 text-center" ng-if="(+novas + +agendaAtiva + +ativa + +agendaDoc) == 0">
+                                <h2 class="text-default">Não há LEADS</h2>
+                            </div>
+                        </div>
+                        <!--    //Gestor de Recuperação  -->
+                        <div  ng-if="userData.tipo == 'GRec'">
+                            <div ng-if="(recnovas + recagenda + recativa) > 0">
+                                <div class="col-xs-4">
+                                    <h4>Novas</h4>
+                                    <h1 class="text-default" style="font-size: {{n}}em; margin-top: 5px">{{recnovas}}</h1>
+                                    <h4>Agendadas</h4>
+                                    <h1 class="text-default" style="font-size: {{n}}em; margin-top: 5px">{{recagenda}}</h1>
+                                </div>
+                                <div class="col-xs-8 text-center"  ng-if="(+recnovas + +recagenda + +recativa) > 0">
+                                    <button class="btn btn-lg btn-default deco-none" ng-click="puxarLeadRec()" style="color: green">
+                                        PUXAR<i class="fa fa-chevron-right fa-4x"> </i> 
+                                    </button>          
+                                </div>
+                            </div>
+                            <div class="col-xs-12 text-center" ng-if="(recnovas + recagenda + recativa) == 0">
+                                <h2 class="text-default">Não há LEADS</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agendadas -->
+            <div class="col-sm-4">
+                <div class="panel panel-primary ph">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Agendadas</h3>
+                    </div>
+                    <div class="panel-body">
+                        <a href="#!/agendadas"  class="deco-none">
+                            <div class="col-xs-6 text-center">
+                                <span class="fa fa-calendar-alt fa-4x text-primary"></span>
+                            </div>
+                            <div class="col-xs-6">
+                                <h1 class="text-primary" style="font-size: {{n}}em">{{agendadas}}</h1>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Documentação -->
+            <div class="col-sm-4">
+                <div class="panel panel-warning ph">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Documentação</h3>
+                    </div>
+                    <div class="panel-body text-center" style="font-size: {{t}}em;">
+                        <div class="col-xs-8">
+                            <p class="text-info"><a href="#!/docs/1" class="deco-none"><i class="fa fa-hourglass-half fa-2x"> </i> Aguarda <span class="pull-right" style="font-size: {{t + 0.2}}em;">{{aguardaDoc}}</span></a></p>
+                            <p class="text-danger">
+                                <i class="fa fa-hourglass-end fa-2x"> </i> Atrasada 
+                                <a href="#!/docs/101" class="deco-none">
+                                    <span class="pull-right" style="font-size: {{t + 0.2}}em; color: green">{{atrasadaDocParcial}}</span>
+                                </a>
+                                <a href="#!/docs/10" class="deco-none">
+                                    <span class="pull-right" style="font-size: {{t + 0.2}}em;">{{atrasadaDoc}} /&nbsp;</span>
+                                </a>
+                            </p>
+                            <p class="text-warning"><a href="#!/docs/21" class="deco-none"><i class="fa fa-hourglass-end fa-2x"> </i> Analista <span class="pull-right" style="font-size: {{t + 0.2}}em;">{{agDocAnalist}}</span></a></p>
+                            <p class="text-info">
+                                <a href="#!/docs/36" class="deco-none"><i class="fa fa-id-card fa-2x"> </i> Cliente 
+                                    <span class="pull-right text-danger" style="font-size: {{t + 0.2}}em;">{{portalClientDocRec}}</span>
+                                    <span class="pull-right" style="font-size: {{t + 0.2}}em;">{{portalClient}} /&nbsp;</span>
+                                </a>
+                            </p>
+                            <p class="text-success">
+                                <a href="#!/docs/39" class="deco-none">
+                                    <span class="fa fa-id-card fa-2x"> </span> BPS-Docs <span class="pull-right" style="font-size: {{t + 0.2}}em;">{{bpsDocs|| 0}}</span>
+                                </a>
+                            </p> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-8">
+            <!-- Anuladas -->
+            <div class="col-sm-6">
+                <div class="panel panel-danger ph">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Anuladas</h3>
+                    </div>
+                    <div class="panel-body">
+                        <!--         <a href="#!/anuladas"  class="deco-none">  -->
+                        <div class="col-xs-6 text-center">
+                            <span class="fa fa-times fa-4x text-danger"></span>
+                        </div>
+                        <div class="col-xs-12">
+                            <h1 class="text-danger">{{anuladas}}</h1>
+                            <ul>
+                                <li><a href="#!/anuladas/4"  class="deco-none">Pelo Gestor: {{anuladasGestor}} </a></li>
+                                <li><a href="#!/anuladas/5"  class="deco-none">Não Atendida: {{anuladasNaoAtende}}</a></li>
+                                <li><a href="#!/anuladas/9"  class="deco-none">Falta Documentação: {{anuladasFaltaDoc}}</a></li>
+                            </ul>
+                        </div>
+                        <!--      </a> -->
+                    </div>
+                </div>
+            </div>
+            <!-- Resultados -->
+            <div class="col-sm-6" style="padding-right: 0px">
+                <div class="panel panel-success ph">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Hoje</h3>
+                    </div>
+                    <div class="panel-body">
+                        <a href="#!/list">
+                            <p class="text-center" style="font-size: {{t}}em; color: green">Sucesso: {{sucesso}}</p>
+                        </a>
+                        <p class="text-center" style="font-size: {{t}}em; color: orange">Contactados: {{contactados}}</p>
+                        <p class="text-center" style="font-size: {{t}}em; color: black">Tentativas: {{tentativas}}</p>
+                    </div>
+                </div>
+            </div> 
+            <!-- Pesquisa-->
+            <div class="col-sm-12" style="padding-right: 0px">
+                <div class="panel panel-info ph">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Pesquisa LEADS</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form ng-submit="searchLead(s)">
+                            <div class="col-xs-6">
+                                <div class="form-inline">
+                                    <label>LEAD:</label>
+                                    <input class="form-control input-sm no-spinner" type="number" ng-model="s.lead"/>
+                                </div>
+                                <div class="form-inline">
+                                    <label>Processo: </label>
+                                    <input class="form-control input-sm" type="text" ng-model="s.process"/>
+                                </div>
+                                <div class="form-inline">
+                                    <label>Parceiro:</label>
+                                    <select class="form-control" ng-model="s.parceiro" ng-options="parceiro.nome for parceiro in parceiros track by parceiro.id"></select>
+                                </div>                           
+                                <div class="form-inline">
+                                    <label>NIF</label>
+                                    <input class="form-control input-sm no-spinner" type="number" ng-model="s.nif"/>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-inline">
+                                    <label>Nome:</label>
+                                    <input class="form-control input-sm" type="text" ng-model="s.nome"/>
+                                </div>
+                                <div class="form-inline">
+                                    <label>Email:</label>
+                                    <input class="form-control input-sm" type="email" ng-model="s.email"/>
+                                </div>
+                                <div class="form-inline">
+                                    <label>Telefone:</label>
+                                    <input class="form-control input-sm no-spinner" type="number" ng-model="s.telefone"/>
+                                </div>
+                                <div class="form-inline">
+                                    <label>LEAD Original:</label>
+                                    <input class="form-control input-sm no-spinner" type="number" ng-model="s.leadorig"/>
+                                </div>                            
+                                <br/>
+                                <div class="text-center">
+                                    <button class="btn btn-success" type="submit"><i class="fa fa-search"></i> Pesquisar</button>
+                                    <button class="btn btn-warning" type="button" ng-click="clearSearch()"><i class="fa fa-eraser"></i> Limpar</button>
+                                </div>
+                            </div>
+                        </form>  
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Mural -->
+
+        <div class="col-sm-4">
+            <div class="col-sm-12" style="padding-left: 0;">
+                <div class="panel panel-{{alerta}}" id="ph2">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Mural</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="panel" style="height: 330px; background-color: #fff; overflow-y: scroll" scroll-glue-bottom>
+                                <!-- Bloco de conversa -->
+                                <div ng-repeat="conv in conversas" ng-click="selectDestino(conv)">
+                                    <div ng-class="conv.sentido" ng-if="clicked != conv.id">
+                                        <span class="pull-right">
+                                            <small>{{conv.dataenvio}} 
+                                                <strong ng-if="conv.sentido === 'msg-in'"> <- {{conv.userorigem}}</strong>
+                                                <strong ng-if="conv.sentido === 'msg-out'"> -> {{conv.userdestino}}</strong>
+                                            </small>
+                                        </span> </br> 
+                                        <p ng-hide="clicked != conv.id">{{conv.assunto}}</p>
+                                    </div>
+                                    <div ng-class="conv.sentido" style="border: gray thick solid" ng-if="clicked == conv.id">
+                                        <span class="pull-right">
+                                            <small>{{conv.dataenvio}} 
+                                                <strong ng-if="conv.sentido === 'msg-in'"> <- {{conv.userorigem}}</strong>
+                                                <strong ng-if="conv.sentido === 'msg-out'"> -> {{conv.userdestino}}</strong>
+                                            </small>
+                                        </span> </br> 
+                                        <p ng-show="clicked == conv.id">{{conv.assunto}}</p>                                    
+                                    </div>
+                                </div>
+                            </div>
+                            <input class="form-control" type="text" ng-model="assunto"/>
+                            <div class="col-xs-12">
+                                <div class="col-xs-8">
+                                    <!-- Split button -->
+                                    <div class="btn-group dropup">
+                                        <button type="button" class="btn btn-success" ng-click="enviarResposta()">Enviar para</button>
+                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="caret"></span>
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <ul class="dropdown-menu"  >
+                                            <li ng-repeat="u in utilizadores| orderBy:'nome' " ng-if="u.id != sessionStorage.userId && (u.tipo == 'Gestor' || u.tipo == 'Analista') && u.ativo == 1" ng-click="enviarPara(u)"><a ng-if="u.mural == 1" href="" >{{u.nome}} - {{u.tipo}}</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+    </div>
+    <br/><br/>
+</div>
+
+
+
+
+<script>
+    $.fn.equalizeHeights = function () {
+        var maxHeight = this.map(function (i, e) {
+            return $(e).height();
+        }).get();
+        return this.height(Math.max.apply(this, maxHeight));
+    };
+
+
+    $("div .ph").equalizeHeights();
+    $("#ph2").height(($(".ph").height()) * 2 + 4);
+</script>

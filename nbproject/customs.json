@@ -1,0 +1,11 @@
+{
+    "elements": {
+        "time-line": {}
+    },
+    "attributes": {
+        "active-link": {},
+        "chart-data": {
+            "context": "canvas"
+        }
+    }
+}

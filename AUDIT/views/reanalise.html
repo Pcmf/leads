@@ -1,0 +1,40 @@
+<div class="container">
+    <h1 class="text-center text-info">RE-ANALISE - SITUAÇÃO</h1>
+    <p>
+        <span class="pull-right form-inline" style="margin-right: 100px">
+           <i class="fa fa-search text-info"></i>
+           <input type="text" ng-model="searchFilter" class="form-control" placeholder="Filtrar por..." >         
+       </span>
+    </p>
+    <table ng-table="paramsTable" class="table table-condensed table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Lead</th>
+                <th>Nome</th>
+                <th>Data Entrada</th>
+                <th>Valor</th>
+                <th>Motivos</th>
+                <th>Data de Status</th>
+                <th>Status</th>
+                <th>Analista</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="d in $data | filter: searchFilter">
+                <th><a href="#!/detLead/{{d.lead}}">{{d.lead}}</a></th>
+                <td>{{d.nome}}</td>
+                <td>{{d.dataentrada}}</td>
+                <td>{{d.montante}}</td>
+                <td>
+                    <ol>
+                        <li ng-repeat="m in d.motivos"> <span class="text-sm">( {{m.data}} )</span> - {{m.motivo}};<br/>{{m.outro}}</li>
+                    </ol>
+                </td>
+                <td>{{d.datastatus}}</td>
+                <td>{{d.statusnome}}</td>
+                <td>{{d.analista}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+

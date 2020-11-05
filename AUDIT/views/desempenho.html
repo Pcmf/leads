@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<!--
+Para analisar a situação dos contratos quando aprovados
+-->
+<style>
+    .Gestor{
+        background-color: #b2bcbc; 
+    }
+    .Analista{
+        background-color: #cbd0d0;
+    }
+
+</style>
+
+<div class="container">
+    <h3 class="text-center text-info">Analise de Desempenho</h3>
+    
+    <div class="container text-center">
+    <time-line style=""></time-line>
+    <table class="table table-responsive">
+        <thead>
+            <tr class="text-center">
+                <td colspan="6">&nbsp;</td>
+                <td colspan="2">Desistências</td>
+            </tr>
+            <tr class="text-center">
+                <th>Colaborador</th>
+                <th>Leads/Processos</th>
+                <th>Financiadas</th>
+                <th>% Conversão</th>
+                <th>Valor Financiado</th>
+                <th>Media</th>
+                <th>%</th>
+                <th>Qty </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="d in dados" class="text-center" ng-class="d.tipo">
+                <th>{{d.nome}}</th>
+                <td>{{d.puxadas}}</td>
+                <td>{{d.financiadas}}</td>
+                <td ng-if="d.puxadas>0">{{d.financiadas / d.puxadas * 100 | number: 2 }} %</td>
+                <td ng-if="d.puxadas==0">0</td>
+                <td>{{d.valor | number}}</td>
+                <td ng-if="d.financiadas>0">{{d.valor / d.financiadas | number: 2 }}</td>
+                <td ng-if="d.financiadas==0">0</td>
+                <td ng-if="d.financiadas">{{d.desistencias / d.financiadas * 100 | number: 2 }} %</td>
+                <td ng-if="d.financiadas==0">0</td>
+                <td><a ng-click="listar(d.id, d.tipo)">{{d.desistencias}}</a></td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+   
+
+<!-- Modal para ver detalhe  -->
+<script type="text/ng-template" id="modalDetListS3.html" ng-controller="modalInstanceDetListS3">  
+   <div class="modal-header">
+        <h4 class="text-info text-center"><strong> {{tipo}}   {{motivo}}</strong>
+        <span class="pull-right fa fa-times fa-2x" ng-click="closeModal()"></span>
+        </h4>
+        <button class="btn btn-primary" ng-click="imprimir()"><i class="fa fa-print"> </i> Imprimir</button>
+
+   </div>
+    <div class="modal-body">
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>Lead</th>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Montante</th>
+                <th>Data Entrada</th>
+                <th>Data Status</th>
+                <th>Gestor</th>
+                <th>Analista</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="d in dados">
+                <th><a href="" ng-click="verDetLead(d.id)">{{d.id}}</a></th>
+                <td>{{d.nome}}</td>
+                <td><button class="btn btn-info"  ng-click="verChamadas(d.telefone, d.id)">{{d.telefone}}</button></td>
+                <td>{{d.montante | number}} €</td>
+                <td>{{d.dataentrada}}</td>
+                <td>{{d.datastatus}}</td>
+                <td>{{d.gestor}}</td>
+                <td>{{d.analista}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="text-center">
+        <button class="btn btn-warning" ng-click="closeModal()"> Fechar</button>
+    </div>
+    </div>
+</script>
+
+
+<!-- Modal para ver detalhe da lead  -->
+<script type="text/ng-template" id="modalDetLead_3.html" ng-controller="modalInstanceDetLead_3"> 
+   
+    <div class="modal-body">
+
+    <!-- Informações sobre a LEAD -->
+        <div class="panel">
+            <div class="panel-heading panel-primary">
+                <h4>Informação da LEAD <span class="text-white">{{dl.id}} - {{dl.tipo}}</span></h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-xs-12">
+                    <div class="form-group-sm col-sm-2">
+                        <label>Fornecedor</label>
+                        <input type="text" class="form-control" ng-model="dl.fornecedornome" readonly=""/>
+                    </div>
+                    <div class="form-group-sm col-sm-2">
+                        <label>LEAD original</label>
+                        <input type="text" class="form-control" ng-model="dl.idleadorig" readonly=""/>
+                    </div>
+                    <div class="form-group-sm col-sm-2">
+                        <label>Data Entrada</label>
+                        <input type="text" class="form-control" ng-model="dl.dataentrada" readonly=""/>
+                    </div>                
+                    <div class="form-group-sm col-sm-2">
+                        <label>Situação</label>
+                        <input ng-click="ativar(dl)" type="text" class="form-control" ng-model="dl.nomestatus" readonly=""/>
+                    </div>
+                    <div class="form-group-sm col-sm-2">
+                        <label>Data Situação</label>
+                        <input type="text" class="form-control" ng-model="dl.datastatus" readonly=""/>
+                    </div>
+                    <div class="form-group-sm col-sm-2" ng-if="tipoUser=='Analista'">
+                        <label>Gestor</label>
+                        <input type="text" class="form-control" ng-model="dl.gestor" readonly=""/>
+                    </div>
+                    <div class="form-group-sm col-sm-2" ng-if="tipoUser=='Gestor' && dl.status>=12">
+                        <label>Analista</label>
+                        <input type="text" class="form-control" ng-model="dl.analista" readonly=""/>
+                    </div> 
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group-sm col-sm-2">
+                        <label>Origem</label>
+                        <input type="text" class="form-control" ng-model="dl.nomelead" readonly=""/>
+                    </div>                    
+                    <div class="form-group-sm col-sm-5">
+                        <label>Situação do crédito</label>
+                        <input type="text" class="form-control" ng-model="dl.situacao" readonly=""/>
+                    </div>
+                    <div class="form-group-sm col-sm-5">
+                        <label>Informações </label>
+                        <input type="text" class="form-control" ng-model="dl.info" readonly=""/>
+                    </div>                    
+                </div>
+            </div>
+            
+        </div>
+    <!-- TABS -->
+    <div id="tabs" class="col-xs-12">
+        <ul>
+            <li class="tabb" ng-repeat="tab in tabs" 
+                ng-class="{active:isActiveTab(tab.id)}" 
+                ng-click="onClickTab(tab)">
+                {{tab.title}}
+            </li>
+        </ul>
+
+    </div>
+    
+           <!--Dados do cliente   -->
+            <div id="zero.tpl" class="pn show">
+                <div id="viewZero" class="col-xs-12">        
+                    <div class="panel">
+                        <div class="panel-heading panel-primary">
+                            <h4><strong class="text-primary">{{dl.id}}</strong> - Informação do Cliente</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-xs-12">
+                                <div class="form-group-sm col-xs-10">
+                                    <label>Nome </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.nome" title="{{ic.nome}}"/>
+                                </div>
+                                <div class="form-group-sm col-xs-2">
+                                    <label>Idade </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.idade"/>
+                                </div>
+                                <div class="form-group-sm col-xs-3">
+                                    <label>Telefone </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.telefone"/>
+                                </div>
+                                <div class="form-group-sm col-xs-9">
+                                    <label>Email </label>
+                                    <input id="emailToCopy" ng-readonly="readOnly" class="form-control" type="text" ng-click="copyToClip()" ng-model="ic.email" title="Click para copiar"/>
+                                </div>
+                                <!-- Morada Postal -->
+                                <div ng-if="ic.moradarua || !readOnly">
+                                    <div class="form-group-sm col-xs-6">
+                                        <label class="text-info">Rua </label>
+                                        <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.moradarua"/>
+                                    </div> 
+                                    <div class="form-group-sm col-xs-4">
+                                        <label class="text-info">Localidade </label>
+                                        <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.moradalocalidade"/>
+                                    </div>                                
+                                    <div class="form-group-sm col-xs-2">
+                                        <label class="text-info">Codigo Postal </label>
+                                        <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.moradacp"/>
+                                    </div> 
+                                </div>
+                                <div class="form-group-sm col-xs-3">
+                                    <label>NIF </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.nif"/>
+                                </div>
+                                <div class="form-group-sm col-sm-2">
+                                    <label>IRS</label>
+                                    <input type="text" class="form-control" ng-model="ic.irs"  ng-readonly="readOnly"/>
+                                </div>                                
+                                <div class="form-group-sm col-xs-3">
+                                    <label>Estado Civil </label>
+                                    <select readonly disabled="" class="form-control" ng-model="ic.estadocivil">
+                                        <option ng-repeat="ec in estadoscivis" ng-value="ec.id" ng-selected="ic.estadocivil==ec.id">{{ec.nome}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group-sm col-xs-2">
+                                    <label>Filhos </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text"  ng-model="ic.filhos"/>
+                                </div>
+                                <div class="form-group-sm col-xs-4">
+                                    <label>Profissão </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.profissao"/>
+                                </div>                                
+                                <div class="form-group-sm col-xs-4">
+                                    <label>Tipo contrato </label>
+                                    <input readonly class="form-control" type="text" ng-model="ic.nomecontrato"/>
+                                </div>
+                                <div class="form-group-sm col-xs-2">
+                                    <label>Inicio </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.anoinicio"/>
+                                </div>                                
+                                <div class="form-group-sm col-xs-2">
+                                    <label>Vencimento </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.vencimento"/>
+                                </div>                                
+                            </div>
+                            <!-- Habitação -->
+                            <div class="col-xs-12">
+                                <div class="form-group-sm col-sm-4">
+                                    <label>Habitação</label>
+                                    <input type="text" class="form-control" ng-model="ic.nomehabitacao" ng-readonly="true"/>
+                                </div>
+                                <div class="form-group-sm col-sm-2" ng-if="ic.valorhabitacao>0">
+                                    <label>Renda/Prestação</label>
+                                    <input type="text" class="form-control"  ng-model="ic.valorhabitacao" ng-readonly="true"/>
+                                </div>
+                                <div class="form-group-sm col-sm-2">
+                                    <label>Inicio</label>
+                                    <input type="text" class="form-control" ng-model="ic.anoiniciohabitacao" ng-readonly="readOnly"/>
+                                </div>                 
+                                <div class="form-group-sm col-sm-2" ng-if="ic.declarada">
+                                    <label>Declarada</label>
+                                    <input type="text" class="form-control" ng-model="ic.declarada" ng-readonly="readOnly"/>
+                                </div>
+                                <div class="form-group-sm col-sm-2" ng-if="ic.mesmahabitacao">
+                                    <label class="text-info">Mesma</label>
+                                    <input type="text" class="form-control" ng-model="ic.mesmahabitacao" ng-readonly="readOnly"/>
+                                </div>
+                                <div ng-if="ic.mesmahabitacao=='Não'">
+                                    <div class="form-group-sm col-sm-4">
+                                        <label class="text-info">Habitação 2º</label>
+                                        <input type="text" class="form-control" ng-model="ic.nomehabitacao2" ng-readonly="true"/>
+                                    </div>
+                                    <div class="form-group-sm col-sm-2" ng-if="ic.valorhabitacao2>0">
+                                        <label class="text-info">Renda/Prestação</label>
+                                        <input type="text" class="form-control"  ng-model="ic.valorhabitacao2" ng-readonly="readOnly"/>
+                                    </div>
+                                    <div class="form-group-sm col-sm-2">
+                                        <label class="text-info">Inicio</label>
+                                        <input type="text" class="form-control" ng-model="ic.anoiniciohabitacao2" ng-readonly="readOnly"/>
+                                    </div>                 
+                                    <div class="form-group-sm col-sm-2" ng-if="ic.declarada2">
+                                        <label class="text-info">Declarada</label>
+                                        <input type="text" class="form-control" ng-model="ic.declarada2" ng-readonly="readOnly"/>
+                                    </div> 
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="form-group-sm col-xs-2">
+                                    <label class="text-info">Parentesco </label>
+                                    <input readonly class="form-control" type="text" ng-model="ic.parentesco2"/>
+                                </div>                                
+                                <div class="form-group-sm col-xs-2">
+                                    <label class="text-info">Idade 2º Prop. </label>
+                                    <input readonly class="form-control" type="text" ng-model="ic.idade2"/>
+                                </div>
+                                <div class="form-group-sm col-xs-3">
+                                    <label class="text-info">Telefone </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.telefone2"/>
+                                </div>
+                                <div class="form-group-sm col-xs-3">
+                                    <label class="text-info">NIF </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.nif2"/>
+                                </div>
+                                <div class="form-group-sm col-xs-4">
+                                    <label class="text-info">Profissão </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.profissao2"/>
+                                </div>                                
+                                <div class="form-group-sm col-xs-4">
+                                    <label class="text-info">Tipo contrato </label>
+                                    <input readonly class="form-control" type="text" ng-model="ic.nomecontrato2"/>
+                                </div> 
+                                <div class="form-group-sm col-xs-2">
+                                    <label class="text-info">Inicio </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.anoinicio2"/>
+                                </div>                                
+                                <div class="form-group-sm col-xs-2">
+                                    <label class="text-info">Vencimento </label>
+                                    <input ng-readonly="readOnly" class="form-control" type="text" ng-model="ic.vencimento2"/>
+                                </div>
+                                <div class="form-group-sm col-xs-12">
+                                    <label>Outras Informações:</label>
+                                    <textarea class="form-control" ng-readonly="readOnly" ng-model="ic.outrainfo"></textarea>
+                                </div>
+                                <div  ng-if="historic.length>0"  class="form-group-sm col-xs-2">
+                                    <label class="text-info">Ver </label>
+                                    <button class="btn btn-warning btn-sm" ng-click="showHistorico(historic)">Histórico</button>
+                                </div> 
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--  Credito Pretendido/Rendimentos/Despesas  -->
+            <div id="one.tpl" class="pn hide">
+                <div id="viewOne" class="col-xs-12">
+                    <div class="panel">
+                        <div class="panel-heading panel-primary">
+                            <h4><strong class="text-primary">{{dl.id}}</strong> - Crédito Pretendido</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-xs-12">
+                                <div class="form-group-sm col-xs-2">
+                                    <label for="montante">Valor Pretendido</label>
+                                    <input id="montante" name="montante" string-to-number  class="form-control no-spinner" min="0" type="number" ng-model="ic.valorpretendido" ng-readonly="readOnly"/>
+                                </div>
+                                <div class="form-group-sm col-xs-2">
+                                    <label for="tipoLead">Tipo Crédito</label>                
+                                    <select id="tipoLead" class="form-control" ng-model="ic.tipocredito" ng-readonly="readOnly">
+                                        <option value="CP" ng-selected="ic.tipocredito=='CP'">CP</option>
+                                        <option value="CC" ng-selected="ic.tipocredito=='CC'">CC</option>
+                                        <option value="AU" ng-selected="ic.tipocredito=='AU'">Auto</option>
+                                    </select>
+                                </div>                
+                                <div class="form-group-sm col-xs-2">
+                                    <label for="numprestacoes">Prazo </label>
+                                    <input id="numprestacoes" class="form-control no-spinner" string-to-number  min="0" type="number" ng-model="ic.prazopretendido" ng-readonly="readOnly"/>
+                                </div>
+                                <div class="form-group-sm col-xs-2">
+                                    <label for="valorprestacao">Prestação </label>
+                                    <input id="valorprestacao" class="form-control no-spinner" string-to-number  min="0" type="number" ng-model="ic.prestacaopretendida"  ng-readonly="readOnly"/>
+                                </div>
+                                <div class="form-group-sm col-xs-4">
+                                    <label for="finalidade">Finalidade</label>
+                                    <input id="finalidade" name="finalidade" class="form-control" type="text" ng-model="ic.finalidade"  ng-readonly="readOnly"/>
+                                </div>
+                            </div>
+                            <div class="col-xs-8 col-xs-offset-2">
+                                <br/>
+                                <table class="table table-condensed" ng-show="rendimentos!=''">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" class="text-center">Outros Rendimentos</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Tipo de rendimento</th>
+                                            <th>Valor</th>
+                                            <th>Periocidade</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="r in rendimentos">
+                                            <td class="text-white">{{r.tiporendimento}}</td>
+                                            <td class="text-white">{{r.valorrendimento}}€</td>
+                                            <td class="text-white">{{r.periocidade}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                               <!-- Outros Creditos -->
+                               <br/>
+                                <table class="table table-condensed" ng-show="creditos!=''">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" class="text-center">Outros Créditos</th>
+                                        </tr>                        
+                                        <tr>
+                                            <th>Tipo de Crédito</th>
+                                            <th>Valor Crédito</th>
+                                            <th>Prestação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="c in creditos">
+                                            <td class="text-white">{{c.tipocredito}}</td>
+                                            <td class="text-white">{{c.valorcredito}}€</td>
+                                            <td class="text-white">{{c.prestacao}}€</td>
+                                        </tr>
+                                    </tbody>
+                                </table>   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Documentos pedidos e recebidos -->
+            <div id="two.tpl" class="pn hide">
+                <div id="viewTwo" class="col-xs-12">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <h4><strong class="text-primary">{{dl.id}}</strong> - Documentação Pedida / Recebida </h4>
+                        </div>
+                        <div class="panel-body">
+                                <table class="table table-condensed table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Documento Pedido</th>
+                                            <th>Ficheiro</th>
+                                            <th>Recebido</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="d in docs">
+                                            <td>{{d.nomedoc}}</td>
+                                            <td>{{d.nomefx}}</td>
+                                            <td ng-if="d.recebido==1" class="text-success">SIM</td>
+                                            <td ng-if="d.recebido==0" class="text-danger">NÃO</td> 
+                                            <td class="text-right">
+                                                <button ng-if="d.recebido==1 && d.nomefx" class="btn btn-success btn-sm" ng-click="verDoc(d)" title="Ver documentos"><i class="fa fa-eye"></i></button>
+                                                <button ng-if="d.recebido==1 && d.nomefx" ng-click="descarregarDoc(d)" class="btn btn-primary btn-sm" title="Descarregar para pasta temporaria"><i class="fa fa-download"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            <div class="panel-footer text-center">
+                                <button class="btn btn-primary" ng-click="descarregarDocs(dl.id)"><i class="fa fa-download"> </i> Descarregar Todos</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Registo de contactos -->
+            <div id="three.tpl" class="pn hide">
+                <div id="viewThree" class="col-xs-12">
+                    <div class="panel">
+                        <div class="panel-heading panel-primary">
+                            <h4><strong class="text-primary">{{dl.id}}</strong> - Contactos</h4>
+                        </div>
+                        <div class="panel-body">
+                             <table class="table table-condensed" ng-show="contactos!=''">
+                                <thead>
+                                    <tr>
+                                        <th colspan="3" class="text-center">Historico de Contactos</th>
+                                    </tr>
+                                    <tr>
+                                        <th ng-click="reverse=!reverse" style="cursor:pointer" title="Click para ordenar">Data &uarr;&darr;</th>
+                                        <th>Motivo</th>
+                                        <th>Utilizador</th>
+                                        <th>Tipo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="c in contactos  | orderBy: 'data': reverse">
+                                        <td>{{c.data}}</td>
+                                        <td>{{c.descricao}}</td>
+                                        <td>{{c.nome}}</td>
+                                        <td>{{c.tipo}}</td>
+                                    </tr>
+                                </tbody>
+                            </table> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Financiamentos -->
+            <div id="four.tpl" class="pn hide">
+                <div id="viewFour" class="col-xs-12">
+                    <div class="panel">
+                        <div class="panel-heading panel-primary">
+                            <h4><strong class="text-primary">{{dl.id}}</strong> - Financiamentos</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group-sm col-xs-12">
+                                <!-- Registo dos financiamentos -->
+                                <table class="table table-condensed" ng-show="financiamentos!=''">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="10" class="text-center">Registo dos Pedidos de Financiamento</th>
+                                        </tr>                        
+                                        <tr>
+                                            <th>Processo</th>
+                                            <th>Parceiro</th>
+                                            <th>Montante</th>
+                                            <th>Prazo</th>
+                                            <th>Prestação</th>
+                                            <th>Contrato Cliente -></th>
+                                            <th>Meio</th>
+                                            <th>Contrato Parceiro</th>
+                                            <th>Data</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="f in financiamentos">
+                                            <td>{{f.processo}}</td>
+                                            <td>{{f.nome}}</td>
+                                            <td>{{f.montante}}</td>
+                                            <td>{{f.prazo}}</td>
+                                            <td>{{f.prestacao}}</td>
+                                            <td>{{f.dtcontratocliente}}</td>
+                                            <td>{{f.formaenvio}}</td>
+                                            <td>{{f.dtcontratoparceiro}}</td>
+                                            <td>{{f.datastatus}}</td>
+                                            <td>{{f.statusnome}}</td>
+                                            <td ng-if="f.outrainfo"><i class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-html="true" title="Informações: {{f.outrainfo}}"> </i></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+            </div>            
+            <!-- Informações e Rejeições -->
+            <div id="five.tpl" class="pn hide">
+                <div id="viewFive" class="col-xs-12">
+                    <div class="panel">
+                        <div class="panel-heading panel-primary">
+                            <h4><strong class="text-primary">{{dl.id}}</strong> - Informações</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group-sm col-xs-12">
+                                <label>Rejeições:</label>
+                                <textarea rows="5" class="form-control" ng-readonly="readOnly || tipoUser=='Gestor'"  ng-model="rejeicoes"></textarea>
+                                
+                            </div>                            
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group-sm col-xs-12">
+                                <label>Outras Informações:</label>
+                                <textarea rows="5" class="form-control" ng-readonly="readOnly || tipoUser=='Analista'" ng-model="ic.outrainfo"></textarea>
+                            </div>                            
+                        </div>                        
+                    </div>
+                </div>
+            </div> 
+            <!-- Notas e Observações do Analista-->
+            <div id="six.tpl" class="pn hide">
+                <div id="viewSix" class="col-xs-12">
+                    <div class="panel">
+                        <div class="panel-heading panel-primary">
+                            <h4><strong class="text-primary">{{dl.id}}</strong> - Notas</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group-sm col-xs-12">
+                                <label>Notas:</label>
+                                <textarea rows="6" class="form-control" ng-model="ic.nota" ng-readonly="readOnly || tipoUser=='Gestor'"></textarea>
+                            </div>                            
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>          
+
+    
+    </div>
+<div class="text-center">
+    <br/>
+    <button class="btn btn-warning" ng-click="closeModal()"><i class="fa fa-undo"> </i> Voltar</button>
+</div>
+<br/><br/><br/>
+
+</script>
